@@ -62,6 +62,11 @@ CSYNTHView	*sview ;
 CSYNTHView::CSYNTHView()
 {
 	// TODO: add construction code here
+
+    pSelectionNode = NULL;    // Initialize new member variable
+
+    m_nEnableSelection = TRUE;  // Set existing member variable
+
 }
 
 CSYNTHView::~CSYNTHView()
@@ -100,6 +105,8 @@ SbBool isTransformable(SoNode *myNode) ;
 SoPath *createTransformPath(SoPath *inputPath) ;
 void selectionCallback(   void *, SoPath *selectionPath ) ;
 void deselectionCallback( void *, SoPath *deselectionPath) ;
+SoPath *pickFilterCB_TopLevel(void *,const SoPickedPoint *pick) ;
+
 SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,  
 										const SbVec2s &cursorPosition ) ;
 void MousePressCB(void *userData, SoEventCallback *eventCB ) ;
@@ -116,19 +123,24 @@ void CSYNTHView::OnInitialUpdate()
 	CView::OnInitialUpdate();
     IvfOnInitialUpdate(this) ;
 
-	m_nEnableSelection = TRUE;
 
-	SoSelection *pSelectionNode = IvfGetSelectionNode();
+	//SoSelection *pSelectionNode =IvfGetSelectionNode();
+    pSelectionNode = IvfGetSelectionNode();
+    pSelectionNode->ref();
+
 	pSelectionNode->policy = SoSelection::SHIFT ;
 	pSelectionNode->addSelectionCallback(selectionCallback, NULL);
 	pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
 
-	myHandleBox = new SoHandleBoxManip;
-	myHandleBox->ref();
-	myTrackball = new SoTrackballManip;
-	myTrackball->ref();
-	myTransformBox = new SoTransformBoxManip;
-	myTransformBox->ref();
+	// pick Top Level Objs (Group ?)
+	pSelectionNode->setPickFilterCallback(pickFilterCB_TopLevel);
+
+	//myHandleBox = new SoHandleBoxManip;
+	//myHandleBox->ref();
+	//myTrackball = new SoTrackballManip;
+	//myTrackball->ref();
+	//myTransformBox = new SoTransformBoxManip;
+	//myTransformBox->ref();
 
 	sdoc = GetDocument() ;
 	sdoc->new_object = FALSE ;
@@ -158,6 +170,7 @@ void CSYNTHView::OnInitialUpdate()
     // Use a bounding box to highlight selected objects
     m_pViewer->setGLRenderAction( new SoBoxHighlightRenderAction() );
 
+	
     // Tell viewer to automatically redraw when selection changes
     // (so the highlight will be drawn in the right place)
     m_pViewer->redrawOnSelectionChange( pSelectionNode ) ;
@@ -175,7 +188,8 @@ BOOL CSYNTHView::OnPreparePrinting(CPrintInfo* pInfo)
 
 void CSYNTHView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	IvfOnBeginPrinting();
+	IvfOnBeginPrinting();	
+
 }
 
 void CSYNTHView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
@@ -408,6 +422,7 @@ void CSYNTHView::OnViewViewmodesViewingmode()
 	IvfViewmodesViewingmode();
 }
 
+//code for select objects in scene (shift mode) 
 /*======================= selectionCallback =============*/
 
 void selectionCallback(   void *, SoPath *selectionPath )
@@ -448,8 +463,26 @@ void deselectionCallback( void *, SoPath *deselectionPath)
 //	}
 }
 
-//======================= pickFilterCallback ===================
+//*********************** pickFilterCB ************************
+//toplevel
+SoPath *pickFilterCB_TopLevel(void *, const SoPickedPoint *pick)
+{
+  //See whitch child of selection got picked
+  SoPath *p = pick->getPath();
+  int i;
+  for (i=0;i<p->getLength()-1;i++)
+  {
+	  SoNode *n = p->getNode(i);
+	  if (n->isOfType(SoSelection::getClassTypeId()))
+		  break;
+  }
+  //Copy 2 nodes from the path:
+  //selection and the picked child
+  return p->copy(i,2);
+}
 
+//======================= pickFilterCallback ===================
+//through manipulators
 SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
 {
 	const SbVec3f *pp = &pick->getPoint() ;
@@ -473,6 +506,8 @@ SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
     
    return filteredPath;
 }
+
+//code for insert objects in scene
 
 /*===================== createTransformPath =================*/
 //  Create a path to the transform node that affects the tail
@@ -654,6 +689,66 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 		sdoc->SetModifiedFlag() ;
 		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)
 
+	}
+	else
+	{
+	//	SoSelection *pSelectionNode = new SoSelection;
+        //pSelectionNode->ref();
+		//pSelectionNode->setPickFilterCallback(pickFilterCB_TopLevel);
+       
+		//
+	/*	ASSERT( pSelectionNode != NULL );
+        // May be more than one object selected...
+        // Get last one (most recently selected)
+		int num = pSelectionNode->getNumSelected();
+		ASSERT( num > 0);
+		SoPath *pPath = pSelectionNode->getPath( num-1 );
+		ASSERT( pPath != NULL );
+		
+
+        int length = pPath->getLength();
+        ASSERT( length > 2 );
+		pPath->ref();
+        pPath->truncate( length-1 );
+        pSelectionNode->select( pPath );
+		pPath->unref();
+*/
+        //select parent    
+/*		ASSERT( pSelectionNode != NULL );
+
+        // Note: May be more than object selected (use last selected)
+        //
+        // Can only select parent if:
+        // 1) There is at least one object selected, and
+        // 2) There are more than two nodes in the path
+        //    (First one is always selection node itself, which cannot be
+        //    selected, and second would be topmost parent of the object.)
+        int num = pSelectionNode->getNumSelected();
+        if (num > 0 &&
+            pSelectionNode->getPath(num-1)->getLength() > 2) {
+            pCmdUI->Enable( TRUE );
+           }
+        else
+        pCmdUI->Enable( FALSE );
+
+    */
+
+ /*     //select all
+     	ASSERT( pSelectionNode != NULL );
+
+        int num = pSelectionNode->getNumChildren();
+        ASSERT( num > 0 );  // Enforced by OnUpdateEditSelectAll
+
+        // Remove all current selections
+        pSelectionNode->deselectAll();
+    
+        // May be multiple objects in scene...
+        // Loop over objects and select each one.
+        for (int i = 0; i < num; i++) {    
+           SoNode *pNode = pSelectionNode->getChild( i );   
+           ASSERT( pNode != NULL);
+           pSelectionNode->select( pNode );
+		}*/
 	}
 }
 

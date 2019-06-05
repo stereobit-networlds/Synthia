@@ -57,6 +57,8 @@ public:
 #endif
 
 protected:
+//	SoSelection *m_pSelectionNode;
+    SoSelection *pSelectionNode;
 
 // Generated message map functions
 protected:

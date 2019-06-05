@@ -22,6 +22,7 @@
 #include <Inventor/manips/SoTrackballManip.h>
 #include <Inventor/manips/SoTransformBoxManip.h>
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -78,6 +79,7 @@ BOOL CSYNTHDoc::OnNewDocument()
 // BEGIN_IVWGEN
 	IvfOnNewDocument();
 // END_IVWGEN
+
 
 /*
 	wb->width	= 100 ;
@@ -409,6 +411,7 @@ void CSYNTHDoc::OnProperties()
 //	} 	
 }
 
+
 void CSYNTHDoc::OnKataxkoyzin() 
 {
 	// Ανοίγει το παράθυρο καταχώρησης της κουζίνας
@@ -417,6 +420,7 @@ void CSYNTHDoc::OnKataxkoyzin()
    
 	if (dlg->DoModal() == IDOK)   
 	{
+
 
 		// setup ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ
 
@@ -507,8 +511,14 @@ void CSYNTHDoc::OnKataxkoyzin()
 			xx[i] = x0 ; yy[i] = y0 ; zz[i] = z0 ;
 		} // for i
 
+	
 		SoSeparator *root = new SoSeparator ;
 		root->ref() ;
+		
+		//setup WallGroup
+        SoGroup *myWalls = new SoGroup;
+		myWalls->ref();
+		myWalls->setName("RoomWalls");
 
 		// setup world base 
 		CWorldBase *wb = new CWorldBase ;
@@ -567,9 +577,13 @@ void CSYNTHDoc::OnKataxkoyzin()
 				rw[off]->Koryfsy[1] = rb->Koryfsy[pleyres-1] ;
 				rw[off]->Koryfsz[1] = rb->Koryfsz[pleyres-1] ;
 			}
-			rw[off]->ObjectToInventor ( root ) ;
+
+
+			rw[off]->ObjectToInventor ( myWalls ) ;
+            //myWalls->addChild(s);
 			off++ ;
 		}
+        root->addChild(myWalls);
 
 		IvfSetSceneGraph( root );
 
