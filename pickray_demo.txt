@@ -1,0 +1,171 @@
+/**************************************************************************
+ * 		 Copyright (C) 1991-94, Silicon Graphics, Inc.		  *
+ *  These coded instructions, statements, and computer programs  contain  *
+ *  unpublished  proprietary  information of Silicon Graphics, Inc., and  *
+ *  are protected by Federal copyright law.  They  may  not be disclosed  *
+ *  to  third  parties  or copied or duplicated in any form, in whole or  *
+ *  in part, without the prior written consent of Silicon Graphics, Inc.  *
+ **************************************************************************/
+
+/*------------------------------------------------------------
+ *  This is an example from The Inventor Mentor,
+ *  chapter 9, example 4.
+ *
+ *  Example of setting up pick actions and using the pick path.
+ *  A couple of objects are displayed.  The program catches 
+ *  mouse button events and determines the mouse position. 
+ *  A pick action is applied and if an object is picked the
+ *  pick path is printed to stdout.
+ *-----------------------------------------------------------*/
+
+
+#include <Inventor/SbViewportRegion.h>
+#include <Inventor/SoDB.h>
+#include <Inventor/SoInput.h>
+#include <Inventor/SoPickedPoint.h>
+#include <Inventor/Xt/SoXt.h>
+#include <Inventor/Xt/viewers/SoXtExaminerViewer.h>
+#include <Inventor/actions/SoRayPickAction.h>
+#include <Inventor/actions/SoWriteAction.h>
+#include <Inventor/events/SoMouseButtonEvent.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoRotationXYZ.h>
+#include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoTranslation.h>
+#include <stdlib.h>
+
+#ifdef WIN32
+#include "print.h"
+#define main ivMain
+#endif
+
+#ifdef WIN32
+static SoOutput *conOut;
+#endif
+
+
+///////////////////////////////////////////////////////////////
+// CODE FOR The Inventor Mentor STARTS HERE
+
+SbBool
+writePickedPath (SoNode *root, 
+   const SbViewportRegion &viewport, 
+   const SbVec2s &cursorPosition)
+{
+   SoRayPickAction myPickAction(viewport);
+
+   // Set an 8-pixel wide region around the pixel
+   myPickAction.setPoint(cursorPosition);
+   myPickAction.setRadius(8.0);
+
+   // Start a pick traversal
+   myPickAction.apply(root);
+   const SoPickedPoint *myPickedPoint = 
+            myPickAction.getPickedPoint();
+   if (myPickedPoint == NULL) return FALSE;
+
+   // Write out the path to the picked object
+#ifdef WIN32
+   SoWriteAction myWriteAction(conOut);
+#else
+   SoWriteAction myWriteAction);
+#endif
+
+   myWriteAction.apply(myPickedPoint->getPath());
+
+#ifdef WIN32
+   conOut->flushFile();
+#endif
+
+   return TRUE;
+}
+
+// CODE FOR The Inventor Mentor ENDS HERE
+///////////////////////////////////////////////////////////////
+
+// This routine is called for every mouse button event.
+void
+myMousePressCB(void *userData, SoEventCallback *eventCB)
+{
+   SoSeparator *root = (SoSeparator *) userData;
+   const SoEvent *event = eventCB->getEvent();
+
+   // Check for mouse button being pressed
+   if (SO_MOUSE_PRESS_EVENT(event, ANY)) {
+      const SbViewportRegion &myRegion = 
+         eventCB->getAction()->getViewportRegion();
+      writePickedPath(root, myRegion,
+                      event->getPosition(myRegion));
+      eventCB->setHandled();
+   } 
+}
+
+void
+main(int, char **argv)
+{
+
+   SoMouseButtonEvent  myMouseEvent;
+#ifdef WIN32
+   conOut = new SoOutput;
+   conOut->setFilePointer(__AllocConsole());
+#endif
+   // Initialize Inventor and Xt
+   Widget myWindow = SoXt::init(argv[0]); 
+   if (myWindow == NULL) exit(1);
+
+   SoSeparator *root = new SoSeparator;
+   root->ref();
+
+   // Add an event callback to catch mouse button presses.
+   // The callback is set up later on.
+   SoEventCallback *myEventCB = new SoEventCallback;
+   root->addChild(myEventCB);
+
+   // Read object data from a file
+   SoInput mySceneInput;
+   if (!mySceneInput.openFile("../../../examples/data/star.iv")) 
+      exit (1);
+   SoSeparator *starObject = SoDB::readAll(&mySceneInput);
+   if (starObject == NULL) exit (1);
+   mySceneInput.closeFile();
+
+   // Add two copies of the star object, one white and one red
+   SoRotationXYZ *myRotation = new SoRotationXYZ;
+   myRotation->axis.setValue(SoRotationXYZ::X);
+   myRotation->angle.setValue(M_PI/2.2);  // almost 90 degrees
+   root->addChild(myRotation);
+
+   root->addChild(starObject);  // first star object
+
+   SoMaterial *myMaterial = new SoMaterial;
+   myMaterial->diffuseColor.setValue(1.0, 0.0, 0.0);   // red
+   root->addChild(myMaterial);
+   SoTranslation *myTranslation = new SoTranslation;
+   myTranslation->translation.setValue(1., 0., 1.);
+   root->addChild(myTranslation);
+   root->addChild(starObject);  // second star object
+
+   // Create a render area in which to see our scene graph.
+   SoXtExaminerViewer *myViewer = new SoXtExaminerViewer(myWindow);
+
+   // Turn off viewing to allow picking
+   myViewer->setViewing(FALSE);
+
+   myViewer->setSceneGraph(root);
+   myViewer->setTitle("Pick Actions & Paths");
+   myViewer->show();
+
+   // Set up the event callback. We want to pass the root of the
+   // entire scene graph (including the camera) as the userData,
+   // so we get the scene manager's version of the scene graph
+   // root.
+   myEventCB->addEventCallback(
+      SoMouseButtonEvent::getClassTypeId(),
+      myMousePressCB,
+      myViewer->getSceneManager()->getSceneGraph());
+
+   SoXt::show(myWindow);  
+   SoXt::mainLoop();      
+}
+

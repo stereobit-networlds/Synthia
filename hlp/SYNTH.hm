@@ -1,0 +1,21 @@
+// MAKEHELP.BAT generated Help Map file.  Used by SYNTH.HPJ. 
+ 
+// Commands (ID_* and IDM_*) 
+HIDM_VIEWPOINTS                         0x103E5
+HID_FILE_INFO                           0x18003
+HID_VIEW_PICEDIT                        0x1801B
+HID_VIEW_SELECTIONMODE                  0x18026
+HID_VIEW_VIEWINGMODE                    0x18027
+HID_FILE_IMPORT                         0x18031
+HID_FILE_RELOAD                         0x18032
+ 
+// Prompts (IDP_*) 
+ 
+// Resources (IDR_*) 
+HIDR_MAINFRAME                          0x20080
+HIDR_SYNTHTYPE                          0x20081
+ 
+// Dialogs (IDD_*) 
+HIDD_ABOUTBOX                           0x20064
+ 
+// Frame Controls (IDW_*) 

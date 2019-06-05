@@ -1,0 +1,675 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_SYNTHTYPE           ICON    DISCARDABLE     "res\\SYNTHDoc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_CONTEXT_HELP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT
+    VK_F1,          ID_HELP,                VIRTKEY 
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 283, 101
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About SYNTH"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "SYNTH Version 1.0",IDC_STATIC,40,10,119,8
+    LTEXT           "Copyright © 1998",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,244,7,32,14,WS_GROUP
+    LTEXT           "",IDC_ABOUT_TEXT,119,14,115,72
+END
+
+SYNTH_WIZZ0 DIALOG DISCARDABLE  0, 0, 324, 238
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ"
+FONT 8, "System"
+BEGIN
+    EDITTEXT        IDC_MHKOS0,101,7,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE0,101,20,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA0,101,34,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS1,101,56,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE1,101,70,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA1,101,84,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS2,101,105,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE2,101,119,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA2,101,133,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS3,101,154,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE3,101,167,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA3,101,182,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS4,249,7,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE4,249,20,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA4,249,34,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS5,249,56,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE5,249,70,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA5,249,84,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS6,249,105,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE6,249,119,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA6,249,133,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MHKOS7,249,154,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ANGLE7,249,167,62,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TOIXOMA7,249,182,62,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,171,217,67,14
+    DEFPUSHBUTTON   "Καταχώρηση",IDOK,253,217,64,14
+    RTEXT           "Γωνία",IDC_STATIC,43,23,49,11
+    RTEXT           "Μήκος",IDC_STATIC,43,7,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,23,36,69,11
+    RTEXT           "Γωνία",IDC_STATIC,43,72,49,11
+    RTEXT           "Μήκος",IDC_STATIC,43,57,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,23,85,69,11
+    RTEXT           "Γωνία",IDC_STATIC,43,121,49,11
+    RTEXT           "Μήκος",IDC_STATIC,43,106,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,23,134,69,11
+    RTEXT           "Γωνία",IDC_STATIC,43,170,49,11
+    RTEXT           "Μήκος",IDC_STATIC,43,154,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,23,183,69,11
+    RTEXT           "Γωνία",IDC_STATIC,191,23,49,11
+    RTEXT           "Μήκος",IDC_STATIC,191,7,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,171,36,69,11
+    RTEXT           "Γωνία",IDC_STATIC,191,72,49,11
+    RTEXT           "Μήκος",IDC_STATIC,191,57,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,171,85,69,11
+    RTEXT           "Γωνία",IDC_STATIC,191,121,49,11
+    RTEXT           "Μήκος",IDC_STATIC,191,106,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,171,134,69,11
+    RTEXT           "Γωνία",IDC_STATIC,191,170,49,11
+    RTEXT           "Μήκος",IDC_STATIC,191,154,49,11
+    RTEXT           "Εχει Τοίχωμα (1/0)",IDC_STATIC,171,183,69,11
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "SYNTH MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "SYNTH\0"
+            VALUE "LegalCopyright", "Copyright © 1998\0"
+            VALUE "OriginalFilename", "SYNTH.EXE\0"
+            VALUE "ProductName", "SYNTH Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 210
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    SYNTH_WIZZ0, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 317
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 231
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Greek resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ELL)
+#ifdef _WIN32
+LANGUAGE LANG_GREEK, SUBLANG_DEFAULT
+#pragma code_page(1253)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\SYNTH.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+SYNTH_WORLDBASE_PROP DIALOG DISCARDABLE  0, 0, 315, 151
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Βάση Σχεδίασης"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Εφαρμογή",IDOK,258,130,50,14
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,193,130,50,14
+    EDITTEXT        IDC_NAME,76,15,207,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ADDRESS,76,27,207,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_CITY,76,39,207,13,ES_AUTOHSCROLL
+    RTEXT           "Ονομα",IDC_STATIC,19,16,49,10
+    RTEXT           "Διεύθυνση",IDC_STATIC,19,29,49,10
+    RTEXT           "Πόλη",IDC_STATIC,21,41,47,10
+    RTEXT           "Τηλέφωνα",IDC_STATIC,21,53,47,10
+    EDITTEXT        IDC_TEL,76,51,207,13,ES_AUTOHSCROLL
+END
+
+SYNTH_ROOMBASE_PROP DIALOG DISCARDABLE  0, 0, 288, 119
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Δάπεδο"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PLAKAKI,68,7,112,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI1,187,7,33,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI2,229,7,33,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,182,98,50,14
+    DEFPUSHBUTTON   "Εφαρμογή",IDOK,237,98,50,14
+    RTEXT           "Πλακάκι",-1,7,11,49,10
+END
+
+SYNTH_SELECT_OBJ DIALOGEX 0, 0, 378, 162
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "ΕΠΙΛΟΓΗ ΑΝΤΙΚΕΙΜΕΝΩΝ"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Επιλογή",IDOK,306,141,65,14
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,7,141,65,14
+    LTEXT           "TODO: Place dialog controls here.",IDC_STATIC,17,36,113,
+                    8
+    LTEXT           "",IDC_VIEWER,7,7,163,98
+    PUSHBUTTON      "Επόμενο >>",SYNTH_NEXT,190,141,65,14
+    PUSHBUTTON      "<< Προηγούμενο",SYNTH_PRIOR,120,141,65,14
+    COMBOBOX        SYNTH_CB_MONTELO,221,7,150,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        SYNTH_CB_YLIKO,221,19,150,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        SYNTH_CB_PORTAKI,221,31,150,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        SYNTH_CB_SYRTARI,221,43,150,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        SYNTH_CB_XEROYL,221,55,150,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        SYNTH_CB_MPAZA,221,66,150,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        SYNTH_CB_ANTIK,62,116,309,143,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Μοντέλο",IDC_STATIC,178,8,34,11
+    RTEXT           "Υλικό",IDC_STATIC,180,20,31,11
+    RTEXT           "Πορτάκι",IDC_STATIC,180,33,32,11
+    RTEXT           "Συρτάρι",IDC_STATIC,176,45,36,11
+    RTEXT           "Χερούλι",IDC_STATIC,176,57,36,11
+    RTEXT           "Μπάζα",IDC_STATIC,179,70,33,11
+    RTEXT           "Αντικείμενο",IDC_STATIC,11,118,45,11
+END
+
+SYNTH_ROOMWALL_PROP DIALOG DISCARDABLE  0, 0, 288, 119
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Τοίχωμα"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_WIDTH,68,7,82,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_HEIGHT,68,19,82,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI,68,32,112,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI1,187,32,33,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI2,229,32,33,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,182,98,50,14
+    DEFPUSHBUTTON   "Εφαρμογή",IDOK,237,98,50,14
+    RTEXT           "Βάθος",-1,7,8,49,10
+    RTEXT           "Υψος",-1,7,21,49,10
+    RTEXT           "Πλακάκι",-1,7,36,49,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    SYNTH_WORLDBASE_PROP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 308
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 144
+    END
+
+    SYNTH_ROOMBASE_PROP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 112
+    END
+
+    SYNTH_SELECT_OBJ, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 371
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 155
+    END
+
+    SYNTH_ROOMWALL_PROP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 112
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif\r\n"
+    "#include ""res\\SYNTH.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#include ""afxprint.rc""       // printing/print preview resources\r\n"
+    "#include ""afxdb.rc""          // Database resources\r\n"
+    "#endif\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "Αρχειοθέτηση"
+    BEGIN
+        MENUITEM "Νέο",                         ID_FILE_NEW
+        MENUITEM "Ανοιγμα...",                  ID_FILE_OPEN
+        MENUITEM "Επαναφόρτωση",                ID_FILE_RELOAD
+        MENUITEM "Εισαγωγή",                    ID_FILE_IMPORT
+        MENUITEM SEPARATOR
+        MENUITEM "Διαμόρφωση Εκτύπωσης...",     ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Πρόσφατο Αρχείο",             ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Πληροφορίες",                 ID_FILE_INFO
+        MENUITEM SEPARATOR
+        MENUITEM "Εξοδος",                      ID_APP_EXIT
+    END
+    POPUP "Εμφάνιση"
+    BEGIN
+        MENUITEM "Μπάρα Εργαλείων",             ID_VIEW_TOOLBAR
+        MENUITEM "Μπάρα Μηνυμάτων",             ID_VIEW_STATUS_BAR
+    END
+    POPUP "Βοήθεια"
+    BEGIN
+        MENUITEM "Θέματα Βοήθειας",             ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "Σχετικά με το SYNTHESIS",     ID_APP_ABOUT
+    END
+END
+
+IDR_SYNTHTYPE MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "Αρχειοθέτηση"
+    BEGIN
+        MENUITEM "Νέο",                         ID_FILE_NEW
+        MENUITEM "Ανοιγμα",                     ID_FILE_OPEN
+        MENUITEM "Επαναφόρτωση",                ID_FILE_RELOAD
+        MENUITEM "Εισαγωγή",                    ID_FILE_IMPORT
+        MENUITEM "Κλείσιμο",                    ID_FILE_CLOSE
+        MENUITEM "Σώσιμο",                      ID_FILE_SAVE
+        MENUITEM "Σώσιμο Ως...",                ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Εκτύπωση...",                 ID_FILE_PRINT
+        MENUITEM "Προεπισκόπιση Εκτύπωσης",     ID_FILE_PRINT_PREVIEW
+        MENUITEM "Καθορισμός Εκτύπωσης...",     ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Πληροφορίες",                 ID_FILE_INFO
+        MENUITEM SEPARATOR
+        MENUITEM "Εξοδος",                      ID_APP_EXIT
+    END
+    POPUP "Επεξεργασία"
+    BEGIN
+        MENUITEM "Ακύρωση",                     ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Διαγραφή",                    ID_EDIT_CUT
+        MENUITEM "Αντιγραφή",                   ID_EDIT_COPY
+        MENUITEM "Επικόληση\tCtrl+V",           ID_EDIT_PASTE
+        MENUITEM "Νέα Σφαίρα",                  SYNTH_NEW_SPHERE
+        MENUITEM "ΙΔΙΟΤΗΤΕΣ",                   SYNTH_PROPERTIES
+        MENUITEM "ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ",         SYNTH_KATAXKOYZIN
+        MENUITEM "ΕΠΙΛΟΓΗ ΑΝΤΙΚΕΙΜΕΝΩΝ",        SYNTH_SELECT
+    END
+    POPUP "Εμφάνιση"
+    BEGIN
+        MENUITEM "Μπάρα Εργαλείων",             ID_VIEW_TOOLBAR
+        MENUITEM "Μπάρα Μηνυμάτων",             ID_VIEW_STATUS_BAR
+        MENUITEM SEPARATOR
+        MENUITEM "Εμφάνιση",                    ID_VIEW_PICEDIT
+        MENUITEM SEPARATOR
+    END
+    POPUP "Παράθυρα"
+    BEGIN
+        MENUITEM "Νέο Παράθυρο",                ID_WINDOW_NEW
+        MENUITEM "Διατεταγμένα",                ID_WINDOW_CASCADE
+        MENUITEM "&Tile",                       ID_WINDOW_TILE_HORZ
+        MENUITEM "Διάταξη Εικονιδίων",          ID_WINDOW_ARRANGE
+    END
+    POPUP "Οπτική"
+    BEGIN
+        MENUITEM "PLACEHOLDER",                 IDM_VIEWPOINTS
+    END
+    POPUP "Βοήθεια"
+    BEGIN
+        MENUITEM "Θέματα Βοήθειας",             ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "Σχετικά με το SYNTHESIS",     ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_MAINFRAME           "SYNTHESIS"
+    IDR_SYNTHTYPE           "\nInventor File\nInventor Files (*.iv)\n.iv\nInventor.Document\nInventor Document"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "SYNTHESIS"
+    AFX_IDS_IDLEMESSAGE     "Γιά Βοήθεια, πάτησε F1"
+    AFX_IDS_HELPMODEMESSAGE "Επέλεξε το αντικείμενο γιά να έχεις την βοήθεια"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Δημιούργησε νέο Αρχείο"
+    ID_FILE_OPEN            "Ανοιξε ένα υπάρχον Αρχείο"
+    ID_FILE_CLOSE           "Κλείσε το ενεργό Αρχείο"
+    ID_FILE_SAVE            "Κλείσε το ενεργό Αρχείο"
+    ID_FILE_SAVE_AS         "Σώσε το ενεργό Αρχείο με ένα νέο όνομα"
+    ID_FILE_PAGE_SETUP      "Αλλαξε τις επιλογές της εκτύπωσης"
+    ID_FILE_PRINT_SETUP     "Αλλαξε τις επιλογές γιά τον εκτυπωτή και την εκτύπωση"
+    ID_FILE_PRINT           "Εκτύπωσε το ενεργό Αρχείο"
+    ID_FILE_PRINT_PREVIEW   "Εμφάνισε πλήρως τις προς εκτύπωση σελίδες"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Εμφάνισε πληροφορίες γιά το πρόγραμμα, αριθμό έκδοσης  και δικαιώματα"
+    ID_APP_EXIT             "Εγκατέλειψε την εφαρμογή με ερώτημα γιά το σώσιμο των Αρχείων"
+    ID_HELP_INDEX           "Ανοίγει την βοήθεια"
+    ID_HELP_FINDER          "Εμφανίζει τα θέματα βοήθειας"
+    ID_HELP_USING           "Εμφανίζει οδηγίες σχετικά με τον τρόπο χρήσης της βοήθειας"
+    ID_CONTEXT_HELP         "Εμφανίζει βοήθεια γιά αντικείμενα στα οπ"
+    ID_HELP                 "Display help for current task or command\nHelp"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE2       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE3       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE4       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE5       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE6       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE7       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE8       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE9       "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE10      "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE11      "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE12      "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE13      "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE14      "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE15      "Ανοιξε αυτό το Αρχείο"
+    ID_FILE_MRU_FILE16      "Ανοιξε αυτό το Αρχείο"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_NEW           "Ανοιξε ένα άλλο παράθυρο γιά το ενεργό Αρχείο"
+    ID_WINDOW_ARRANGE       "Τακτοποίησε τα εικονίδια στην βάση του παραθύρου"
+    ID_WINDOW_CASCADE       "Τακτοποίησε τα παράθυρα ώστε να επικαλύπτονται"
+    ID_WINDOW_TILE_HORZ     "Τακτοποίησε τα παράθυρα ώστε να μήν επικαλύπτονται"
+    ID_WINDOW_TILE_VERT     "Τακτοποίησε τα παράθυρα ώστε να μήν επικαλύπτονται"
+    ID_WINDOW_SPLIT         "Διαίρεσε το ενεργό παράθυρο σε περιοχές"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Διέγραψε την επιλογή"
+    ID_EDIT_CLEAR_ALL       "Διέγραψε τα πάντα"
+    ID_EDIT_COPY            "Αντέγραψε την επιλογή και τοποθέτησέ-την στο Clipboard"
+    ID_EDIT_CUT             "Διέγραψε την επιλογή και τοποθέτησέ-την στο Clipboard"
+    ID_EDIT_FIND            "Βρές το καθορισμένο κείμενο"
+    ID_EDIT_PASTE           "Παρέμβαλε τα περιεχόμενα του Clipboard"
+    ID_EDIT_REPEAT          "Επανέλαβε την προηγούμενη ενέργεια"
+    ID_EDIT_REPLACE         "Αντικατέστησε το καθορισμένο κείμενο με διαφορετικό"
+    ID_EDIT_SELECT_ALL      "Επέλεξε το σύνολο του Αρχείου"
+    ID_EDIT_UNDO            "Ακύρωσε την τελευταία ενέργεια"
+    ID_EDIT_REDO            "Επανέλαβε την τελευταία ακυρωθείσα ενέργεια"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Εμφάνισε ή κρύψε την μπάρα εργαλείων"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+END
+
+#endif    // Greek resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif
+#include "res\SYNTH.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#include "afxprint.rc"       // printing/print preview resources
+#include "afxdb.rc"          // Database resources
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
