@@ -119,7 +119,7 @@ void CSYNTHView::OnInitialUpdate()
 	m_nEnableSelection = TRUE;
 
 	SoSelection *pSelectionNode = IvfGetSelectionNode();
-	pSelectionNode->policy = SoSelection::TOGGLE ;
+	pSelectionNode->policy = SoSelection::SHIFT ;
 	pSelectionNode->addSelectionCallback(selectionCallback, NULL);
 	pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
 
@@ -131,6 +131,7 @@ void CSYNTHView::OnInitialUpdate()
 	myTransformBox->ref();
 
 	sdoc = GetDocument() ;
+	sdoc->new_object = FALSE ;
 	sview = this ;
 
 	SoMouseButtonEvent  myMouseEvent;
@@ -148,9 +149,11 @@ void CSYNTHView::OnInitialUpdate()
 									MousePressCB,
 									m_pViewer->getSceneManager()->getSceneGraph());
 
-/*
+
 	// set the document's selected object
 	GetDocument()->SetSelectedObj(pSelectionNode) ;
+
+
 
     // Use a bounding box to highlight selected objects
     m_pViewer->setGLRenderAction( new SoBoxHighlightRenderAction() );
@@ -158,7 +161,7 @@ void CSYNTHView::OnInitialUpdate()
     // Tell viewer to automatically redraw when selection changes
     // (so the highlight will be drawn in the right place)
     m_pViewer->redrawOnSelectionChange( pSelectionNode ) ;
-*/
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -412,12 +415,12 @@ void selectionCallback(   void *, SoPath *selectionPath )
 	// Attach the manipulator.
 	// Use the convenience routine to get a path to
 	// the transform that effects the selected object.
-	SoPath *xformPath = createTransformPath(selectionPath);
-	if (xformPath == NULL) return;
-	xformPath->ref();
+//	SoPath *xformPath = createTransformPath(selectionPath);
+//	if (xformPath == NULL) return;
+//	xformPath->ref();
 
-	transformBoxPath = xformPath ;
-	myTransformBox->replaceNode(xformPath) ;
+//	transformBoxPath = xformPath ;
+//	myTransformBox->replaceNode(xformPath) ;
 /*
 	sdoc->SetSelectedObj(sview->IvfGetSelectionNode()) ;
 	if (sdoc->SelId >= 0) 
@@ -438,11 +441,11 @@ void selectionCallback(   void *, SoPath *selectionPath )
 
 void deselectionCallback( void *, SoPath *deselectionPath)
 {
-	if (deselectionPath->getTail()->isOfType(SoCube::getClassTypeId())) 
-	{
-		myTransformBox->replaceManip(transformBoxPath,NULL);
-		transformBoxPath->unref();
-	}
+//	if (deselectionPath->getTail()->isOfType(SoCube::getClassTypeId())) 
+//	{
+//		myTransformBox->replaceManip(transformBoxPath,NULL);
+//		transformBoxPath->unref();
+//	}
 }
 
 //======================= pickFilterCallback ===================
@@ -487,6 +490,7 @@ SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
 //       node is found first, insert a transform just left of 
 //       that node.  This way the manip will affect all nodes
 //       in the group.
+
 SoPath *createTransformPath(SoPath *inputPath)
 {
    int pathLength = inputPath->getLength();
@@ -576,6 +580,7 @@ SoPath *createTransformPath(SoPath *inputPath)
 /*========================= isTransformable ====================*/
 
 // Is this node of a type that is influenced by transforms?
+
 SbBool isTransformable(SoNode *myNode)
 {
    if (myNode->isOfType(SoGroup::getClassTypeId())
@@ -621,15 +626,17 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 
 void MousePressCB(void *userData, SoEventCallback *eventCB)
 {
-	SoSeparator *root = (SoSeparator *) userData;
-	const SoEvent *event = eventCB->getEvent();
-
-	const SbViewportRegion &myRegion = eventCB->getAction()->getViewportRegion();
-	writePickedPath(root, myRegion, event->getPosition(myRegion));
-	eventCB->setHandled();
-
-	if ( sdoc->new_object ) 
+  	if ( sdoc->new_object ) 
 	{
+
+     	SoSeparator *root = (SoSeparator *) userData;
+	    const SoEvent *event = eventCB->getEvent();
+
+    	const SbViewportRegion &myRegion = eventCB->getAction()->getViewportRegion();
+	    writePickedPath(root, myRegion, event->getPosition(myRegion));  
+    	eventCB->setHandled();
+
+
 		SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1])->sep ;
 		
 		SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
@@ -646,6 +653,7 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 		
 		sdoc->SetModifiedFlag() ;
 		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)
+
 	}
 }
 

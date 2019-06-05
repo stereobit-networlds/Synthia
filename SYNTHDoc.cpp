@@ -17,6 +17,7 @@
 #include "GExternal.h"
 #include "SelectObj.h"
 
+
 #include <Inventor/manips/SoHandleBoxManip.h>
 #include <Inventor/manips/SoTrackballManip.h>
 #include <Inventor/manips/SoTransformBoxManip.h>
@@ -102,6 +103,7 @@ BOOL CSYNTHDoc::OnNewDocument()
 */
 //	root->unref();
  
+
 	return TRUE;
 }
 
@@ -271,8 +273,8 @@ void CSYNTHDoc::OnNewSphere()
 {
 	// TODO: Add your command handler code here
 	
-	if ( m_pSceneRoot == NULL )
-	{
+//	if ( m_pSceneRoot == NULL )
+//	{
 //		SoSelection *selectionRoot = new SoSelection;
 //		selectionRoot->ref() ;
 //		selectionRoot->policy = SoSelection::SINGLE ;
@@ -280,13 +282,36 @@ void CSYNTHDoc::OnNewSphere()
 //		selectionRoot-> addDeselectionCallback(myDeselectionCB) ;
 
 		// Create the scene graph
-		m_pSceneRoot = new SoSeparator ;
-		m_pSceneRoot->ref() ;
+//		m_pSceneRoot = new SoSeparator ;
+//		m_pSceneRoot->ref() ;
 //		selectionRoot->addChild(m_pSceneRoot) ;
-	}
-	
+//	}
+    //root = m_pSceneRoot ; 
+
+	SoSeparator *sep = new SoSeparator;
+    SoMaterial  *myMaterial = new SoMaterial;
 	SoSphere *mySphere = new SoSphere ;
-	m_pSceneRoot->addChild(mySphere) ;		
+    SoDrawStyle *ds = new SoDrawStyle ;
+
+	sep->ref();
+
+	
+	myMaterial->diffuseColor.setValue( 1., 0., 0. ); //Red
+	sep->addChild( myMaterial );
+
+	ds->style = SoDrawStyle::FILLED ;
+    sep->addChild(ds);
+
+	sep->addChild(mySphere) ;
+	
+    //if ( m_pSceneRoot == NULL ) 
+	//	IvfSetSceneGraph( sep );
+	//else
+	//{
+      m_pSceneRoot->addChild(sep) ;
+	  sdoc->SetModifiedFlag() ;
+	  sdoc->UpdateAllViews(NULL);
+	//}
 }
 
 

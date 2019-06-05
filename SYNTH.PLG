@@ -1,5 +1,5 @@
 --------------------Configuration: SYNTH - Win32 Debug--------------------
-Begining build with project "D:\DevStudio\MyProjects\CKOSMOS_01\SYNTH\SYNTH.DSP", at root.
+Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_02\SYNTH\SYNTH.DSP", at root.
 Active configuration is Win32 (x86) Application (based on Win32 (x86) Application)
 
 Project's tools are:
@@ -11,10 +11,14 @@ Project's tools are:
 			"Custom Build" with flags ""
 			"<Component 0xa>" with flags ""
 
-Creating temp file "C:\WINDOWS\TEMP\RSP2356.BAT" with contents <@echo off
+Creating temp file "C:\WINDOWS\TEMP\RSP2122.BAT" with contents <@echo off
 call ".\makehelp.bat"
 >
-Creating command line "C:\WINDOWS\TEMP\RSP2356.BAT" 
+Creating command line "C:\WINDOWS\TEMP\RSP2122.BAT" 
+Creating temp file "C:\WINDOWS\TEMP\RSP2123.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\DevStudio\CKOSMOS\CKOSMOS_02\SYNTH\SYNTHView.cpp"
+>
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP2123.TMP" 
 Making help file...
 Building Win32 Help files
 
@@ -23,6 +27,47 @@ File not found - hlp\SYNTH.hlp
 File not found - hlp\SYNTH.cnt                   
         0 file(s) copied
 
+Creating temp file "C:\WINDOWS\TEMP\RSP2175.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
+.\Debug\ChildFrm.obj
+.\Debug\GExternal.obj
+.\Debug\glib0.obj
+.\Debug\GObject.obj
+.\Debug\lib0.obj
+.\Debug\LObj2.obj
+.\Debug\MainFrm.obj
+.\Debug\RoomBase.obj
+.\Debug\RoomWall.obj
+.\Debug\SelectObj.obj
+.\Debug\StdAfx.obj
+.\Debug\SYNTH.obj
+.\Debug\SYNTHDoc.obj
+.\Debug\SYNTHView.obj
+.\Debug\Wizz0.obj
+.\Debug\WorldBase.obj
+.\Debug\SYNTH.res>
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP2175.TMP" 
+Compiling...
+SYNTHView.cpp
+Linking...
+Creating temp file "C:\WINDOWS\TEMP\RSP22F3.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\ChildFrm.sbr
+.\Debug\GExternal.sbr
+.\Debug\glib0.sbr
+.\Debug\GObject.sbr
+.\Debug\lib0.sbr
+.\Debug\LObj2.sbr
+.\Debug\MainFrm.sbr
+.\Debug\RoomBase.sbr
+.\Debug\RoomWall.sbr
+.\Debug\SelectObj.sbr
+.\Debug\SYNTH.sbr
+.\Debug\SYNTHDoc.sbr
+.\Debug\SYNTHView.sbr
+.\Debug\Wizz0.sbr
+.\Debug\WorldBase.sbr>
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSP22F3.TMP" 
+Creating browse info file...
 
 
 

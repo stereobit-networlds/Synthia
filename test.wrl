@@ -1,0 +1,151 @@
+#VRML V1.0 ascii
+
+
+DEF WorldBase Separator {
+
+  Material {
+	diffuseColor 1 0 0
+  }
+  Cube {
+	width 2000
+	height 100
+	depth 2000
+  }
+  DrawStyle {
+	style INVISIBLE
+  }
+  Text2 {
+	string "2000" =
+	DEF width GlobalField {
+	  type "SFFloat"
+	  width 2000
+	}	. width
+  }
+  Text2 {
+	string "2000" =
+	DEF depth GlobalField {
+	  type "SFFloat"
+	  depth 2000
+	}	. depth
+  }
+  Text2 {
+	string "100" =
+	DEF height GlobalField {
+	  type "SFFloat"
+	  height 100
+	}	. height
+  }
+  Text2 {
+	string "паукидгс яажагк" =
+	DEF c_name GlobalField {
+	  type "SFString"
+	  c_name "паукидгс яажагк"
+	}	. c_name
+  }
+  Text2 {
+	string "" =
+	DEF c_address GlobalField {
+	  type "SFString"
+	  c_address ""
+	}	. c_address
+  }
+  Text2 {
+	string "" =
+	DEF c_city GlobalField {
+	  type "SFString"
+	  c_city ""
+	}	. c_city
+  }
+  Text2 {
+	string "" =
+	DEF c_tel GlobalField {
+	  type "SFString"
+	  c_tel ""
+	}	. c_tel
+  }}
+DEF RoomBase Separator {
+
+  Normal {
+	vector 0 1 0
+  }
+  NormalBinding {
+	value PER_FACE
+  }
+  Material {
+	diffuseColor 1 1 1
+  }
+  Coordinate3 {
+	point 0 105 0
+  }
+  FaceSet {
+	numVertices 1
+  }
+  DrawStyle {
+	style INVISIBLE
+  }
+  Text2 {
+	string "5" =
+	DEF rb_height GlobalField {
+	  type "SFFloat"
+	  rb_height 5
+	}	. rb_height
+  }
+  Text2 {
+	string "1" =
+	DEF KoryfCount GlobalField {
+	  type "SFLong"
+	  KoryfCount 1
+	}	. KoryfCount
+  }
+  Text2 {
+	string "0" =
+	DEF rb_Koryfsx0 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsx0 0
+	}	. rb_Koryfsx0
+  }
+  Text2 {
+	string "100" =
+	DEF rb_Koryfsy0 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsy0 100
+	}	. rb_Koryfsy0
+  }
+  Text2 {
+	string "0" =
+	DEF rb_Koryfsz0 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsz0 0
+	}	. rb_Koryfsz0
+  }
+  Text2 {
+	string "" =
+	DEF rb_plakaki GlobalField {
+	  type "SFString"
+	  rb_plakaki ""
+	}	. rb_plakaki
+  }
+  Text2 {
+	string "0" =
+	DEF rb_plakaki1 GlobalField {
+	  type "SFFloat"
+	  rb_plakaki1 0
+	}	. rb_plakaki1
+  }
+  Text2 {
+	string "0" =
+	DEF rb_plakaki2 GlobalField {
+	  type "SFFloat"
+	  rb_plakaki2 0
+	}	. rb_plakaki2
+  }}
+Separator {
+
+  Material {
+	diffuseColor 1 0 0
+  }
+  DrawStyle {
+	style INVISIBLE
+  }
+  Sphere {
+  }}
