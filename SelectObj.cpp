@@ -321,7 +321,7 @@ void CSelectObj::Draw()
 	LObj2 obj2 ;
 	CLib0 lib ;
 	CString eidh0_c ;
-	SoSeparator *root = (SoSeparator *)view->IvfGetSceneGraph() ;
+	SoGroup *root = (SoGroup *)view->IvfGetSceneGraph() ;
 	root->removeAllChildren() ;
 
 	if (!Get_eidh_id()) AfxMessageBox("get_eidh_id error") ;

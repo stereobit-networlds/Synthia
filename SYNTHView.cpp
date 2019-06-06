@@ -663,7 +663,6 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 {
   	if ( sdoc->new_object ) 
 	{
-
      	SoSeparator *root = (SoSeparator *) userData;
 	    const SoEvent *event = eventCB->getEvent();
 
@@ -683,6 +682,9 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 
 		SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),picked_normal) ;
 		rot->rotation.setValue(*sbrot) ;
+
+		//SoGroup *myObjects = new SoGroup;
+		//myObjects->addChild(sep);
 		
 		sdoc->new_object = FALSE ;
 		

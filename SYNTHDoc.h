@@ -34,6 +34,8 @@ public:
 	BOOL	new_object ;	// true if a new objcect is added
 	int ob_offset ;			// counter for the GExternal objects
 
+	SoGroup *myObjects ;
+
 	void SetSelectedObj ( SoSelection *sel ) ;
 	void InventorToObjects() ;
 

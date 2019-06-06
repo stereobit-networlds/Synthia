@@ -31,7 +31,7 @@ public:
 
 // Operations
 public:
-	void ObjectToInventor ( SoSeparator *root ) ;
+	void ObjectToInventor ( SoGroup *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;

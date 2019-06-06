@@ -580,15 +580,21 @@ void CSYNTHDoc::OnKataxkoyzin()
 
 
 			rw[off]->ObjectToInventor ( myWalls ) ;
-            //myWalls->addChild(s);
 			off++ ;
 		}
         root->addChild(myWalls);
 
+		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Prepare group for objects
+		//myObjects = new SoGroup;
+	    //myObjects->ref();
+	    //myObjects->setName("External_Objects");
+		//root->addChild(myObjects);
+
 		IvfSetSceneGraph( root );
 
    		SetModifiedFlag();
-		UpdateAllViews(NULL);   
+		UpdateAllViews(NULL); 
+		
 	} 
 }
 

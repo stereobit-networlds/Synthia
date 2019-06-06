@@ -45,7 +45,7 @@ CGExternal::~CGExternal()
 
 /*======================== ObjectToInventor ================*/
 
-void CGExternal::ObjectToInventor ( SoSeparator *root )
+void CGExternal::ObjectToInventor ( SoGroup *root )
 {
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
@@ -53,15 +53,7 @@ void CGExternal::ObjectToInventor ( SoSeparator *root )
 	SoDrawStyle *ds = new SoDrawStyle ;
 	sep->addChild(ds) ;
 	ds->style = SoDrawStyle::INVISIBLE ;
-	
-//	SaveProperties() ;
 
-	//bill
-	//SoMaterial  *my2Material = new SoMaterial;
-
-	//my2Material->diffuseColor.setValue( 0., 0., 1. ); //Blue
-	//root->addChild( my2Material );
-	//root->addChild( new SoCone );
 
 } 
 

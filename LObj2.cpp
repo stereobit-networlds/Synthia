@@ -106,7 +106,7 @@ void LObj2::TableToObject ( char *dd, char *mm )
 
 /*========================== CreateObject =====================*/
 
-void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
+void LObj2::CreateObject ( BOOL add, SoGroup *root, COleVariant eid_id[10],
 						   CDaoRecordset *dt, CDaoRecordset *mt ) 
 {
 	CGLib0	glib ;
@@ -401,12 +401,20 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 		}
     }
 
-	root->addChild( sep ) ;
+	//setup object group
+	SoGroup *thisObject = new SoGroup;
+	thisObject->ref();
+	thisObject->setName("External_Object");
+    thisObject->addChild( sep );
+
+
+	root->addChild( thisObject ) ;
 
 	// CREATE THE GObject ...
 	if (add)
 	{
 		CGExternal *ob = new CGExternal ;
+
 		sdoc->Obj[sdoc->ObjCount] = ob ; sdoc->ObjCount++ ;
 		ob->sep = sep ;
 		ob->offset = sdoc->ob_offset ; sdoc->ob_offset++ ;
@@ -417,6 +425,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 			ob->eid_id[i] = eid_id[i].pbVal ;
 
 		ob->ObjectToInventor(root) ;
+
 	}
 }
 
