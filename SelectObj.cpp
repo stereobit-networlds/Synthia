@@ -308,6 +308,8 @@ void CSelectObj::OnOK()
 //			SoSelection *sel = sview->IvfGetSelectionNode() ;
 //			sel->select(sdoc->root->getChild(sdoc->root->getNumChildren()-1)) ;
 			sdoc->new_object = TRUE ;
+			if (sdoc->proto == 0) sdoc->proto = 1;
+			else sdoc->proto = -1;
 		}
 	}
 
@@ -321,7 +323,7 @@ void CSelectObj::Draw()
 	LObj2 obj2 ;
 	CLib0 lib ;
 	CString eidh0_c ;
-	SoGroup *root = (SoGroup *)view->IvfGetSceneGraph() ;
+	SoSeparator *root = (SoSeparator *)view->IvfGetSceneGraph() ;
 	root->removeAllChildren() ;
 
 	if (!Get_eidh_id()) AfxMessageBox("get_eidh_id error") ;

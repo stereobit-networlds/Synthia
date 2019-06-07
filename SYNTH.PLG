@@ -1,5 +1,5 @@
 --------------------Configuration: SYNTH - Win32 Debug--------------------
-Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_04\SYNTH\SYNTH.DSP", at root.
+Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_05\SYNTH\SYNTH.DSP", at root.
 Active configuration is Win32 (x86) Application (based on Win32 (x86) Application)
 
 Project's tools are:
@@ -11,11 +11,11 @@ Project's tools are:
 			"Custom Build" with flags ""
 			"<Component 0xa>" with flags ""
 
-Creating temp file "C:\WINDOWS\TEMP\RSP13A4.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_04\SYNTH\LObj2.cpp"
+Creating temp file "C:\WINDOWS\TEMP\RSPC2A3.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\DevStudio\CKOSMOS\CKOSMOS_05\SYNTH\LObj2.cpp"
 >
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP13A4.TMP" 
-Creating temp file "C:\WINDOWS\TEMP\RSP13A5.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPC2A3.TMP" 
+Creating temp file "C:\WINDOWS\TEMP\RSPC2A4.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
 .\Debug\ChildFrm.obj
 .\Debug\GExternal.obj
 .\Debug\glib0.obj
@@ -33,11 +33,11 @@ Creating temp file "C:\WINDOWS\TEMP\RSP13A5.TMP" with contents </nologo /subsyst
 .\Debug\Wizz0.obj
 .\Debug\WorldBase.obj
 .\Debug\SYNTH.res>
-Creating command line "link.exe @C:\WINDOWS\TEMP\RSP13A5.TMP" 
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPC2A4.TMP" 
 Compiling...
 LObj2.cpp
 Linking...
-Creating temp file "C:\WINDOWS\TEMP\RSP2090.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
+Creating temp file "C:\WINDOWS\TEMP\RSPC363.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
 .\Debug\StdAfx.sbr
 .\Debug\ChildFrm.sbr
 .\Debug\GExternal.sbr
@@ -54,7 +54,7 @@ Creating temp file "C:\WINDOWS\TEMP\RSP2090.TMP" with contents </nologo /o"Debug
 .\Debug\SYNTHView.sbr
 .\Debug\Wizz0.sbr
 .\Debug\WorldBase.sbr>
-Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSP2090.TMP" 
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSPC363.TMP" 
 Creating browse info file...
 
 

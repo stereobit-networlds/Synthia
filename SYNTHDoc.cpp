@@ -590,6 +590,8 @@ void CSYNTHDoc::OnKataxkoyzin()
 	    //myObjects->setName("External_Objects");
 		//root->addChild(myObjects);
 
+
+
 		IvfSetSceneGraph( root );
 
    		SetModifiedFlag();

@@ -106,7 +106,7 @@ void LObj2::TableToObject ( char *dd, char *mm )
 
 /*========================== CreateObject =====================*/
 
-void LObj2::CreateObject ( BOOL add, SoGroup *root, COleVariant eid_id[10],
+void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 						   CDaoRecordset *dt, CDaoRecordset *mt ) 
 {
 	CGLib0	glib ;
@@ -222,7 +222,7 @@ void LObj2::CreateObject ( BOOL add, SoGroup *root, COleVariant eid_id[10],
 	// ... START CREATING THE OBJECT
     glib.DefinePolygon000 ( pleyres, len, angle, 10, xx, yy, zz ) ;
 
-    SoSeparator		*sep	= new SoSeparator ;
+    SoSeparator		*sep	= new SoSeparator;
 
 	SoTranslation	*trans	= new SoTranslation ;
 	SoRotation		*rot	= new SoRotation ;
@@ -401,14 +401,28 @@ void LObj2::CreateObject ( BOOL add, SoGroup *root, COleVariant eid_id[10],
 		}
     }
 
-	//setup object group
-	SoGroup *thisObject = new SoGroup;
-	thisObject->ref();
-	thisObject->setName("External_Object");
-    thisObject->addChild( sep );
 
+	//root->addChild( thisObject ) ;
 
-	root->addChild( thisObject ) ;
+    if (sdoc->proto==1) //if proto Object create Objects Group and add into
+    {
+		myObjects = new SoGroup;
+	    myObjects->ref();
+		myObjects->setName("Objects");
+		myObjects->addChild(sep);
+	    root->addChild(myObjects);
+    }
+	else
+    {
+		myObjects = new SoGroup;  //just add into .......imiteles
+	    myObjects->ref();
+		myObjects->setName("Objects");
+		myObjects->addChild(sep);
+	    root->addChild(myObjects) ;
+    }
+    
+	//myObjects->addChild(sep);
+	//root->addChild(myObjects);
 
 	// CREATE THE GObject ...
 	if (add)

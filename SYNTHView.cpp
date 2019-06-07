@@ -144,6 +144,7 @@ void CSYNTHView::OnInitialUpdate()
 
 	sdoc = GetDocument() ;
 	sdoc->new_object = FALSE ;
+	sdoc->proto = 0 ;
 	sview = this ;
 
 	SoMouseButtonEvent  myMouseEvent;
@@ -682,9 +683,6 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 
 		SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),picked_normal) ;
 		rot->rotation.setValue(*sbrot) ;
-
-		//SoGroup *myObjects = new SoGroup;
-		//myObjects->addChild(sep);
 		
 		sdoc->new_object = FALSE ;
 		

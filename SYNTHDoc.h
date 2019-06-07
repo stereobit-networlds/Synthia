@@ -28,13 +28,13 @@ public:
 public:
 
 	SoSeparator *root ;		// the scene root
+
 	CObject *Obj[100] ;		// then various RoomBase, WorldBase, ...
 	int ObjCount ;			// number of Objs
 	int SelId ;				// selected Obj[SelId]
 	BOOL	new_object ;	// true if a new objcect is added
+	int    proto ;          // true (1) if first extObj is added
 	int ob_offset ;			// counter for the GExternal objects
-
-	SoGroup *myObjects ;
 
 	void SetSelectedObj ( SoSelection *sel ) ;
 	void InventorToObjects() ;

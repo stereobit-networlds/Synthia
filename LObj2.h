@@ -6,7 +6,7 @@
 #endif // _MSC_VER >= 1000
 // LObj2.h : header file
 //
-
+ 
 #include <Inventor/nodes/SoSeparator.h>
 
 class LObj2 : public CObject
@@ -17,6 +17,7 @@ public:
 
 // Attributes
 public:
+	SoGroup *myObjects ;    //the objects root
 
 	int		eidos ;  // tetrapleyro, pentapleyro, exapleyro
 
@@ -46,7 +47,7 @@ public:
 public:
 
 	void TableToObject ( char *dd, char *mm ) ;
-	void CreateObject ( BOOL add, SoGroup *root, COleVariant eid_id[10],
+	void CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 						CDaoRecordset *dt, CDaoRecordset *mt ) ;
 
 // Overrides
