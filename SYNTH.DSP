@@ -95,6 +95,10 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\dummy.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\GExternal.cpp
 # End Source File
 # Begin Source File
@@ -105,6 +109,10 @@ SOURCE=..\Lib\glib0.cpp
 # Begin Source File
 
 SOURCE=.\GObject.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IvfTreeView.cpp
 # End Source File
 # Begin Source File
 
@@ -219,6 +227,10 @@ SOURCE=.\ChildFrm.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\dummy.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\GExternal.h
 # End Source File
 # Begin Source File
@@ -228,6 +240,10 @@ SOURCE=..\Lib\glib0.h
 # Begin Source File
 
 SOURCE=.\GObject.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IvfTreeView.h
 # End Source File
 # Begin Source File
 
@@ -405,6 +421,10 @@ SOURCE=.\res\Toolbar.bmp
 # Begin Source File
 
 SOURCE=C:\kosmos\Lib\lib0\GLObj1.pas
+# End Source File
+# Begin Source File
+
+SOURCE=C:\kosmos\synth\LObject2.pas
 # End Source File
 # Begin Source File
 

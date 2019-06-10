@@ -1,5 +1,5 @@
 --------------------Configuration: SYNTH - Win32 Debug--------------------
-Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_05\SYNTH\SYNTH.DSP", at root.
+Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_11\SYNTH\SYNTH.DSP", at root.
 Active configuration is Win32 (x86) Application (based on Win32 (x86) Application)
 
 Project's tools are:
@@ -11,15 +11,17 @@ Project's tools are:
 			"Custom Build" with flags ""
 			"<Component 0xa>" with flags ""
 
-Creating temp file "C:\WINDOWS\TEMP\RSPC2A3.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_05\SYNTH\LObj2.cpp"
+Creating temp file "C:\WINDOWS\TEMP\RSPE261.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\DevStudio\CKOSMOS\CKOSMOS_11\SYNTH\SYNTHDoc.cpp"
 >
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPC2A3.TMP" 
-Creating temp file "C:\WINDOWS\TEMP\RSPC2A4.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPE261.TMP" 
+Creating temp file "C:\WINDOWS\TEMP\RSPE262.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
 .\Debug\ChildFrm.obj
+.\Debug\dummy.obj
 .\Debug\GExternal.obj
 .\Debug\glib0.obj
 .\Debug\GObject.obj
+.\Debug\IvfTreeView.obj
 .\Debug\lib0.obj
 .\Debug\LObj2.obj
 .\Debug\MainFrm.obj
@@ -33,16 +35,18 @@ Creating temp file "C:\WINDOWS\TEMP\RSPC2A4.TMP" with contents </nologo /subsyst
 .\Debug\Wizz0.obj
 .\Debug\WorldBase.obj
 .\Debug\SYNTH.res>
-Creating command line "link.exe @C:\WINDOWS\TEMP\RSPC2A4.TMP" 
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPE262.TMP" 
 Compiling...
-LObj2.cpp
+SYNTHDoc.cpp
 Linking...
-Creating temp file "C:\WINDOWS\TEMP\RSPC363.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
+Creating temp file "C:\WINDOWS\TEMP\RSPE320.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
 .\Debug\StdAfx.sbr
 .\Debug\ChildFrm.sbr
+.\Debug\dummy.sbr
 .\Debug\GExternal.sbr
 .\Debug\glib0.sbr
 .\Debug\GObject.sbr
+.\Debug\IvfTreeView.sbr
 .\Debug\lib0.sbr
 .\Debug\LObj2.sbr
 .\Debug\MainFrm.sbr
@@ -54,7 +58,7 @@ Creating temp file "C:\WINDOWS\TEMP\RSPC363.TMP" with contents </nologo /o"Debug
 .\Debug\SYNTHView.sbr
 .\Debug\Wizz0.sbr
 .\Debug\WorldBase.sbr>
-Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSPC363.TMP" 
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSPE320.TMP" 
 Creating browse info file...
 
 

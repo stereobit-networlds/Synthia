@@ -28,8 +28,6 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/nodes/SoTextureCoordinatePlane.h>
 #include <Inventor/nodes/SoComplexity.h>
 
-#include <Inventor/nodes/SoCone.h>
-
 /////////////////////////////////////////////////////////////////////////////
 // CGExternal
 
@@ -37,6 +35,7 @@ IMPLEMENT_DYNAMIC( CGExternal, CObject )
 
 CGExternal::CGExternal()
 {
+	sep = NULL ;
 }
 
 CGExternal::~CGExternal()
@@ -45,7 +44,7 @@ CGExternal::~CGExternal()
 
 /*======================== ObjectToInventor ================*/
 
-void CGExternal::ObjectToInventor ( SoGroup *root )
+void CGExternal::ObjectToInventor ( SoSeparator *root )
 {
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
@@ -54,6 +53,13 @@ void CGExternal::ObjectToInventor ( SoGroup *root )
 	sep->addChild(ds) ;
 	ds->style = SoDrawStyle::INVISIBLE ;
 
+	
+	//SaveProperties() ;  ?????????????????? δεν παιρνουν σωστες τιμες τα saved πεδια (το offset ειναι ενας big num )
+    
+	CString& mycode = code.SpanExcluding(_T(" ")); //βγάζω τα κενά απο το τέλος του string
+	sep->setName(SbName(mycode)); //set node name 
+
+	root->addChild(sep) ;
 
 } 
 
@@ -64,7 +70,7 @@ void CGExternal::SaveProperties ()
 	// inherited action
 	CGObject::SaveProperties() ;
 
-	sep->setName(name) ;  // set node name
+	//sep->setName(name) ;  // set node name
 
 	CLib0 lib ;
 	CString soff = lib.inttostr(offset) ;
@@ -82,6 +88,28 @@ void CGExternal::SaveProperties ()
 	lib.setSoSFStringProp ( sep, SbName("ob_eid7"+soff), eid_id[7] ) ;
 	lib.setSoSFStringProp ( sep, SbName("ob_eid8"+soff), eid_id[8] ) ;
 	lib.setSoSFStringProp ( sep, SbName("ob_eid9"+soff), eid_id[9] ) ;
+
+	lib.setSoSFIntProp ( sep, SbName("next"+soff), next_id ) ;
+	lib.setSoSFIntProp ( sep, SbName("prior"+soff), prior_id ) ;
+	lib.setSoSFIntProp ( sep, SbName("carrier"+soff), carrier_id ) ;
+	lib.setSoSFIntProp ( sep, SbName("topoth"+soff), topoth ) ;
+	
+	lib.setSoSFFloatProp ( sep, SbName("yangle"+soff), yangle ) ;
+
+	lib.setSoSFFloatProp ( sep, SbName("lbp0"+soff), left_base_point[0] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("lbp1"+soff), left_base_point[1] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("lbp2"+soff), left_base_point[2] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("rbp0"+soff), right_base_point[0] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("rbp1"+soff), right_base_point[1] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("rbp2"+soff), right_base_point[2] ) ;
+
+	lib.setSoSFFloatProp ( sep, SbName("ltp0"+soff), left_top_point[0] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("ltp1"+soff), left_top_point[1] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("ltp2"+soff), left_top_point[2] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("rtp0"+soff), right_top_point[0] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("rtp1"+soff), right_top_point[1] ) ;
+	lib.setSoSFFloatProp ( sep, SbName("rtp2"+soff), right_top_point[2] ) ;
+
 }
 
 /*======================== InventorToObject ================*/
@@ -106,6 +134,27 @@ void CGExternal::InventorToObject ( SoSeparator *root )
 	eid_id[7]  = lib.getSoSFStringProp(SbName("ob_eid7"+soff)) ;
 	eid_id[8]  = lib.getSoSFStringProp(SbName("ob_eid8"+soff)) ;
 	eid_id[9]  = lib.getSoSFStringProp(SbName("ob_eid9"+soff)) ;
+
+	next_id		= lib.getSoSFIntProp(SbName("next"+soff)) ;
+	prior_id	= lib.getSoSFIntProp(SbName("prior"+soff)) ;
+	carrier_id	= lib.getSoSFIntProp(SbName("carrier"+soff)) ;
+	topoth		= lib.getSoSFIntProp(SbName("topoth"+soff)) ;
+
+	yangle		= lib.getSoSFFloatProp(SbName("yangle"+soff)) ;
+
+	left_base_point[0]	= lib.getSoSFFloatProp(SbName("lbp0"+soff)) ;
+	left_base_point[1]	= lib.getSoSFFloatProp(SbName("lbp1"+soff)) ;
+	left_base_point[2]	= lib.getSoSFFloatProp(SbName("lbp2"+soff)) ;
+	right_base_point[0]	= lib.getSoSFFloatProp(SbName("rbp0"+soff)) ;
+	right_base_point[1]	= lib.getSoSFFloatProp(SbName("rbp1"+soff)) ;
+	right_base_point[2]	= lib.getSoSFFloatProp(SbName("rbp2"+soff)) ;
+
+	left_top_point[0]	= lib.getSoSFFloatProp(SbName("ltp0"+soff)) ;
+	left_top_point[1]	= lib.getSoSFFloatProp(SbName("ltp1"+soff)) ;
+	left_top_point[2]	= lib.getSoSFFloatProp(SbName("ltp2"+soff)) ;
+	right_top_point[0]	= lib.getSoSFFloatProp(SbName("rtp0"+soff)) ;
+	right_top_point[1]	= lib.getSoSFFloatProp(SbName("rtp1"+soff)) ;
+	right_top_point[2]	= lib.getSoSFFloatProp(SbName("rtp2"+soff)) ;
 }
 
 /*======================= EditProperties ========================*/
@@ -114,5 +163,71 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 {
 	// inherited action
 	CGObject::EditProperties(d,root) ;
-	return 1 ;
+
+	GExternalProp *dlg = new GExternalProp ;
+
+	float xdist, ydist ;
+
+	dlg->m_code		= code ;
+	dlg->m_descr	= descr ;
+	dlg->m_yangle	= yangle ;
+	dlg->m_topoth	= topoth ;
+	dlg->m_xdist	= xdist ;
+	dlg->m_ydist	= ydist ;
+
+	int res = dlg->DoModal() ;
+
+	if (res == IDOK)   
+	{
+		code	= dlg->m_code ;
+		descr	= dlg->m_descr ;
+		yangle	= dlg->m_yangle ;
+		topoth	= dlg->m_topoth ;
+		xdist	= dlg->m_xdist ;
+		ydist	= dlg->m_ydist ;
+
+		ObjectToInventor ( root ) ;
+	}
+
+	return res ;
 }
+/////////////////////////////////////////////////////////////////////////////
+// GExternalProp dialog
+
+
+GExternalProp::GExternalProp(CWnd* pParent /*=NULL*/)
+	: CDialog(GExternalProp::IDD, pParent)
+{
+	//{{AFX_DATA_INIT(GExternalProp)
+	m_code = _T("");
+	m_descr = _T("");
+	m_topoth = 0;
+	m_xdist = 0.0f;
+	m_yangle = 0.0f;
+	m_ydist = 0.0f;
+	//}}AFX_DATA_INIT
+}
+
+
+void GExternalProp::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(GExternalProp)
+	DDX_Text(pDX, IDC_CODE, m_code);
+	DDX_Text(pDX, IDC_DESCR, m_descr);
+	DDX_Text(pDX, IDC_TOPOTH, m_topoth);
+	DDX_Text(pDX, IDC_XDIST, m_xdist);
+	DDX_Text(pDX, IDC_YANGLE, m_yangle);
+	DDX_Text(pDX, IDC_YDIST, m_ydist);
+	//}}AFX_DATA_MAP
+}
+
+
+BEGIN_MESSAGE_MAP(GExternalProp, CDialog)
+	//{{AFX_MSG_MAP(GExternalProp)
+		// NOTE: the ClassWizard will add message map macros here
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// GExternalProp message handlers

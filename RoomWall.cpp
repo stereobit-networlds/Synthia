@@ -46,11 +46,10 @@ CRoomWall::~CRoomWall()
 
 /*======================== ObjectToInventor ================*/
 
-void CRoomWall::ObjectToInventor ( SoGroup *root )
+void CRoomWall::ObjectToInventor ( SoSeparator *root )
 {
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
-
 
 	float	vert[30][3] ;
 	float	norm[5][3] ;
@@ -270,7 +269,6 @@ void CRoomWall::SaveProperties ()
 	CGObject::SaveProperties() ;
 
 	sep->setName(name) ;  // set node name
-   
 
 	CLib0 lib ;
 	CString soff = lib.inttostr(offset) ;

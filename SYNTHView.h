@@ -7,6 +7,12 @@
 #include <Ivf/Viewers/IvfExaminerViewer.h>
 // END_IVWGEN
 
+// IVF_EXAMPLE_BEGIN
+// We'll use an SoSelection node as the "real" root of the scene
+// graph contained in the component (to get selection behavior).
+class SoSelection;
+// IVF_EXAMPLE_END
+
 
 class CSYNTHDoc;
 
@@ -22,6 +28,11 @@ protected: // create from serialization only
 // Attributes
 public:
 	CSYNTHDoc* GetDocument();
+
+    SoSelection *GetSelectionNode()
+        { return m_pSelectionNode; }
+
+
 	BOOL IsDocLoaded();
 	BOOL IsSelected();
 	UINT GetViewerViewMode();
@@ -39,6 +50,20 @@ public:
 	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
 	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
 // END_IVWGEN
+
+// IVF_EXAMPLE_BEGIN
+	// This method forces the component to use the scene graph pointed to
+	// by pRoot instead of the scene graph contained in the document.
+	virtual void		IvfSetSceneGraph(SoNode *pRoot);
+
+	// This method returns the scene graph contained in the component.
+	virtual SoNode *	IvfGetSceneGraph();
+
+	// This method causes the component to unreference it's scene graph.
+	virtual void		IvfReleaseSceneGraph();
+// IVF_EXAMPLE_END
+
+
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	protected:
@@ -57,8 +82,11 @@ public:
 #endif
 
 protected:
-//	SoSelection *m_pSelectionNode;
-    SoSelection *pSelectionNode;
+// IVF_EXAMPLE_BEGIN
+    // Selection node to manage selection
+    SoSelection *m_pSelectionNode;
+// IVF_EXAMPLE_END
+
 
 // Generated message map functions
 protected:

@@ -12,6 +12,7 @@
 #define SYNTH_WIZZ0                     136
 #define SYNTH_ROOMBASE_PROP             137
 #define SYNTH_ROOMWALL_PROP             138
+#define SYNTH_GEXTERNAL_PROP            139
 #define IDM_VIEWPOINTS                  997
 #define IDC_VIEWER                      998
 #define IDC_ABOUT_TEXT                  999
@@ -36,10 +37,16 @@
 #define SYNTH_CB_SYRTARI                1019
 #define IDC_ANGLE2                      1020
 #define SYNTH_CB_XEROYL                 1020
+#define IDC_CODE                        1020
 #define IDC_MHKOS2                      1021
 #define SYNTH_CB_MPAZA                  1021
+#define IDC_DESCR                       1021
 #define IDC_TOIXOMA2                    1022
 #define SYNTH_CB_ANTIK                  1022
+#define IDC_YANGLE                      1022
+#define IDC_TOPOTH                      1023
+#define IDC_XDIST                       1024
+#define IDC_YDIST                       1025
 #define IDC_ANGLE3                      1026
 #define IDC_MHKOS3                      1027
 #define IDC_TOIXOMA3                    1028
@@ -73,7 +80,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32824
-#define _APS_NEXT_CONTROL_VALUE         1020
+#define _APS_NEXT_CONTROL_VALUE         1023
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

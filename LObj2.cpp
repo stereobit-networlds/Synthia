@@ -222,7 +222,19 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	// ... START CREATING THE OBJECT
     glib.DefinePolygon000 ( pleyres, len, angle, 10, xx, yy, zz ) ;
 
-    SoSeparator		*sep	= new SoSeparator;
+    SoSeparator *sep ;
+	CGExternal *ob ;
+	
+	// CREATE THE GObject ...
+	if (add)
+	{
+		ob = new CGExternal ;
+		sdoc->Obj[sdoc->ObjCount] = ob ; sdoc->ObjCount++ ;
+		ob->sep = new SoSeparator ;
+		sep		= ob->sep ;
+	}
+	else
+		sep = new SoSeparator ;
 
 	SoTranslation	*trans	= new SoTranslation ;
 	SoRotation		*rot	= new SoRotation ;
@@ -266,6 +278,10 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	else
 		txt_syr = NULL ;
 
+    // battery variables
+    float left_base_point[3], right_base_point[3],
+          left_top_point[3], right_top_point[3] ;
+
 	SoNode *b ;
 
 	// setup base
@@ -273,6 +289,13 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	{
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
 		sep->addChild( b );
+
+		left_base_point[0] = xx[0] ;
+		left_base_point[1] = yy[0] ;
+		left_base_point[2] = zz[0] ;
+		right_base_point[0] = xx[pleyres-1] ;
+		right_base_point[1] = yy[pleyres-1] ;
+		right_base_point[2] = zz[pleyres-1] ;
 	}
 
 	// setup top
@@ -282,6 +305,14 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 			yy[i] = yy[i] + height0*10 ;
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
 		sep->addChild( b );
+
+		left_top_point[0] = xx[0] ;
+		left_top_point[1] = yy[0] ;
+		left_top_point[2] = zz[0] ;
+		right_top_point[0] = xx[pleyres-1] ;
+		right_top_point[1] = yy[pleyres-1] ;
+		right_top_point[2] = zz[pleyres-1] ;
+		
 		for ( i = 0 ; i < pleyres ; i++ )
 			yy[i] = yy[i] - height0*10 ;
 	}
@@ -401,46 +432,28 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 		}
     }
 
-
-	//root->addChild( thisObject ) ;
-
-    if (sdoc->proto==1) //if proto Object create Objects Group and add into
-    {
-		myObjects = new SoGroup;
-	    myObjects->ref();
-		myObjects->setName("Objects");
-		myObjects->addChild(sep);
-	    root->addChild(myObjects);
-    }
-	else
-    {
-		myObjects = new SoGroup;  //just add into .......imiteles
-	    myObjects->ref();
-		myObjects->setName("Objects");
-		myObjects->addChild(sep);
-	    root->addChild(myObjects) ;
-    }
-    
-	//myObjects->addChild(sep);
-	//root->addChild(myObjects);
-
 	// CREATE THE GObject ...
 	if (add)
 	{
-		CGExternal *ob = new CGExternal ;
-
-		sdoc->Obj[sdoc->ObjCount] = ob ; sdoc->ObjCount++ ;
-		ob->sep = sep ;
 		ob->offset = sdoc->ob_offset ; sdoc->ob_offset++ ;
-		ob->name   = "GObject" ;
+		ob->name   = "GExternal"  + lib.inttostr(ob->offset) ;;
 		ob->code   = code ;
 		ob->descr  = descr ;
 		for ( i = 0 ; i < 10 ; i++ )
 			ob->eid_id[i] = eid_id[i].pbVal ;
 
-		ob->ObjectToInventor(root) ;
+		for ( i = 0 ; i < 3 ; i++ )
+		{
+			ob->left_base_point[i]	= left_base_point[i] ;
+			ob->right_base_point[i] = right_base_point[i] ;
+			ob->left_top_point[i]	= left_top_point[i] ;
+			ob->right_top_point[i]	= right_top_point[i] ;
+		}
 
+		ob->ObjectToInventor(root) ;
 	}
+	else
+		root->addChild( sep ) ;
 }
 
 /////////////////////////////////////////////////////////////////////////////

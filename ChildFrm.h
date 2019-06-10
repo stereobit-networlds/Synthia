@@ -9,6 +9,9 @@ public:
 	CChildFrame();
 
 // Attributes
+protected:
+	CSplitterWnd m_wndSplitter;
+
 public:
 
 // Operations
@@ -21,6 +24,7 @@ public:
 	//}}AFX_VIRTUAL
 
 // Implementation
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 public:
 	virtual ~CChildFrame();
 #ifdef _DEBUG

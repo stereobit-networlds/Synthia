@@ -24,8 +24,7 @@ public:
 	virtual ~CGObject();
 
 	SoSeparator *sep ;
-
-	void ObjectToInventor ( SoGroup *root ) ;
+	void ObjectToInventor ( SoSeparator *root ) ;
 	void SaveProperties() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
 };

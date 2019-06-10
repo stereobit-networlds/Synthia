@@ -308,8 +308,6 @@ void CSelectObj::OnOK()
 //			SoSelection *sel = sview->IvfGetSelectionNode() ;
 //			sel->select(sdoc->root->getChild(sdoc->root->getNumChildren()-1)) ;
 			sdoc->new_object = TRUE ;
-			if (sdoc->proto == 0) sdoc->proto = 1;
-			else sdoc->proto = -1;
 		}
 	}
 

@@ -2,56 +2,62 @@
 
 [General Info]
 Version=1
-LastClass=CWizz0
-LastTemplate=CDialog
+LastClass=dummy
+LastTemplate=CTreeView
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "SYNTH.h"
 LastPage=0
 
-ClassCount=18
+ClassCount=21
 Class1=CSYNTHApp
 Class2=CSYNTHDoc
 Class3=CSYNTHView
 Class4=CMainFrame
 
-ResourceCount=16
+ResourceCount=19
 Resource1=IDD_ABOUTBOX
-Resource2=SYNTH_ROOMWALL_PROP
-Resource3=IDD_ABOUTBOX (English (U.S.))
+Resource2=SYNTH_SELECT_OBJ
+Resource3=SYNTH_SELECT_OBJ (Greek)
 Class5=CAboutDlg
 Class6=CChildFrame
-Resource4=SYNTH_SELECT_OBJ
+Resource4=SYNTH_ROOMBASE_PROP
 Class7=CWorldBase
-Resource5=IDR_MAINFRAME
+Resource5=IDR_SYNTHTYPE
 Class8=CWorldBasePro
-Resource6=IDR_SYNTHTYPE
+Resource6=IDR_MAINFRAME
 Class9=CWizz0
 Class10=CGLib0
 Class11=CRoomBase
 Class12=CRoomWall
-Resource7=SYNTH_ROOMBASE_PROP
-Resource8=SYNTH_WORLDBASE_PROP
+Resource7=SYNTH_WIZZ0
+Resource8=SYNTH_ROOMWALL_PROP (Greek)
 Class13=CRoomWallPro
 Class14=CSelectObj
 Class15=LObj2
 Class16=CGObject
 Class17=CGExternal
-Resource9=SYNTH_WIZZ0
+Resource9=SYNTH_WORLDBASE_PROP
 Class18=CRoomBasePro
-Resource10=IDR_MAINFRAME (English (U.S.))
-Resource11=SYNTH_ROOMBASE_PROP (English (U.S.))
-Resource12=SYNTH_ROOMWALL_PROP (English (U.S.))
-Resource13=IDR_SYNTHTYPE (English (U.S.))
-Resource14=SYNTH_WIZZ0 (English (U.S.))
-Resource15=SYNTH_SELECT_OBJ (English (U.S.))
-Resource16=SYNTH_WORLDBASE_PROP (English (U.S.))
+Resource10=SYNTH_ROOMWALL_PROP
+Resource11=SYNTH_GEXTERNAL_PROP
+Class19=GExternalProp
+Resource12=SYNTH_WIZZ0 (Greek)
+Resource13=IDR_MAINFRAME (English (U.S.))
+Resource14=SYNTH_WORLDBASE_PROP (Greek)
+Resource15=IDD_ABOUTBOX (English (U.S.))
+Resource16=IDR_MAINFRAME (Greek)
+Resource17=SYNTH_GEXTERNAL_PROP (Greek)
+Resource18=SYNTH_ROOMBASE_PROP (Greek)
+Class20=IvfTreeView
+Class21=dummy
+Resource19=IDR_SYNTHTYPE (Greek)
 
 [CLS:CSYNTHApp]
 Type=0
 HeaderFile=SYNTH.h
 ImplementationFile=SYNTH.cpp
 Filter=N
-LastObject=CSYNTHApp
+LastObject=65535
 
 [CLS:CSYNTHDoc]
 Type=0
@@ -91,13 +97,12 @@ LastObject=CAboutDlg
 
 [DLG:IDD_ABOUTBOX]
 Type=1
-Class=CAboutDlg
-ControlCount=5
+ControlCount=4
 Control1=IDC_STATIC,static,1342177283
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_STATIC,static,1342308352
 Control4=IDOK,button,1342373889
-Control5=IDC_ABOUT_TEXT,static,1342308352
+Class=CAboutDlg
 
 [MNU:IDR_MAINFRAME]
 Type=1
@@ -126,9 +131,9 @@ Command4=ID_EDIT_CUT
 Command5=ID_EDIT_COPY
 Command6=ID_EDIT_PASTE
 Command7=ID_FILE_PRINT
+CommandCount=9
 Command8=ID_APP_ABOUT
 Command9=ID_CONTEXT_HELP
-CommandCount=9
 
 [MNU:IDR_SYNTHTYPE]
 Type=1
@@ -180,11 +185,12 @@ Command9=ID_EDIT_UNDO
 Command10=ID_EDIT_CUT
 Command11=ID_EDIT_COPY
 Command12=ID_EDIT_PASTE
+CommandCount=16
 Command13=ID_NEXT_PANE
 Command14=ID_PREV_PANE
 Command15=ID_CONTEXT_HELP
 Command16=ID_HELP
-CommandCount=16
+
 
 [TB:IDR_MAINFRAME (English (U.S.))]
 Type=1
@@ -317,7 +323,7 @@ ImplementationFile=Wizz0.cpp
 BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
-LastObject=IDC_ANGLE4
+LastObject=CWizz0
 
 [CLS:CGLib0]
 Type=0
@@ -366,7 +372,7 @@ HeaderFile=SelectObj.h
 ImplementationFile=SelectObj.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_VIEWER
+LastObject=CSelectObj
 VirtualFilter=dWC
 
 [CLS:LObj2]
@@ -416,7 +422,104 @@ HeaderFile=roombase.h
 ImplementationFile=roombase.cpp
 BaseClass=CDialog
 
-[DLG:SYNTH_WIZZ0 (English (U.S.))]
+[DLG:SYNTH_GEXTERNAL_PROP]
+Type=1
+Class=GExternalProp
+ControlCount=14
+Control1=IDC_CODE,edit,1350631552
+Control2=IDC_DESCR,edit,1350631552
+Control3=IDC_YANGLE,edit,1350631552
+Control4=IDCANCEL,button,1342242816
+Control5=IDOK,button,1342242817
+Control6=65535,static,1342308354
+Control7=65535,static,1342308354
+Control8=65535,static,1342308354
+Control9=IDC_TOPOTH,edit,1350631552
+Control10=65535,static,1342308354
+Control11=IDC_XDIST,edit,1350631552
+Control12=65535,static,1342308354
+Control13=IDC_YDIST,edit,1350631552
+Control14=65535,static,1342308354
+
+[CLS:GExternalProp]
+Type=0
+HeaderFile=GExternal.h
+ImplementationFile=GExternal.cpp
+BaseClass=CDialog
+Filter=D
+VirtualFilter=dWC
+
+[DLG:SYNTH_GEXTERNAL_PROP (Greek)]
+Type=1
+Class=GExternalProp
+ControlCount=14
+Control1=IDC_CODE,edit,1350631552
+Control2=IDC_DESCR,edit,1350631552
+Control3=IDC_YANGLE,edit,1350631552
+Control4=IDCANCEL,button,1342242816
+Control5=IDOK,button,1342242817
+Control6=65535,static,1342308354
+Control7=65535,static,1342308354
+Control8=65535,static,1342308354
+Control9=IDC_TOPOTH,edit,1350631552
+Control10=65535,static,1342308354
+Control11=IDC_XDIST,edit,1350631552
+Control12=65535,static,1342308354
+Control13=IDC_YDIST,edit,1350631552
+Control14=65535,static,1342308354
+
+[DLG:SYNTH_ROOMBASE_PROP (Greek)]
+Type=1
+Class=CRoomBasePro
+ControlCount=6
+Control1=IDC_PLAKAKI,edit,1350631552
+Control2=IDC_PLAKAKI1,edit,1350631552
+Control3=IDC_PLAKAKI2,edit,1350631552
+Control4=IDCANCEL,button,1342242816
+Control5=IDOK,button,1342242817
+Control6=65535,static,1342308354
+
+[DLG:SYNTH_ROOMWALL_PROP (Greek)]
+Type=1
+Class=CRoomBasePro
+ControlCount=10
+Control1=IDC_WIDTH,edit,1350631552
+Control2=IDC_HEIGHT,edit,1350631552
+Control3=IDC_PLAKAKI,edit,1350631552
+Control4=IDC_PLAKAKI1,edit,1350631552
+Control5=IDC_PLAKAKI2,edit,1350631552
+Control6=IDCANCEL,button,1342242816
+Control7=IDOK,button,1342242817
+Control8=65535,static,1342308354
+Control9=65535,static,1342308354
+Control10=65535,static,1342308354
+
+[DLG:SYNTH_SELECT_OBJ (Greek)]
+Type=1
+Class=CSelectObj
+ControlCount=20
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_VIEWER,static,1342308352
+Control5=SYNTH_NEXT,button,1342242816
+Control6=SYNTH_PRIOR,button,1342242816
+Control7=SYNTH_CB_MONTELO,combobox,1344340226
+Control8=SYNTH_CB_YLIKO,combobox,1344340226
+Control9=SYNTH_CB_PORTAKI,combobox,1344340226
+Control10=SYNTH_CB_SYRTARI,combobox,1344340226
+Control11=SYNTH_CB_XEROYL,combobox,1344340226
+Control12=SYNTH_CB_MPAZA,combobox,1344340226
+Control13=SYNTH_CB_ANTIK,combobox,1344340226
+Control14=IDC_STATIC,static,1342308354
+Control15=IDC_STATIC,static,1342308354
+Control16=IDC_STATIC,static,1342308354
+Control17=IDC_STATIC,static,1342308354
+Control18=IDC_STATIC,static,1342308354
+Control19=IDC_STATIC,static,1342308354
+Control20=IDC_STATIC,static,1342308354
+
+[DLG:SYNTH_WIZZ0 (Greek)]
 Type=1
 Class=CWizz0
 ControlCount=50
@@ -471,33 +574,24 @@ Control48=IDC_STATIC,static,1342308354
 Control49=IDC_STATIC,static,1342308354
 Control50=IDC_STATIC,static,1342308354
 
-[DLG:SYNTH_SELECT_OBJ (English (U.S.))]
+[DLG:SYNTH_WORLDBASE_PROP (Greek)]
 Type=1
-Class=CSelectObj
-ControlCount=20
+Class=CWorldBasePro
+ControlCount=10
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
-Control3=IDC_STATIC,static,1342308352
-Control4=IDC_VIEWER,static,1342308352
-Control5=SYNTH_NEXT,button,1342242816
-Control6=SYNTH_PRIOR,button,1342242816
-Control7=SYNTH_CB_MONTELO,combobox,1344340226
-Control8=SYNTH_CB_YLIKO,combobox,1344340226
-Control9=SYNTH_CB_PORTAKI,combobox,1344340226
-Control10=SYNTH_CB_SYRTARI,combobox,1344340226
-Control11=SYNTH_CB_XEROYL,combobox,1344340226
-Control12=SYNTH_CB_MPAZA,combobox,1344340226
-Control13=SYNTH_CB_ANTIK,combobox,1344340226
-Control14=IDC_STATIC,static,1342308354
-Control15=IDC_STATIC,static,1342308354
-Control16=IDC_STATIC,static,1342308354
-Control17=IDC_STATIC,static,1342308354
-Control18=IDC_STATIC,static,1342308354
-Control19=IDC_STATIC,static,1342308354
-Control20=IDC_STATIC,static,1342308354
+Control3=IDC_NAME,edit,1350631552
+Control4=IDC_ADDRESS,edit,1350631552
+Control5=IDC_CITY,edit,1350631552
+Control6=IDC_STATIC,static,1342308354
+Control7=IDC_STATIC,static,1342308354
+Control8=IDC_STATIC,static,1342308354
+Control9=IDC_STATIC,static,1342308354
+Control10=IDC_TEL,edit,1350631552
 
-[MNU:IDR_MAINFRAME (English (U.S.))]
+[MNU:IDR_MAINFRAME (Greek)]
 Type=1
+Class=?
 Command1=ID_FILE_NEW
 Command2=ID_FILE_OPEN
 Command3=ID_FILE_RELOAD
@@ -512,8 +606,9 @@ Command11=ID_HELP_FINDER
 Command12=ID_APP_ABOUT
 CommandCount=12
 
-[MNU:IDR_SYNTHTYPE (English (U.S.))]
+[MNU:IDR_SYNTHTYPE (Greek)]
 Type=1
+Class=?
 Command1=ID_FILE_NEW
 Command2=ID_FILE_OPEN
 Command3=ID_FILE_RELOAD
@@ -546,41 +641,17 @@ Command29=ID_HELP_FINDER
 Command30=ID_APP_ABOUT
 CommandCount=30
 
-[DLG:SYNTH_ROOMWALL_PROP (English (U.S.))]
-Type=1
-ControlCount=10
-Control1=IDC_WIDTH,edit,1350631552
-Control2=IDC_HEIGHT,edit,1350631552
-Control3=IDC_PLAKAKI,edit,1350631552
-Control4=IDC_PLAKAKI1,edit,1350631552
-Control5=IDC_PLAKAKI2,edit,1350631552
-Control6=IDCANCEL,button,1342242816
-Control7=IDOK,button,1342242817
-Control8=65535,static,1342308354
-Control9=65535,static,1342308354
-Control10=65535,static,1342308354
+[CLS:IvfTreeView]
+Type=0
+HeaderFile=IvfTreeView.h
+ImplementationFile=IvfTreeView.cpp
+BaseClass=CTreeView
+Filter=C
 
-[DLG:SYNTH_WORLDBASE_PROP (English (U.S.))]
-Type=1
-ControlCount=10
-Control1=IDOK,button,1342242817
-Control2=IDCANCEL,button,1342242816
-Control3=IDC_NAME,edit,1350631552
-Control4=IDC_ADDRESS,edit,1350631552
-Control5=IDC_CITY,edit,1350631552
-Control6=IDC_STATIC,static,1342308354
-Control7=IDC_STATIC,static,1342308354
-Control8=IDC_STATIC,static,1342308354
-Control9=IDC_STATIC,static,1342308354
-Control10=IDC_TEL,edit,1350631552
-
-[DLG:SYNTH_ROOMBASE_PROP (English (U.S.))]
-Type=1
-ControlCount=6
-Control1=IDC_PLAKAKI,edit,1350631552
-Control2=IDC_PLAKAKI1,edit,1350631552
-Control3=IDC_PLAKAKI2,edit,1350631552
-Control4=IDCANCEL,button,1342242816
-Control5=IDOK,button,1342242817
-Control6=65535,static,1342308354
+[CLS:dummy]
+Type=0
+HeaderFile=dummy.h
+ImplementationFile=dummy.cpp
+BaseClass=CTreeView
+Filter=C
 

@@ -1,0 +1,271 @@
+#Inventor V2.1 ascii
+
+
+DEF WorldBase Separator {
+
+  Material {
+	diffuseColor 1 0 0
+  }
+  Transform {
+  }
+  Cube {
+	width 7000
+	height 100
+	depth 7000
+  }
+  DrawStyle {
+	style INVISIBLE
+  }
+  Text2 {
+	string "7000" =
+	DEF width GlobalField {
+	  type "SFFloat"
+	  width 7000
+	}	. width
+  }
+  Text2 {
+	string "7000" =
+	DEF depth GlobalField {
+	  type "SFFloat"
+	  depth 7000
+	}	. depth
+  }
+  Text2 {
+	string "100" =
+	DEF height GlobalField {
+	  type "SFFloat"
+	  height 100
+	}	. height
+  }
+  Text2 {
+	string "паукидгс яажагк" =
+	DEF c_name GlobalField {
+	  type "SFString"
+	  c_name "паукидгс яажагк"
+	}	. c_name
+  }
+  Text2 {
+	string "" =
+	DEF c_address GlobalField {
+	  type "SFString"
+	  c_address ""
+	}	. c_address
+  }
+  Text2 {
+	string "" =
+	DEF c_city GlobalField {
+	  type "SFString"
+	  c_city ""
+	}	. c_city
+  }
+  Text2 {
+	string "" =
+	DEF c_tel GlobalField {
+	  type "SFString"
+	  c_tel ""
+	}	. c_tel
+  }}
+DEF RoomBase Separator {
+
+  Normal {
+	vector 0 1 0
+  }
+  NormalBinding {
+	value PER_FACE
+  }
+  Material {
+	diffuseColor 1 1 1
+  }
+  Coordinate3 {
+	point [ -2500 105 2500,
+	    2500 105 2500,
+	    2500 105 2500 ]
+  }
+  FaceSet {
+	numVertices 3
+  }
+  DrawStyle {
+	style INVISIBLE
+  }
+  Text2 {
+	string "5" =
+	DEF rb_height GlobalField {
+	  type "SFFloat"
+	  rb_height 5
+	}	. rb_height
+  }
+  Text2 {
+	string "3" =
+	DEF KoryfCount GlobalField {
+	  type "SFLong"
+	  KoryfCount 3
+	}	. KoryfCount
+  }
+  Text2 {
+	string "-2500" =
+	DEF rb_Koryfsx0 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsx0 -2500
+	}	. rb_Koryfsx0
+  }
+  Text2 {
+	string "100" =
+	DEF rb_Koryfsy0 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsy0 100
+	}	. rb_Koryfsy0
+  }
+  Text2 {
+	string "2500" =
+	DEF rb_Koryfsz0 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsz0 2500
+	}	. rb_Koryfsz0
+  }
+  Text2 {
+	string "2500" =
+	DEF rb_Koryfsx1 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsx1 2500
+	}	. rb_Koryfsx1
+  }
+  Text2 {
+	string "100" =
+	DEF rb_Koryfsy1 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsy1 100
+	}	. rb_Koryfsy1
+  }
+  Text2 {
+	string "2500" =
+	DEF rb_Koryfsz1 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsz1 2500
+	}	. rb_Koryfsz1
+  }
+  Text2 {
+	string "2500" =
+	DEF rb_Koryfsx2 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsx2 2500
+	}	. rb_Koryfsx2
+  }
+  Text2 {
+	string "100" =
+	DEF rb_Koryfsy2 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsy2 100
+	}	. rb_Koryfsy2
+  }
+  Text2 {
+	string "2500" =
+	DEF rb_Koryfsz2 GlobalField {
+	  type "SFFloat"
+	  rb_Koryfsz2 2500
+	}	. rb_Koryfsz2
+  }
+  Text2 {
+	string "" =
+	DEF rb_plakaki GlobalField {
+	  type "SFString"
+	  rb_plakaki ""
+	}	. rb_plakaki
+  }
+  Text2 {
+	string "0" =
+	DEF rb_plakaki1 GlobalField {
+	  type "SFFloat"
+	  rb_plakaki1 0
+	}	. rb_plakaki1
+  }
+  Text2 {
+	string "0" =
+	DEF rb_plakaki2 GlobalField {
+	  type "SFFloat"
+	  rb_plakaki2 0
+	}	. rb_plakaki2
+  }}
+DEF RoomWalls Group {
+
+  DEF RoomWall0 Separator {
+
+	Normal {
+	  vector [ 0 0 1,
+		  1 0 0,
+		  0 0 -1,
+		  -1 0 0,
+		  0 1 0 ]
+	}
+	NormalBinding {
+	  value PER_FACE
+	}
+	Complexity {
+	  textureQuality 0.5
+	}
+	Material {
+	  diffuseColor 1 1 1
+	}
+	Coordinate3 {
+	  point [ -2500 100 2500,
+		  2500 100 2500,
+		  2500 3100 2500,
+		  -2500 3100 2500,
+		  2500 100 2500,
+		  2500 100 2497,
+		  2500 3100 2497,
+		  2500 3100 2500,
+		  2500 100 2497,
+		  -2500 100 2497,
+		  -2500 3100 2497,
+		  2500 3100 2497,
+		  -2500 100 2497,
+		  -2500 100 2500,
+		  -2500 3100 2500,
+		  -2500 3100 2497,
+		  -2500 3100 2500,
+		  2500 3100 2500,
+		  2500 3100 2497,
+		  -2500 3100 2497 ]
+	}
+	Transform {
+	}
+	FaceSet {
+	  numVertices [ 4, 4, 4, 4, 4 ]
+	}
+	DrawStyle {
+	  style INVISIBLE
+	}
+	Text2 {
+	  string "3000" =
+	  DEF height0 GlobalField {
+		type "SFFloat"
+		height0 3000
+	  }	  . height0
+	}
+	Text2 {
+	  string "3" =
+	  DEF depth0 GlobalField {
+		type "SFFloat"
+		depth0 3
+	  }	  . depth0
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF Koryfsx00 GlobalField {
+		type "SFFloat"
+		Koryfsx00 -2500
+	  }	  . Koryfsx00
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy00 GlobalField {
+		type "SFFloat"
+		Koryfsy00 100
+	  }	  . Koryfsy00
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsz00 GlobalField {
+		type "SFFloat"
+		Koryfsz00 2500
+	  }	 

@@ -62,15 +62,20 @@ CSYNTHView	*sview ;
 CSYNTHView::CSYNTHView()
 {
 	// TODO: add construction code here
-
-    pSelectionNode = NULL;    // Initialize new member variable
+// IVF_EXAMPLE_BEGIN
+    m_pSelectionNode = NULL;    // Initialize new member variable
 
     m_nEnableSelection = TRUE;  // Set existing member variable
-
+// IVF_EXAMPLE_END
 }
 
 CSYNTHView::~CSYNTHView()
 {
+// IVF_EXAMPLE_BEGIN
+    // Don't delete Inventor nodes, just decrement the ref count
+    if (m_pSelectionNode != NULL)
+        m_pSelectionNode->unref();
+// IVF_EXAMPLE_END
 }
 
 BOOL CSYNTHView::PreCreateWindow(CREATESTRUCT& cs)
@@ -105,7 +110,9 @@ SbBool isTransformable(SoNode *myNode) ;
 SoPath *createTransformPath(SoPath *inputPath) ;
 void selectionCallback(   void *, SoPath *selectionPath ) ;
 void deselectionCallback( void *, SoPath *deselectionPath) ;
-SoPath *pickFilterCB_TopLevel(void *,const SoPickedPoint *pick) ;
+
+SoPath *pickFilterCallback (void *, const SoPickedPoint *pick);
+SoPath *pickFilterCB(void *, const SoPickedPoint *pick) ;
 
 SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,  
 										const SbVec2s &cursorPosition ) ;
@@ -124,27 +131,30 @@ void CSYNTHView::OnInitialUpdate()
     IvfOnInitialUpdate(this) ;
 
 
-	//SoSelection *pSelectionNode =IvfGetSelectionNode();
-    pSelectionNode = IvfGetSelectionNode();
-    pSelectionNode->ref();
+// IVF_EXAMPLE_BEGIN
+    if (m_pSelectionNode == NULL) { /***/
+        // Create the SoSelection node that will be root of scene graph
+        m_pSelectionNode = new SoSelection;
+        m_pSelectionNode->ref();
+// IVF EXAMPLE_End
 
-	pSelectionNode->policy = SoSelection::SHIFT ;
-	pSelectionNode->addSelectionCallback(selectionCallback, NULL);
-	pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
+//	m_nEnableSelection = TRUE; has defined already in construction
 
-	// pick Top Level Objs (Group ?)
-	pSelectionNode->setPickFilterCallback(pickFilterCB_TopLevel);
+//	SoSelection *pSelectionNode = IvfGetSelectionNode();
+	m_pSelectionNode->policy = SoSelection::SINGLE ;
+	//m_pSelectionNode->addSelectionCallback(selectionCallback, NULL);
+	//m_pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
+//    m_pSelectionNode->setPickFilterCallback(pickFilterCB);
 
-	//myHandleBox = new SoHandleBoxManip;
-	//myHandleBox->ref();
-	//myTrackball = new SoTrackballManip;
-	//myTrackball->ref();
-	//myTransformBox = new SoTransformBoxManip;
-	//myTransformBox->ref();
-
+/*
+	myHandleBox = new SoHandleBoxManip;
+	myHandleBox->ref();
+	myTrackball = new SoTrackballManip;
+	myTrackball->ref();
+	myTransformBox = new SoTransformBoxManip;
+	myTransformBox->ref();
+*/
 	sdoc = GetDocument() ;
-	sdoc->new_object = FALSE ;
-	sdoc->proto = 0 ;
 	sview = this ;
 
 	SoMouseButtonEvent  myMouseEvent;
@@ -152,30 +162,31 @@ void CSYNTHView::OnInitialUpdate()
 	// Add an event callback to catch mouse button presses.
 	// The callback is set up later on.
 	SoEventCallback *EventCB = new SoEventCallback;
-	pSelectionNode->addChild(EventCB);
+	m_pSelectionNode->addChild(EventCB);
 
 	// Set up the event callback. We want to pass the root of the
 	// entire scene graph (including the camera) as the userData,
 	// so we get the scene manager's version of the scene graph
 	// root.
 	EventCB->addEventCallback ( SoMouseButtonEvent::getClassTypeId(),
-									MousePressCB,
-									m_pViewer->getSceneManager()->getSceneGraph());
-
+								MousePressCB,
+								m_pViewer->getSceneManager()->getSceneGraph());
 
 	// set the document's selected object
-	GetDocument()->SetSelectedObj(pSelectionNode) ;
+	GetDocument()->SetSelectedObj(m_pSelectionNode) ;
 
+	// Set our selection node as the scene graph root node
+    m_pViewer->setSceneGraph( m_pSelectionNode );
 
 
     // Use a bounding box to highlight selected objects
     m_pViewer->setGLRenderAction( new SoBoxHighlightRenderAction() );
 
-	
     // Tell viewer to automatically redraw when selection changes
     // (so the highlight will be drawn in the right place)
-    m_pViewer->redrawOnSelectionChange( pSelectionNode ) ;
+    m_pViewer->redrawOnSelectionChange( m_pSelectionNode ) ;
 
+	} /***/
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -189,8 +200,7 @@ BOOL CSYNTHView::OnPreparePrinting(CPrintInfo* pInfo)
 
 void CSYNTHView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	IvfOnBeginPrinting();	
-
+	IvfOnBeginPrinting();
 }
 
 void CSYNTHView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
@@ -423,7 +433,6 @@ void CSYNTHView::OnViewViewmodesViewingmode()
 	IvfViewmodesViewingmode();
 }
 
-//code for select objects in scene (shift mode) 
 /*======================= selectionCallback =============*/
 
 void selectionCallback(   void *, SoPath *selectionPath )
@@ -431,14 +440,16 @@ void selectionCallback(   void *, SoPath *selectionPath )
 	// Attach the manipulator.
 	// Use the convenience routine to get a path to
 	// the transform that effects the selected object.
-//	SoPath *xformPath = createTransformPath(selectionPath);
-//	if (xformPath == NULL) return;
-//	xformPath->ref();
 
-//	transformBoxPath = xformPath ;
-//	myTransformBox->replaceNode(xformPath) ;
+	SoPath *xformPath = createTransformPath(selectionPath);
+	if (xformPath == NULL) return;
+	xformPath->ref();
 /*
+	transformBoxPath = xformPath ;
+	myTransformBox->replaceNode(xformPath) ;
+
 	sdoc->SetSelectedObj(sview->IvfGetSelectionNode()) ;
+
 	if (sdoc->SelId >= 0) 
 	{
 		transformBoxPath = xformPath ;
@@ -457,33 +468,18 @@ void selectionCallback(   void *, SoPath *selectionPath )
 
 void deselectionCallback( void *, SoPath *deselectionPath)
 {
-//	if (deselectionPath->getTail()->isOfType(SoCube::getClassTypeId())) 
-//	{
-//		myTransformBox->replaceManip(transformBoxPath,NULL);
-//		transformBoxPath->unref();
-//	}
-}
-
-//*********************** pickFilterCB ************************
-//toplevel
-SoPath *pickFilterCB_TopLevel(void *, const SoPickedPoint *pick)
-{
-  //See whitch child of selection got picked
-  SoPath *p = pick->getPath();
-  int i;
-  for (i=0;i<p->getLength()-1;i++)
-  {
-	  SoNode *n = p->getNode(i);
-	  if (n->isOfType(SoSelection::getClassTypeId()))
-		  break;
-  }
-  //Copy 2 nodes from the path:
-  //selection and the picked child
-  return p->copy(i,2);
+/*
+AfxMessageBox("deselectionCallback") ;
+	if (deselectionPath->getTail()->isOfType(SoCube::getClassTypeId())) 
+	{
+		myTransformBox->replaceManip(transformBoxPath,NULL);
+		transformBoxPath->unref();
+	}
+*/
 }
 
 //======================= pickFilterCallback ===================
-//through manipulators
+
 SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
 {
 	const SbVec3f *pp = &pick->getPoint() ;
@@ -506,9 +502,30 @@ SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
    else filteredPath = p;
     
    return filteredPath;
+
 }
 
-//code for insert objects in scene
+//*********************** pickFilterCB ************************
+//toplevel
+SoPath *pickFilterCB(void *, const SoPickedPoint *pick)
+{
+  //See whitch child of selection got picked
+  int ok=0;
+  SoPath *p = pick->getPath();
+  int i;
+  for (i=0;i<p->getLength()-1;i++)
+  {
+	  SoNode *n = p->getNode(i);
+
+	  if (n->isOfType(SoSelection::getClassTypeId()))
+		  break;
+  }
+  //Copy 2 nodes from the path:
+  //selection and the picked child
+  return p->copy(i,2); 
+  
+}
+
 
 /*===================== createTransformPath =================*/
 //  Create a path to the transform node that affects the tail
@@ -526,7 +543,6 @@ SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
 //       node is found first, insert a transform just left of 
 //       that node.  This way the manip will affect all nodes
 //       in the group.
-
 SoPath *createTransformPath(SoPath *inputPath)
 {
    int pathLength = inputPath->getLength();
@@ -616,7 +632,6 @@ SoPath *createTransformPath(SoPath *inputPath)
 /*========================= isTransformable ====================*/
 
 // Is this node of a type that is influenced by transforms?
-
 SbBool isTransformable(SoNode *myNode)
 {
    if (myNode->isOfType(SoGroup::getClassTypeId())
@@ -633,8 +648,6 @@ SbBool isTransformable(SoNode *myNode)
 SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport, 
 										const SbVec2s &cursorPosition )
 {
-	if (!sdoc->new_object) return FALSE ;
-
 	SoRayPickAction PickAction(viewport);
 
 	// Set an 8-pixel wide region around the pixel
@@ -652,9 +665,6 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 	picked_point	= *pp ;
 	picked_normal	= *nn ;
 
-//	CLib0 lib ;
-//	AfxMessageBox(lib.floattostr((*pp)[0])+" "+lib.floattostr((*pp)[1])+" "+lib.floattostr((*pp)[2])) ;
-
 	return TRUE;
 }
 
@@ -662,16 +672,19 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 
 void MousePressCB(void *userData, SoEventCallback *eventCB)
 {
-  	if ( sdoc->new_object ) 
+	SoSeparator *root = (SoSeparator *) userData;
+	const SoEvent *event = eventCB->getEvent();
+
+    // Check for mouse button being pressed
+    if (SO_MOUSE_PRESS_EVENT(event, ANY))
 	{
-     	SoSeparator *root = (SoSeparator *) userData;
-	    const SoEvent *event = eventCB->getEvent();
+		const SbViewportRegion &myRegion = eventCB->getAction()->getViewportRegion();
+		writePickedPath(root, myRegion, event->getPosition(myRegion));
+		eventCB->setHandled();
+	}
 
-    	const SbViewportRegion &myRegion = eventCB->getAction()->getViewportRegion();
-	    writePickedPath(root, myRegion, event->getPosition(myRegion));  
-    	eventCB->setHandled();
-
-
+	if ( sdoc->new_object ) 
+	{
 		SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1])->sep ;
 		
 		SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
@@ -686,69 +699,75 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 		
 		sdoc->new_object = FALSE ;
 		
+//		sview->IvfGetSelectionNode()->select(sep) ;
+
 		sdoc->SetModifiedFlag() ;
 		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)
-
-	}
-	else
-	{
-	//	SoSelection *pSelectionNode = new SoSelection;
-        //pSelectionNode->ref();
-		//pSelectionNode->setPickFilterCallback(pickFilterCB_TopLevel);
-       
-		//
-	/*	ASSERT( pSelectionNode != NULL );
-        // May be more than one object selected...
-        // Get last one (most recently selected)
-		int num = pSelectionNode->getNumSelected();
-		ASSERT( num > 0);
-		SoPath *pPath = pSelectionNode->getPath( num-1 );
-		ASSERT( pPath != NULL );
-		
-
-        int length = pPath->getLength();
-        ASSERT( length > 2 );
-		pPath->ref();
-        pPath->truncate( length-1 );
-        pSelectionNode->select( pPath );
-		pPath->unref();
-*/
-        //select parent    
-/*		ASSERT( pSelectionNode != NULL );
-
-        // Note: May be more than object selected (use last selected)
-        //
-        // Can only select parent if:
-        // 1) There is at least one object selected, and
-        // 2) There are more than two nodes in the path
-        //    (First one is always selection node itself, which cannot be
-        //    selected, and second would be topmost parent of the object.)
-        int num = pSelectionNode->getNumSelected();
-        if (num > 0 &&
-            pSelectionNode->getPath(num-1)->getLength() > 2) {
-            pCmdUI->Enable( TRUE );
-           }
-        else
-        pCmdUI->Enable( FALSE );
-
-    */
-
- /*     //select all
-     	ASSERT( pSelectionNode != NULL );
-
-        int num = pSelectionNode->getNumChildren();
-        ASSERT( num > 0 );  // Enforced by OnUpdateEditSelectAll
-
-        // Remove all current selections
-        pSelectionNode->deselectAll();
-    
-        // May be multiple objects in scene...
-        // Loop over objects and select each one.
-        for (int i = 0; i < num; i++) {    
-           SoNode *pNode = pSelectionNode->getChild( i );   
-           ASSERT( pNode != NULL);
-           pSelectionNode->select( pNode );
-		}*/
 	}
 }
+
+
+
+///////////////////////////////////////////////////////////////////////
+// Overrides of IVF member functions
+
+
+// IVF_EXAMPLE_BEGIN
+// This method forces the component to use the scene graph pointed to
+// by pRoot instead of the scene graph contained in the document.
+void CSYNTHView::IvfSetSceneGraph(SoNode *pRoot)
+{
+    // Note: We may get called with NULL from IvfOnInitialUpdate.
+    //       We may even get called before m_pSelectionNode has
+    //       been created.  Just live with it for now.
+    if (pRoot != NULL && m_pSelectionNode != NULL) {
+
+        // Instead of setting the document's scene graph directly into the
+        // viewer we add it to our selection node (which is already set
+        // in the viewer).
+        m_pSelectionNode->addChild( pRoot );
+        
+        // Some viewers (eg. Walk and Fly) only recompute scene size
+        // in setSceneGraph -- change notification is not good enough.
+        m_pViewer->setSceneGraph( m_pSelectionNode );
+
+    }
+}
+// IVF_EXAMPLE_END
+
+// IVF_EXAMPLE_BEGIN
+// This method returns the scene graph contained in the component.
+SoNode *CSYNTHView::IvfGetSceneGraph()
+{
+    // Instead of returning the scene graph set into the viewer (which
+    // is actually our selection node) we return the first child of
+    // our selection node.
+    //
+    // Note: We may get called from IvfOnInitialUpdate before the
+    //       m_pSelectionNode has been created.  Just be paranoid.
+    if (m_pSelectionNode && m_pSelectionNode->getNumChildren() > 0)
+
+        return m_pSelectionNode->getChild( 0 );
+    else
+        return NULL;
+}
+// IVF_EXAMPLE_END
+
+// IVF_EXAMPLE_BEGIN
+// This method causes the component to unreference it's scene graph.
+void CSYNTHView::IvfReleaseSceneGraph()
+{
+    // Instead of setting the viewer's scene graph (which is actually
+    // our selection node) to NULL, we deselect and remove all the
+    // children of our selection node.  The viewer's sensor will notice
+    // the change and automatically redraw.
+    if (m_pSelectionNode != NULL) {
+        m_pSelectionNode->deselectAll();
+        m_pSelectionNode->removeAllChildren();
+    }
+}
+// IVF_EXAMPLE_END
+
+
+
 

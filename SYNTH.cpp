@@ -335,6 +335,8 @@ void CSYNTHApp::OnFileOpen()
 }
 
 
+
+
 int CSYNTHApp::ExitInstance() 
 {
 	// TODO: Add your specialized code here and/or call the base class

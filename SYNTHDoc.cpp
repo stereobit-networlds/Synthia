@@ -8,6 +8,7 @@
 
 #include "SYNTHDoc.h"
 #include "SYNTHView.h"
+#include "IvfTreeView.h"
 
 #include "Wizz0.h"
 #include "lib0.h"
@@ -17,11 +18,9 @@
 #include "GExternal.h"
 #include "SelectObj.h"
 
-
 #include <Inventor/manips/SoHandleBoxManip.h>
 #include <Inventor/manips/SoTrackballManip.h>
 #include <Inventor/manips/SoTransformBoxManip.h>
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,7 +41,6 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	ON_COMMAND(ID_FILE_SAVE_AS, OnFileSaveAs)
 	ON_COMMAND(ID_FILE_RELOAD, OnFileReload)
 	ON_UPDATE_COMMAND_UI(ID_FILE_RELOAD, OnUpdateFileReload)
-	ON_COMMAND(SYNTH_NEW_SPHERE, OnNewSphere)
 	ON_COMMAND(SYNTH_PROPERTIES, OnProperties)
 	ON_COMMAND(SYNTH_KATAXKOYZIN, OnKataxkoyzin)
 	ON_COMMAND(SYNTH_SELECT, OnSelectObj)
@@ -74,38 +72,11 @@ BOOL CSYNTHDoc::OnNewDocument()
 
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
-	
- 
+	 
 // BEGIN_IVWGEN
 	IvfOnNewDocument();
 // END_IVWGEN
-
-
-/*
-	wb->width	= 100 ;
-	wb->depth	= 200 ;
-	wb->height	= 20 ;
-	wb->sep		= new SoSeparator ;
-
-	SoSeparator *root = new SoSeparator;
-	SoMaterial  *myMaterial = new SoMaterial;
-	SoCube		*cb	= new SoCube ;
-
-	root->ref();
-	root->addChild(wb->sep) ;
-	myMaterial->diffuseColor.setValue( 1., 0., 0. ); //Red
-	wb->sep->addChild( myMaterial );	
-	wb->sep->addChild( cb );
-
-	cb->width  = wb->width ;
-	cb->depth  = wb->depth ;
-	cb->height = wb->height ;
-
-	IvfSetSceneGraph( root );
-*/
-//	root->unref();
  
-
 	return TRUE;
 }
 
@@ -271,103 +242,6 @@ void CSYNTHDoc::IvfSetupUrlFetchCallback(void)
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoSelection.h>
 
-void CSYNTHDoc::OnNewSphere() 
-{
-	// TODO: Add your command handler code here
-	
-//	if ( m_pSceneRoot == NULL )
-//	{
-//		SoSelection *selectionRoot = new SoSelection;
-//		selectionRoot->ref() ;
-//		selectionRoot->policy = SoSelection::SINGLE ;
-//		selectionRoot-> addSelectionCallback(mySelectionCB) ;
-//		selectionRoot-> addDeselectionCallback(myDeselectionCB) ;
-
-		// Create the scene graph
-//		m_pSceneRoot = new SoSeparator ;
-//		m_pSceneRoot->ref() ;
-//		selectionRoot->addChild(m_pSceneRoot) ;
-//	}
-    //root = m_pSceneRoot ; 
-
-	SoSeparator *sep = new SoSeparator;
-    SoMaterial  *myMaterial = new SoMaterial;
-	SoSphere *mySphere = new SoSphere ;
-    SoDrawStyle *ds = new SoDrawStyle ;
-
-	sep->ref();
-
-	
-	myMaterial->diffuseColor.setValue( 1., 0., 0. ); //Red
-	sep->addChild( myMaterial );
-
-	ds->style = SoDrawStyle::FILLED ;
-    sep->addChild(ds);
-
-	sep->addChild(mySphere) ;
-	
-    //if ( m_pSceneRoot == NULL ) 
-	//	IvfSetSceneGraph( sep );
-	//else
-	//{
-      m_pSceneRoot->addChild(sep) ;
-	  sdoc->SetModifiedFlag() ;
-	  sdoc->UpdateAllViews(NULL);
-	//}
-}
-
-
-/*
-// This routine is called when an object gets selected. 
-// We determine which object was selected, and change 
-// that objects material color.
-void
-mySelectionCB(void *, SoPath *selectionPath)
-{
-   if (selectionPath->getTail()->
-            isOfType(SoText3::getClassTypeId())) { 
-      textMaterial->diffuseColor.setValue(reddish);
-   } else if (selectionPath->getTail()->
-            isOfType(SoSphere::getClassTypeId())) {
-      sphereMaterial->diffuseColor.setValue(reddish);
-   }
-}
-
-// This routine is called whenever an object gets deselected. 
-// We determine which object was deselected, and reset 
-// that objects material color.
-void
-myDeselectionCB(void *, SoPath *deselectionPath)
-{
-   if (deselectionPath->getTail()->
-            isOfType(SoText3::getClassTypeId())) {
-      textMaterial->diffuseColor.setValue(white);
-   } else if (deselectionPath->getTail()->
-            isOfType(SoSphere::getClassTypeId())) {
-      sphereMaterial->diffuseColor.setValue(white);
-   }
-}
-
-
-void
-main(int argc, char **argv)
-{
-   // Initialize Inventor and Xt
-   Widget myWindow = SoXt::init(argv[0]);
-   if (myWindow == NULL) exit(1);
-
-   // Create and set up the selection node
-   SoSelection *selectionRoot = new SoSelection;
-   selectionRoot->ref();
-   selectionRoot->policy = SoSelection::SINGLE;
-   selectionRoot-> addSelectionCallback(mySelectionCB);
-   selectionRoot-> addDeselectionCallback(myDeselectionCB);
-
-   // Create the scene graph
-   SoSeparator *root = new SoSeparator;
-   selectionRoot->addChild(root);
-
-*/
 
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoMaterial.h>
@@ -384,13 +258,16 @@ void CSYNTHDoc::OnProperties()
 
 	pos = GetFirstViewPosition() ;   
 	if (pos != NULL) 
-		pView = GetNextView(pos);
-	SoSelection *pSel = ((CSYNTHView *)pView)->IvfGetSelectionNode();
+		pView = GetNextView(pos);        //εβγαλα το Ivf απο το GetSelectionNode για να βλεπει την m_pSelectionNode
+	SoSelection *pSel = ((CSYNTHView *)pView)->GetSelectionNode();
 	SetSelectedObj(pSel) ;
 
 	// Ανοίγει το παράθυρο ιδιοτήτων του επιλεγμένου αντικειμένου
 	int res ;
 	if (SelId < 0) return ;
+
+//    CLib0 lib;
+//    AfxMessageBox(lib.inttostr(SelId));
 
 	if (Obj[SelId]->IsKindOf(RUNTIME_CLASS(CWorldBase)))
 		res = ((CWorldBase*)Obj[SelId])->EditProperties(this,root) ;
@@ -411,7 +288,6 @@ void CSYNTHDoc::OnProperties()
 //	} 	
 }
 
-
 void CSYNTHDoc::OnKataxkoyzin() 
 {
 	// Ανοίγει το παράθυρο καταχώρησης της κουζίνας
@@ -421,12 +297,7 @@ void CSYNTHDoc::OnKataxkoyzin()
 	if (dlg->DoModal() == IDOK)   
 	{
 
-
 		// setup ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ
-
-//    wb   : TWorldBase ;
-//    rb   : TRoomBase ;
-//    rw   : TRoomWall ;
 
 		float	x, y, z, x0, y0, z0,
 				x00, y00, z00, vx, vy, vz, sx, sy, sz,
@@ -469,7 +340,6 @@ void CSYNTHDoc::OnKataxkoyzin()
 		for ( int i = 0 ; i <= 7 ; i++ )
 			if (len[i] == 0) break ;
 		pleyres = i + 1 ;
-//		if (pleyres <= 2) goto a1 ;
 
         xmax = xmin = zmax = zmin = 0 ;
 		for ( i = 0 ; i < pleyres ; i++)
@@ -511,14 +381,9 @@ void CSYNTHDoc::OnKataxkoyzin()
 			xx[i] = x0 ; yy[i] = y0 ; zz[i] = z0 ;
 		} // for i
 
-	
-		SoSeparator *root = new SoSeparator ;
+		root = new SoSeparator ;
 		root->ref() ;
 		
-		//setup WallGroup
-        SoGroup *myWalls = new SoGroup;
-		myWalls->ref();
-		myWalls->setName("RoomWalls");
 
 		// setup world base 
 		CWorldBase *wb = new CWorldBase ;
@@ -531,8 +396,6 @@ void CSYNTHDoc::OnKataxkoyzin()
 		wb->height	= 100 ;
 		wb->c_name  = "ΠΑΥΛΙΔΗΣ ΡΑΦΑΗΛ" ;
 		wb->ObjectToInventor ( root ) ;
-
-//		SoCube *cb = (SoCube *)wb->sep->getChild(1) ;
 
 		// setup the room base
 		CRoomBase *rb = new CRoomBase ;
@@ -577,26 +440,14 @@ void CSYNTHDoc::OnKataxkoyzin()
 				rw[off]->Koryfsy[1] = rb->Koryfsy[pleyres-1] ;
 				rw[off]->Koryfsz[1] = rb->Koryfsz[pleyres-1] ;
 			}
-
-
-			rw[off]->ObjectToInventor ( myWalls ) ;
+			rw[off]->ObjectToInventor ( root ) ;
 			off++ ;
 		}
-        root->addChild(myWalls);
-
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Prepare group for objects
-		//myObjects = new SoGroup;
-	    //myObjects->ref();
-	    //myObjects->setName("External_Objects");
-		//root->addChild(myObjects);
-
-
 
 		IvfSetSceneGraph( root );
 
    		SetModifiedFlag();
-		UpdateAllViews(NULL); 
-		
+		UpdateAllViews(NULL);   
 	} 
 }
 
@@ -606,6 +457,7 @@ void CSYNTHDoc::SetSelectedObj ( SoSelection *sel )
 {
 //	theApp.DoMessageBox(buff,MB_OK,0) ;
 	int j ;
+	int x,x1 ;
 
 	SoSeparator *path ;
 	SelId = -1 ; // no current selection
@@ -620,15 +472,61 @@ void CSYNTHDoc::SetSelectedObj ( SoSelection *sel )
 		if (Obj[i]->IsKindOf(RUNTIME_CLASS(CRoomWall)))
 			path = ((CRoomWall*)Obj[i])->sep ;
 		else
-		if (Obj[i]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+		if (Obj[i]->IsKindOf(RUNTIME_CLASS(CGExternal))) 
 			path = ((CGExternal*)Obj[i])->sep ;
+		
+//***********************
+// Maximum search level 3
+//***********************        
+		CLib0 lib;
+//	    AfxMessageBox(lib.inttostr(path->getNumChildren()));
 
-		for ( j = 0 ; j < path->getNumChildren() ; j++ )
-			if (sel->isSelected(path->getChild(j))) 
-			{
-				SelId = i ;
-				goto out ;
-			}
+		for ( j = 0 ; j < path->getNumChildren() ; j++ )   //level 1
+        {
+			SoNode *mynode ;
+			mynode = path->getChild(j) ;
+			if (mynode->isOfType(SoGroup::getClassTypeId()))  //if separator
+            {
+               SoSeparator *ss ;
+			   ss = (SoSeparator *) mynode ;
+               //AfxMessageBox(lib.inttostr(ss->getNumChildren())) ;
+               for ( x = 0 ; x < ss->getNumChildren() ; x++ )  // level 2
+			   {
+                   SoNode *mynode1 ;
+			       mynode1 = ss->getChild(x) ;
+				   if (mynode1->isOfType(SoGroup::getClassTypeId())) // if separator
+				   {
+                     SoSeparator *ss1 ;
+			         ss1 = (SoSeparator *) mynode1 ;
+					 //AfxMessageBox(lib.inttostr(ss1->getNumChildren())) ;
+                     for ( x1 = 0 ; x1 < ss1->getNumChildren() ; x1++ )  // level 3
+					 {
+				       if (sel->isSelected(ss1->getChild(x1))) 
+					   { 
+				         SelId = i ;
+				         goto out ;
+					   }
+                     }
+				   }
+				   else  // if other
+				   {
+				     if (sel->isSelected(ss->getChild(x))) 
+					 { 
+				        SelId = i ;
+				        goto out ;
+					 }
+				   }	
+               }
+			}	
+            else  //if other
+            {
+			  if (sel->isSelected(path->getChild(j))) 
+			  {
+		    		SelId = i ;
+		    		goto out ;
+			  }
+			}  
+		}
 	}
 out : ;
 }
@@ -645,7 +543,8 @@ void CSYNTHDoc::InventorToObjects()
 	char		dummy[10] ;
 	CLib0		lib ;
 
-	root = m_pSceneRoot ;
+	root = m_pSceneRoot; 
+
 	ObjCount  = 0 ;
 	ob_offset = 0 ;
 
@@ -684,7 +583,7 @@ void CSYNTHDoc::InventorToObjects()
 			ob->name   = "GExternal" + lib.inttostr(ob->offset) ;
 			ob->InventorToObject((SoSeparator *)root->getChild(i)) ;
 			Obj[ObjCount] = ob ; ObjCount++ ;
-			ob_offset = ob->offset ;
+			ob_offset = ob->offset + 1 ;
 		}
 	}
 }
@@ -695,12 +594,46 @@ void CSYNTHDoc::OnSelectObj()
 {
 	// Ανοίγει το παράθυρο επιλογής αντικειμένου
 	CSelectObj *dlg = new CSelectObj ;
-
-	root = m_pSceneRoot ;   // !!!!!!!!!!!!!!!
+   
 	if (dlg->DoModal() == IDOK)   
 	{
 
 	}
 	
 }
+
+
+/////////////////////////////////////////////////////////////////////////////
+// TreeView section
+
+void CSYNTHDoc::IvfSceneGraphChanged()
+{
+    CIvfDocument::IvfSceneGraphChanged();
+
+    POSITION pos;
+    SoSelection *pSelNode = NULL;
+
+    // Find the Inventor (IVF) view and get its selection node
+    pos = GetFirstViewPosition();
+    CSYNTHView *pSYNTHView;
+    while (pSYNTHView = (CSYNTHView*)GetNextView(pos)) {
+        if (pSYNTHView->IsKindOf(RUNTIME_CLASS(CSYNTHView))) {
+            pSelNode = pSYNTHView->GetSelectionNode();
+            break;
+        }
+    }
+
+    // Find the tree view and tell it which nodes to watch
+    pos = GetFirstViewPosition();
+    CIvfTreeView *pTreeView;
+    while (pTreeView = (CIvfTreeView*)GetNextView(pos)) {
+        if (pTreeView->IsKindOf(RUNTIME_CLASS(CIvfTreeView))) {
+            pTreeView->SetRootNode( IvfGetDocSceneGraph() );
+            pTreeView->SetSelectionNode( pSelNode );
+            break;
+        }
+    }
+}
+
+
 

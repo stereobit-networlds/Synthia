@@ -24,7 +24,7 @@ CGObject::~CGObject()
 {
 }
 
-void CGObject::ObjectToInventor ( SoGroup *root ) 
+void CGObject::ObjectToInventor ( SoSeparator *root ) 
 {
 }
 
