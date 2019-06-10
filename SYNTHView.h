@@ -85,6 +85,8 @@ public:
 #endif
     
 	void OnDelete();
+	void OnExtDelete();
+	void OnUnGroup();
 
 protected:
 // IVF_EXAMPLE_BEGIN
@@ -111,14 +113,19 @@ protected:
 	afx_msg void OnViewPicedit();
 	afx_msg void OnUpdateViewPicedit(CCmdUI* pCmdUI);
 	//afx_msg void OnDelete(); must be public (look above)
+	//afx_msg void OnExtDelete(); must be public (look above)
 	afx_msg void OnEditCut();
 	afx_msg void OnUpdateEditCut(CCmdUI* pCmdUI);
+	afx_msg void OnExtentedCut();
+	afx_msg void OnUpdateExtentedCut(CCmdUI* pCmdUI);
 	afx_msg void OnEditCopy();
 	afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
 	afx_msg void OnEditPaste();
 	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
 	afx_msg void OnViewViewmodesSelectionmode();
 	afx_msg void OnViewViewmodesViewingmode();
+    //afx_msg void OnUnGroup(); must be public (look above)
+	afx_msg void OnUpdateUnGroup(CCmdUI* pCmdUI);
 // END_IVWGEN
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

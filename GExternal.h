@@ -58,16 +58,20 @@ public:
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
-	void GetObjRefPoints();
-	void GetDistances() ;
-	void MoveObjectTo(float d1,float d2) ;
-	void CalculateSelectedObjectDistance() ;
-	void CalculateNewObjectDistance();
+	void GetObjRefPoints(CGExternal *ext_obj);
+	void GetDistances(CGExternal *ext_obj) ;
+	void MoveObjectTo(CGExternal *ext_obj ,float d1,float d2) ;
+	void MovRebuildButtering() ;
+	void CalculateObjectDistance(CGExternal *e_obj) ;
 	void AttachObject(SoSeparator *obj_sep) ;
-	void ChangeAttributes() ;
-	void ChangeButteringAttributes() ;
-	void RebuildRight() ;
-	void RebuildLeft() ;
+	void InsChangeAttributes() ;
+	void InsChangeMiddleAttributes() ;
+	void InsRebuildButtering() ;
+	void DelChangeAttributes() ;
+	void DelRebuildButtering() ;
+	void ExtDelChangeAttributes() ;
+	void ExtDelRebuildButtering() ;
+	void UnGroupObjects();
 };
 
 /////////////////////////////////////////////////////////////////////////////

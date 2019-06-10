@@ -37,6 +37,9 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/nodes/SoRotation.h>
 #include <Inventor/nodes/SoSelection.h>
 
+SbMatrix matrix ;
+SbVec3f dianisma , destdianisma ;
+
 /////////////////////////////////////////////////////////////////////////////
 // CGExternal
 
@@ -202,10 +205,12 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 	// inherited action
 	CGObject::EditProperties(d,root) ;
 
-	//Get reference points
-	GetObjRefPoints();
-    //Calculate object distances
-    GetDistances(); 
+	//get selected object
+	CGExternal *selected = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);
+	//Get selected reference points
+	GetObjRefPoints(selected);
+    //Calculate selected object distances
+    GetDistances(selected); 
 
 	GExternalProp *dlg = new GExternalProp ;
 
@@ -226,15 +231,14 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 		descr	= dlg->m_descr ;
 		yangle	= dlg->m_yangle ;
 		topoth	= dlg->m_topoth ;
-		xdist	= dlg->m_xdist ;
-		ydist	= dlg->m_ydist ;
+        xdist   = dlg->m_xdist ;
+		ydist   = dlg->m_ydist ;
 
  		if ((xdist!=comparedistX) || (ydist!=comparedistY)) //if xdist,ydist value has change
         {
-		  //calculate motion
-	      MoveObjectTo(xdist,ydist) ;
+		  //calculate motion for selected object only
+	      MoveObjectTo(selected,xdist,ydist) ;
         }
-
 		SaveProperties() ;    
 	}
 
@@ -244,14 +248,15 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 
 //************************ ΑΛΛΑΓΗ ΘΕΣΗΣ *********************************
 /*************************  get reference points  ********************/
-void CGExternal::GetObjRefPoints()
+void CGExternal::GetObjRefPoints(CGExternal *ext_obj)
 {
 	CLib0 lib;
 
 	//get selection carrier
-	carrier_id = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->carrier_id;
-	next_id = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->next_id;
-	prior_id = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->prior_id;
+	carrier_id = ((CGExternal*)ext_obj)->carrier_id;
+
+	next_id = ((CGExternal*)ext_obj)->next_id;
+	prior_id = ((CGExternal*)ext_obj)->prior_id;
 	AfxMessageBox(lib.inttostr(carrier_id)+" "+lib.inttostr(next_id)+" "+lib.inttostr(prior_id));
 
 	//get points data x1,y1,z1 ,x2,y2,z2
@@ -298,14 +303,14 @@ void CGExternal::GetObjRefPoints()
     }
 	
 	
-	AfxMessageBox("points :"+lib.floattostr(pointX1)+" "+lib.floattostr(pointY1)+" "+lib.floattostr(pointZ1)+
-	                   " , "+lib.floattostr(pointX2)+" "+lib.floattostr(pointY2)+" "+lib.floattostr(pointZ2));
+	//AfxMessageBox("points :"+lib.floattostr(pointX1)+" "+lib.floattostr(pointY1)+" "+lib.floattostr(pointZ1)+
+	//                   " , "+lib.floattostr(pointX2)+" "+lib.floattostr(pointY2)+" "+lib.floattostr(pointZ2));
 }
 
 
 #define PI 3.1415926
 /********************* GetDistances **************************/
-void CGExternal::GetDistances()
+void CGExternal::GetDistances(CGExternal *ext_obj)
 {
     CLib0 lib;
 	float objX,objY,objZ ;
@@ -313,11 +318,7 @@ void CGExternal::GetDistances()
 	SbVec3f vals;
 
     
-	SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ; //get node
-    //test code
-	//SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;  
-	//ds->style = SoDrawStyle::FILLED ;
-	
+	SoSeparator *sep = ((CGExternal*)ext_obj)->sep ; //get node
 	SoNode *mynode ;
 	mynode = sep->getChild(1);
 	if (mynode->isOfType(SoTranslation::getClassTypeId())) //if it is translation node
@@ -329,7 +330,7 @@ void CGExternal::GetDistances()
       objY = vals[1];
       objZ = vals[2];
 
-	  AfxMessageBox("object :"+lib.floattostr(vals[0])+" "+lib.floattostr(vals[1])+" "+lib.floattostr(vals[2]));
+	  //AfxMessageBox("object :"+lib.floattostr(vals[0])+" "+lib.floattostr(vals[1])+" "+lib.floattostr(vals[2]));
 
 	  //begin calculations...
 	  //step 1 : calc d
@@ -368,7 +369,11 @@ void CGExternal::GetDistances()
 	  xdist = d1 ;
 	  ydist = d2 ;
 
-	  AfxMessageBox("distances :"+lib.floattostr(d1)+" "+lib.floattostr(d2));
+	  //check for non zero
+	  if (xdist<1) xdist = .5 ;
+	  if (ydist<1) ydist = .5 ;
+
+	  //AfxMessageBox("distances :"+lib.floattostr(xdist)+" "+lib.floattostr(ydist));
     }
 	else
     {
@@ -378,13 +383,14 @@ void CGExternal::GetDistances()
 }
 
 /********************* Move object **************************/
-void CGExternal::MoveObjectTo(float d1,float d2)
+void CGExternal::MoveObjectTo(CGExternal *ext_obj,float d1,float d2)
 {
     CLib0 lib;
 	float objX,objY,objZ ;
 	float b; 
+	SbVec3f vector ;
 
-	AfxMessageBox("distances :"+lib.floattostr(d1)+" "+lib.floattostr(d2));
+	//AfxMessageBox("distances :"+lib.floattostr(d1)+" "+lib.floattostr(d2));
 	//calculations...
 	b = sqrt( (pow( (pointX2-pointX1), 2)) +  
 		      (pow( (pointY2-pointY1), 2)) + 
@@ -395,28 +401,102 @@ void CGExternal::MoveObjectTo(float d1,float d2)
     objY = ( ( (pointY2-pointY1) / fabs(b) ) * d1  + d2 +pointY1 ) ;
 	objZ = ( ( (pointZ2-pointZ1) / fabs(b) ) * d1 + pointZ1 ) ;
 
-	AfxMessageBox("object :"+lib.floattostr(objX)+" "+
-		                     lib.floattostr(objY)+" "+
-				             lib.floattostr(objZ)) ;
+	//AfxMessageBox("object :"+lib.floattostr(objX)+" "+
+	//	                     lib.floattostr(objY)+" "+
+	//			             lib.floattostr(objZ)) ;
 
 	//put new translation
-    SbVec3f vector ;
 	vector.setValue(objX , objY , objZ);
 
-	SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;
+	SoSeparator *sep = ((CGExternal*)ext_obj)->sep ;
 	SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
 
 	trans->translation	=  vector;
+
+	//move all the others buttering objects
+	MovRebuildButtering();
+}
+
+
+//move all the buttering objects...
+void CGExternal::MovRebuildButtering()
+{
+	int my_next, my_prev , meter;
+	SbVec3f sourcevec , targetvec;
+
+    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
+
+    SoSeparator *sep = ((CGExternal*)ext)->sep ; //get the selected object translation 
+	SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+    sourcevec = trans->translation.getValue(); //εχει αλλαξει ηδη το translation και έχει την νέα τιμή
+
+	my_next = ext->next_id ;  //get the selected object next number
+	my_prev = ext->prior_id ;  //get the selected object previous number
+
+	//init calculations for the next pointers
+	//find the first value for the targetvec
+	CalculateObjectDistance(ext);
+	if ((my_next)!=0) targetvec = sourcevec + destdianisma ; 
+    //if at right +destdianisma 
+
+	//first move right objects of buttering
+	meter=0;
+    while (my_next!=0)
+	{
+       CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+
+	   //get next object
+	   my_next = nxt->next_id ;
+
+	   //put new translation for each object
+	   SoSeparator *nxt_sep = ((CGExternal*)nxt)->sep ;
+	   SoTranslation *trans = (SoTranslation *)nxt_sep->getChild(1) ;
+	   trans->translation = targetvec;
+
+	   //after calculate...
+	   //calculate its distance and add it to the targetvec
+       CalculateObjectDistance(nxt);
+       targetvec = targetvec + destdianisma ;
+
+	   meter+=1; 
+	}
+
+	//init calculations for the prev pointers
+	//find the first value for the targetvec
+	CalculateObjectDistance(ext); 
+	if ((my_prev)!=0) targetvec = sourcevec ; //=sourcevec
+    //if at right -destdianisma 
+
+	//secontary move left objects...
+    meter=0;
+	while (my_prev!=0)
+	{
+       CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+	   
+	   //get prev object
+	   my_prev = prv->prior_id ;
+
+	   //first calculate...
+       //calculate its distance and substrack it from the targetvec
+       CalculateObjectDistance(prv);
+       targetvec = targetvec - destdianisma ;
+
+	   //put new translation for each object
+	   SoSeparator *prv_sep = ((CGExternal*)prv)->sep ;
+	   SoTranslation *trans = (SoTranslation *)prv_sep->getChild(1) ;
+	   trans->translation = targetvec;
+
+	   meter+=1;
+	}
+	//CLib0 lib;
+    //AfxMessageBox(lib.inttostr(meter));
 }
 
 //**************** BUTTERING ************************
-SbMatrix matrix ;
-SbVec3f dianisma , destdianisma ;
-
-void CGExternal::CalculateSelectedObjectDistance()
+void CGExternal::CalculateObjectDistance(CGExternal *e_obj)
 {
 	//get left and right base points of selected object
-    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);
+    CGExternal *ext = ((CGExternal*)e_obj);
     pointX1 = ext->left_base_point[0] ;
     pointY1 = ext->left_base_point[1] ;
     pointZ1 = ext->left_base_point[2] ;
@@ -434,25 +514,6 @@ void CGExternal::CalculateSelectedObjectDistance()
     matrix.multVecMatrix(dianisma , destdianisma);
 }
 
-void CGExternal::CalculateNewObjectDistance()
-{
-	//get left and right base points of new object
-    pointX1 = left_base_point[0] ;
-    pointY1 = left_base_point[1] ;
-	pointZ1 = left_base_point[2] ;
-
-	pointX2 = right_base_point[0] ;
-    pointY2 = right_base_point[1] ;
-	pointZ2 = right_base_point[2] ;
-
-	//get distances
-	dianisma[0] = pointX2 - pointX1;
-	dianisma[1] = pointY2 - pointY1;
-	dianisma[2] = pointZ2 - pointZ1;
-
-	//multiply dianisma by matrix
-	matrix.multVecMatrix(dianisma , destdianisma);
-}
 
 //************** input object (buttering) **************/
 void CGExternal::AttachObject(SoSeparator *obj_sep)
@@ -482,34 +543,34 @@ void CGExternal::AttachObject(SoSeparator *obj_sep)
 	switch (theApp.ObjDirection)
     {
 	  case 1 : { //right
-               CalculateSelectedObjectDistance();
+		       //get selected object
+		       CGExternal *gext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); 
+               CalculateObjectDistance(gext);
 
 		       //new translation
 	           NewTransaxis[0] = Transaxis[0] + destdianisma[0] ;
                NewTransaxis[1] = Transaxis[1] + destdianisma[1] ;
                NewTransaxis[2] = Transaxis[2] + destdianisma[2] ;
 
-			   //rebuild buttering (if there are buttering)
-			   RebuildRight();
-
 			   //AfxMessageBox("Right");
 			   break;
              }
       case 2 : { //left
-		       CalculateNewObjectDistance();
+		       //get new object
+		       CGExternal *gext = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]);
+		       CalculateObjectDistance(gext);
 			   
                //new translation 
 	           NewTransaxis[0] = Transaxis[0] - destdianisma[0] ;
                NewTransaxis[1] = Transaxis[1] - destdianisma[1] ;
                NewTransaxis[2] = Transaxis[2] - destdianisma[2] ;
 
-			   //rebuild buttering (if there are buttering)
-			   RebuildLeft();
-
 			   //AfxMessageBox("Left");
 			   break;
              }
     }
+	//rebuild buttering (if there are buttering) inserting mode
+	InsRebuildButtering();
 
 	//set new object translation & rotation 
     SoDrawStyle	*ds = (SoDrawStyle *)obj_sep->getChild(0) ;
@@ -533,8 +594,8 @@ void CGExternal::AttachObject(SoSeparator *obj_sep)
 	sdoc->UpdateAllViews(NULL);   
 }
 
-//******* standart change of attributes (no buttering) *******
-void CGExternal::ChangeAttributes()
+//******* standart change of attributes  (end of buttering) *******
+void CGExternal::InsChangeAttributes()
 {
 	CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);
 
@@ -585,8 +646,8 @@ void CGExternal::ChangeAttributes()
     }
 }
 
-//******* Buttering change of attributes  *******
-void CGExternal::ChangeButteringAttributes()
+//******* change of attributes in the middle of the buttering *******
+void CGExternal::InsChangeMiddleAttributes()
 {
     CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); //get selected object
 
@@ -655,93 +716,332 @@ void CGExternal::ChangeButteringAttributes()
     }
 }
 
-//rebuild the buttering objects at right and change the attributes
-void CGExternal::RebuildRight()
+//rebuild the buttering objects at right and left or change the attributes
+//insert mode ....
+void CGExternal::InsRebuildButtering()
 {
-    int my_next, meter;
+    int my_next, my_prev, meter;
 	SbVec3f Values , NewValues ;
 
 	//***** i need the distance of new object so..
-	CalculateNewObjectDistance();
+	CGExternal *gext = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]);
+    CalculateObjectDistance(gext);
 
     CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
-    my_next	= ext->next_id ;  //get the selected object next number
-
-	meter=0;
-	while (my_next!=0)
+	meter=0; //zero meter
+	switch (theApp.ObjDirection)
     {
+	  case 1 : { //right
+
+                 my_next	= ext->next_id ;  //get the selected object next number
+
+	             while (my_next!=0)
+				 {
+                    CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+	                SoSeparator *nextsep = ((CGExternal*)sdoc->Obj[my_next])->sep ; //get next object node
+                    SoTranslation *t = (SoTranslation *)nextsep->getChild(1) ;  //get translation node
+	                Values = t->translation.getValue(); //get next object translation values
+
+	                //new translation
+                    NewValues[0] = Values[0] + destdianisma[0] ;
+                    NewValues[1] = Values[1] + destdianisma[1] ;
+                    NewValues[2] = Values[2] + destdianisma[2] ;
+
+                    t->translation = NewValues ; //put new (computed ) translation values to next object
+
+	                //get next object
+	                my_next = nxt->next_id ;
+	                meter+=1; 
+				 }
+				 break;
+			   }
+      case 2 : { //left
+
+                 my_prev = ext->prior_id ;  //get the selected object prior number
+
+	             while (my_prev!=0)
+				 {
+                    CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+	                SoSeparator *prevsep = ((CGExternal*)sdoc->Obj[my_prev])->sep ; //get previous object node
+                    SoTranslation *t = (SoTranslation *)prevsep->getChild(1) ;  //get translation node
+	                Values = t->translation.getValue(); //get next object translation values
+
+                    //new translation
+                    NewValues[0] = Values[0] - destdianisma[0] ;
+                    NewValues[1] = Values[1] - destdianisma[1] ;
+                    NewValues[2] = Values[2] - destdianisma[2] ;
+
+                    t->translation = NewValues ; //put new (computed ) translation values to previous object
+
+					//get next object
+	                my_prev = prv->prior_id ;
+	                meter+=1;
+				 }
+				 break;
+               }
+	}
+
+	//CLib0 lib;
+	//AfxMessageBox(lib.inttostr(meter));
+
+    //Change the attributes of objects
+	if (meter==0) //it means that the new object is located at the end of buttering
+    {
+       InsChangeAttributes();
+    }
+	else  //the object has insert somewhere -in- the  buttering
+    {
+	   InsChangeMiddleAttributes();
+    }
+}
+
+
+
+
+//******* Delete mode .. change attributes *********
+void CGExternal::DelChangeAttributes()
+{
+    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); //get selected object
+
+	if (ext->next_id!=0)
+    {
+      CGExternal *nxt = ((CGExternal*)sdoc->Obj[ext->next_id]);       //get next of selected object
+      nxt->prior_id = ext->prior_id;
+	  nxt->SaveProperties();
+    }
+    if (ext->prior_id!=0)
+    {
+      CGExternal *prv = ((CGExternal*)sdoc->Obj[ext->prior_id]);      //get prev of selected object 
+	  prv->next_id = ext->next_id;
+      prv->SaveProperties();
+    }
+
+	//change selected (deleted) object attributes
+	ext->next_id = 0;
+	ext->prior_id = 0;
+	ext->carrier_id = 0;
+	ext->SaveProperties();
+
+}
+
+
+//rebuild the buttering objects at right or left and change the attributes
+//delete mode...
+//**** this routine called from delete routine of synthview file ******
+void CGExternal::DelRebuildButtering()
+{
+    int my_next, my_prev, meter;
+	SbVec3f Values , NewValues ;
+	float pX1, pY1, pZ1 ;
+    float pX2, pY2, pZ2 ;
+	SbVec3f Rotaxis ;
+	float Rotangle ;
+	int the_next, the_prev;
+
+    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
+
+	//check if there are buttering ...
+	the_next = ext->next_id ;  //get the selected object next number
+    the_prev = ext->prior_id ;  //get the selected object previous number
+    if ((the_next!=0) || (the_prev!=0))
+    {
+ 
+	  //find matrix 
+	  SoSeparator *selected = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ; //get selected object node
+	  SoRotation *r = (SoRotation *)selected->getChild(2) ; 	   
+      r->rotation.getValue(Rotaxis , Rotangle); //get selected object rotation values
+
+	  SbRotation *sbrot = new SbRotation(Rotaxis , Rotangle); //get selected object rotation  
+	  sbrot->getValue(matrix);                                //and transfer it to the new
+      //matrix multiply with the new rotation and the result is the real rotation of the new object
+
+
+      //calculate selected object distance
+	  pX1 = ext->left_base_point[0] ;
+      pY1 = ext->left_base_point[1] ;
+      pZ1 = ext->left_base_point[2] ;
+
+      pX2 = ext->right_base_point[0] ;
+      pY2 = ext->right_base_point[1] ;
+      pZ2 = ext->right_base_point[2] ;
+
+      //get distances
+      dianisma[0] = pX2 - pX1;
+      dianisma[1] = pY2 - pY1;
+      dianisma[2] = pZ2 - pZ1; 
+
+	  //multiply dianisma by matrix 
+      matrix.multVecMatrix(dianisma , destdianisma);
+
+      //get selected object 
+      //CalculateObjectDistance(ext); εαν αντικατασταθεί η calculate ρουτινα με αυτη κολλαει ασχημα!!!!!
+
+	  meter=0; //zero meter
+	  switch (theApp.ObjDirection)
+	  {
+	    case 1 : { //right
+
+                   my_next	= ext->next_id ;  //get the selected object next number
+
+	               while (my_next!=0)
+				   {
+                      CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+	                  SoSeparator *nextsep = ((CGExternal*)sdoc->Obj[my_next])->sep ; //get next object node
+                      SoTranslation *t = (SoTranslation *)nextsep->getChild(1) ;  //get translation node
+	                  Values = t->translation.getValue(); //get next object translation values
+
+	                  //new translation
+                      NewValues[0] = Values[0] - destdianisma[0] ;
+                      NewValues[1] = Values[1] - destdianisma[1] ;
+                      NewValues[2] = Values[2] - destdianisma[2] ;
+
+                      t->translation = NewValues ; //put new (computed ) translation values to next object
+
+	                  //get next object
+	                  my_next = nxt->next_id ;
+	                  meter+=1; 
+				   }
+				   break;
+				 }
+        case 2 : { //left
+
+                   my_prev = ext->prior_id ;  //get the selected object prior number
+
+	               while (my_prev!=0)
+				   {
+                      CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+	                  SoSeparator *prevsep = ((CGExternal*)sdoc->Obj[my_prev])->sep ; //get previous object node
+                      SoTranslation *t = (SoTranslation *)prevsep->getChild(1) ;  //get translation node
+	                  Values = t->translation.getValue(); //get next object translation values
+
+                      //new translation
+                      NewValues[0] = Values[0] + destdianisma[0] ;
+                      NewValues[1] = Values[1] + destdianisma[1] ;
+                      NewValues[2] = Values[2] + destdianisma[2] ;
+
+                      t->translation = NewValues ; //put new (computed ) translation values to previous object
+
+					  //get prev object
+	                  my_prev = prv->prior_id ;
+	                  meter+=1;
+				   }
+				   break;
+				 }
+	  }
+
+	  //CLib0 lib;
+	  //AfxMessageBox(lib.inttostr(meter));
+
+      //Change the attributes of objects
+      DelChangeAttributes();
+
+	} //if
+}
+
+
+
+//******* Extented Delete mode .. change attributes (break buttering) *********
+void CGExternal::ExtDelChangeAttributes()
+{
+    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); //get selected object
+
+	if (ext->next_id!=0)
+    {
+      CGExternal *nxt = ((CGExternal*)sdoc->Obj[ext->next_id]);       //get next of selected object
+      nxt->prior_id = 0; //break..
+	  nxt->SaveProperties();
+    }
+    if (ext->prior_id!=0)
+    {
+      CGExternal *prv = ((CGExternal*)sdoc->Obj[ext->prior_id]);      //get prev of selected object 
+	  prv->next_id = 0; //break..
+      prv->SaveProperties();
+    }
+
+	//change selected (deleted) object attributes
+	ext->next_id = 0;
+	ext->prior_id = 0;
+	ext->carrier_id = 0;
+	ext->SaveProperties();
+
+}
+
+
+//rebuild the buttering objects at right or left and change the attributes
+//delete object and break the buttering in 2 butterings
+//extent delete mode...
+//**** this routine called from delete routine of synthview file ******
+void CGExternal::ExtDelRebuildButtering()
+{
+	int the_next, the_prev;
+
+    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
+
+	//check if there are buttering ...
+	the_next = ext->next_id ;  //get the selected object next number
+    the_prev = ext->prior_id ;  //get the selected object previous number
+    if ((the_next!=0) || (the_prev!=0))
+    {
+	  //..do nothing 
+      //just set the atributes...
+
+      //Change the attributes of objects
+      ExtDelChangeAttributes();
+
+	} //if
+}
+
+
+//Ungroup the selected object buttering
+void CGExternal::UnGroupObjects()
+{
+	int my_next, my_prev , meter;
+
+    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
+	my_next = ext->next_id ;  //get the selected object next number
+	my_prev = ext->prior_id ;  //get the selected object previous number
+
+	//first ungroup right objects of buttering
+	meter=0;
+    while (my_next!=0)
+	{
        CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
-	   SoSeparator *nextsep = ((CGExternal*)sdoc->Obj[my_next])->sep ; //get next object node
-       SoTranslation *t = (SoTranslation *)nextsep->getChild(1) ;  //get translation node
-	   Values = t->translation.getValue(); //get next object translation values
-
-	   //new translation
-       NewValues[0] = Values[0] + destdianisma[0] ;
-       NewValues[1] = Values[1] + destdianisma[1] ;
-       NewValues[2] = Values[2] + destdianisma[2] ;
-
-       t->translation = NewValues ; //put new (computed ) translation values to next object
 
 	   //get next object
 	   my_next = nxt->next_id ;
-	   meter+=1;
+
+	   nxt->prior_id = 0; 
+	   nxt->next_id =0; //after getting the next pointer zero him
+      
+	   nxt->SaveProperties();
+
+	   meter+=1; 
 	}
-	CLib0 lib;
-	AfxMessageBox(lib.inttostr(meter));
-    //Change the attributes of objects
-	if (meter==0) //it means that there are not buttering
-    {
-       ChangeAttributes();
-    }
-	else
-    {
-	   ChangeButteringAttributes();
-    }
-}
 
-//rebuild the buttering objects at left and change the attributes
-void CGExternal::RebuildLeft()
-{
-    int my_prev, meter;
-	SbVec3f Values , NewValues ;
-
-	//***** i need the distance of new object so..
-	CalculateNewObjectDistance();
-
-    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
-    my_prev	= ext->prior_id ;  //get the selected object prior number
-
-	meter=0;
+	//secontary ungroup left objects...
+    meter=0;
 	while (my_prev!=0)
-    {
+	{
        CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
-	   SoSeparator *prevsep = ((CGExternal*)sdoc->Obj[my_prev])->sep ; //get previous object node
-       SoTranslation *t = (SoTranslation *)prevsep->getChild(1) ;  //get translation node
-	   Values = t->translation.getValue(); //get next object translation values
-
-	   //new translation
-       NewValues[0] = Values[0] - destdianisma[0] ;
-       NewValues[1] = Values[1] - destdianisma[1] ;
-       NewValues[2] = Values[2] - destdianisma[2] ;
-
-       t->translation = NewValues ; //put new (computed ) translation values to previous object
-
-	   //get next object
+	   
+	   //get prev object
 	   my_prev = prv->prior_id ;
+
+	   prv->next_id = 0;
+       prv->prior_id =0; //after getting the prev pointer zero him
+
+	   prv->SaveProperties();
+
 	   meter+=1;
 	}
-	CLib0 lib;
-	AfxMessageBox(lib.inttostr(meter));
-    //Change the attributes of objects
-	if (meter==0) //it means that there are not buttering
-    {
-       ChangeAttributes();
-    }
-	else
-    {
-	   ChangeButteringAttributes();
-    }
+
+	//..at end ungroup selected object
+	ext->next_id = 0;
+	ext->prior_id = 0;
+	ext->SaveProperties();
+
 }
+
 
 
 /////////////////////////////////////////////////////////////////////////////

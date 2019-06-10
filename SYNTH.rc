@@ -531,8 +531,12 @@ BEGIN
         MENUITEM "Ακύρωση",                     ID_EDIT_UNDO
         MENUITEM SEPARATOR
         MENUITEM "Διαγραφή",                    ID_EDIT_CUT
+        MENUITEM "Διαγραφή - Αποσύνδεση . . .", ID_EXTENTED_CUT
         MENUITEM "Αντιγραφή",                   ID_EDIT_COPY
         MENUITEM "Επικόληση\tCtrl+V",           ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "Αποσύνδεση αντικειμένων . . .", ID_UNGROUP
+        MENUITEM SEPARATOR
         MENUITEM "Νέα Σφαίρα",                  SYNTH_NEW_SPHERE
         MENUITEM "ΙΔΙΟΤΗΤΕΣ",                   SYNTH_PROPERTIES
         MENUITEM "ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ",         SYNTH_KATAXKOYZIN

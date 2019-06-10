@@ -49,6 +49,8 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	ON_COMMAND(SYNTH_SELECT, OnSelectObj)
 	ON_UPDATE_COMMAND_UI(SYNTH_SELECT, OnUpdateSelectObj)
 	ON_COMMAND(ID_EDIT_CUT, OnDelete)
+	ON_COMMAND(ID_EXTENTED_CUT, OnExtDelete)
+	ON_COMMAND(ID_UNGROUP, OnUnGroup)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -256,7 +258,8 @@ void CSYNTHDoc::IvfSetupUrlFetchCallback(void)
 	CIvfDocument::IvfSetupUrlFetchCallback();
 }
 
-/******** just set modified flag ************/
+//***** τις καλω απο το doc διοτι πρεπει να κανω το ModifiedFlag On
+/******** delete the selected object ************/
 void CSYNTHDoc::OnDelete() 
 {
 	// Ανοίγει το παράθυρο διαγραφής αντικειμένου
@@ -268,6 +271,27 @@ void CSYNTHDoc::OnDelete()
 	  SetModifiedFlag();
 	}
 
+}
+
+/******** extent delete of selected object ************/
+void CSYNTHDoc::OnExtDelete() 
+{
+	// Ανοίγει το παράθυρο διαγραφής αντικειμένου
+	DeleteObj *dlg = new DeleteObj ;
+   
+	if (dlg->DoModal() == IDOK)   
+	{
+      sview->OnExtDelete(); //call extented delete of view
+	  SetModifiedFlag();
+	}
+
+}
+
+//******** Ungroup objects
+void CSYNTHDoc::OnUnGroup()
+{
+	sview->OnUnGroup(); 
+	SetModifiedFlag();
 }
 
 #include <Inventor/nodes/SoSphere.h>

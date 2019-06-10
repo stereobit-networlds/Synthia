@@ -84,6 +84,8 @@ protected:
 	afx_msg void OnSelectObj();
 	afx_msg void OnUpdateSelectObj(CCmdUI* pCmdUI);
 	afx_msg void OnDelete();
+	afx_msg void OnExtDelete();
+	afx_msg void OnUnGroup();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

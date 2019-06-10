@@ -50,12 +50,17 @@ BEGIN_MESSAGE_MAP(CSYNTHView, CView)
 	//ON_COMMAND(ID_EDIT_CUT, OnDelete)  this command called from OnDelete of doc
 	//ON_COMMAND(ID_EDIT_CUT, OnEditCut) redirect this command to "OnDelete"
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateEditCut)
+	//ON_COMMAND(ID_EDIT_CUT, OnExtDelete)  this command called from OnExtDelete of doc
+	//ON_COMMAND(ID_EXTENTED_CUT, OnExtentedCut) redirect this command to "OnExtDelete" 
+	ON_UPDATE_COMMAND_UI(ID_EXTENTED_CUT, OnUpdateExtentedCut)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateEditCopy)
 	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
 	ON_COMMAND(ID_VIEW_VIEWINGMODE, OnViewViewmodesViewingmode)
 	ON_COMMAND(ID_VIEW_SELECTIONMODE, OnViewViewmodesSelectionmode)
+	ON_COMMAND(ID_UNGROUP, OnUnGroup)
+	ON_UPDATE_COMMAND_UI(ID_UNGROUP, OnUpdateUnGroup)
 // END_IVWGEN
 	//}}AFX_MSG_MAP
 	// Standard printing commands
@@ -438,12 +443,9 @@ void CSYNTHView::OnEditCut()
         SoGroup *pGroup = (SoGroup *) pPath->getNodeFromTail( 1 );
         pGroup->removeChild( pPath->getTail() );
 
-        pPath->unref();
+        pPath->unref();  
         i--;
-    }
-
-	//delete object from Object array
-	sdoc->Obj[sdoc->obj_selector]=NULL;   
+    }   
 }
 
 void CSYNTHView::OnUpdateEditCut(CCmdUI* pCmdUI) 
@@ -455,6 +457,46 @@ void CSYNTHView::OnUpdateEditCut(CCmdUI* pCmdUI)
     else
         pCmdUI->Enable( FALSE );
 }
+
+//****************************** 
+//ειναι ίδια με την OnEditCut... (future use??) 
+void CSYNTHView::OnExtentedCut() 
+{
+    // Copy all selected objects to clipboard
+    OnEditCopy();
+
+    // Loop over all selected objects
+    int i = m_pSelectionNode->getNumSelected() - 1;
+
+    while (i >= 0) {
+        // Get next path
+        SoPath *pPath = (*m_pSelectionNode)[i];
+        pPath->ref();
+	
+        // Deselect this path
+        m_pSelectionNode->deselect(i);
+
+        // Remove the tail node from the graph
+        // 1) Get parent of tail node (which must be a group).
+        // 2) Remove tail node from the group.
+        SoGroup *pGroup = (SoGroup *) pPath->getNodeFromTail( 1 );
+        pGroup->removeChild( pPath->getTail() );
+
+        pPath->unref();  
+        i--;
+    }   
+}
+
+void CSYNTHView::OnUpdateExtentedCut(CCmdUI* pCmdUI) 
+{
+    // Cut is only valid if at least one object is selected
+    ASSERT( m_pSelectionNode != NULL );
+    if (m_pSelectionNode->getNumSelected() > 0)
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+}
+//**********************************
 
 void CSYNTHView::OnPasteCB( void *data, SoPathList *pList )
 {
@@ -576,14 +618,94 @@ void CSYNTHView::OnViewViewmodesViewingmode()
 }
 
 
-/**** just redirect onEditCut ****/
+/**************************/
 void CSYNTHView::OnDelete()
 {
-      OnEditCut(); //call OnEditCut (ετοιμη ρουτινα)
-	  // εδω μπορει να γινει η δικιά μου delete routine
-	  //....
+    CGExternal  *external_obj ;
+
+	if (sdoc->obj_selector>0) //delete only walls, roombase ,externals
+    {
+	  //if the object is GExternal type...
+      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+      {
+         //.. my delete .. (make object invisible)
+	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;		
+	     SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
+         ds->style = SoDrawStyle::INVISIBLE  ;
+
+         //rebuild the buttering -before- delete the selected object
+         external_obj->DelRebuildButtering(); 
+      }
+      //OnEditCut(); //call OnEditCut (ετοιμη ρουτινα) delete the selected object  (κολλαει μετά στην εισαγωγη object)
+      else  AfxMessageBox("Access denied."); 
+
+	  //delete object from Object array
+	  sdoc->Obj[sdoc->obj_selector]=NULL;
+	  //deselect ...
+	  GetSelectionNode()->deselectAll();
+	}
+	else AfxMessageBox("Access denied."); 
 }
 
+void CSYNTHView::OnExtDelete()
+{
+    CGExternal  *external_obj ;
+
+	if (sdoc->obj_selector>0) //delete only walls, roombase ,externals
+    {
+	  //if the object is GExternal type...
+      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+      {
+         //.. my delete .. (make object invisible)
+	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;		
+	     SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
+         ds->style = SoDrawStyle::INVISIBLE  ;
+         //rebuild the buttering -before- delete the selected object
+         external_obj->ExtDelRebuildButtering(); 
+      }
+      else //OnExtentedCut(); 
+           AfxMessageBox("Invalid selection. Access denied."); 
+
+	  //delete object from Object array
+	  sdoc->Obj[sdoc->obj_selector]=NULL;
+	  //deselect ...
+	  GetSelectionNode()->deselectAll();
+	}
+	else AfxMessageBox("Invalid selection. Access denied."); 
+}
+
+
+void CSYNTHView::OnUnGroup()
+{
+	CGExternal  *external_obj ;
+
+	if (sdoc->obj_selector>0) //ungroup only externals
+    {
+	  //if the object is GExternal type...
+      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+      {
+         //do the job...
+		 external_obj->UnGroupObjects();
+      }
+      else AfxMessageBox("Invalid selection. Access denied."); 
+	}
+	else AfxMessageBox("Invalid selection. Access denied."); 
+
+}
+
+void CSYNTHView::OnUpdateUnGroup(CCmdUI* pCmdUI) 
+{
+    ASSERT( m_pSelectionNode != NULL );
+    if (m_pSelectionNode->getNumSelected() > 0)
+   // {
+    //if the object is GExternal type...
+    //if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+   //}
+}
+//***********************************
 
 /*======================= selectionCallback =============*/
 
