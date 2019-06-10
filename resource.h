@@ -50,7 +50,9 @@
 #define IDC_XDIST                       1024
 #define IDC_YDIST                       1025
 #define IDC_ANGLE3                      1026
+#define IDC_LDIST                       1026
 #define IDC_MHKOS3                      1027
+#define IDC_RDIST                       1027
 #define IDC_TOIXOMA3                    1028
 #define IDC_ANGLE4                      1029
 #define IDC_MHKOS4                      1030
@@ -89,7 +91,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        143
 #define _APS_NEXT_COMMAND_VALUE         32833
-#define _APS_NEXT_CONTROL_VALUE         1023
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

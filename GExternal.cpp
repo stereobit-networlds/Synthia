@@ -208,6 +208,9 @@ void CGExternal::InventorToObject ( SoSeparator *root )
 /*======================= EditProperties ========================*/
 int CGExternal::EditProperties ( CDocument *d, SoSeparator *root ) 
 {
+    float comparedistX,comparedistY ; //compare purpose
+	float compL , compR ;
+
 	// inherited action
 	CGObject::EditProperties(d,root) ;
 
@@ -216,11 +219,11 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 	//Get selected reference points
 	GetObjRefPoints(selected);
     //Calculate selected object distances
-    GetDistances(selected); 
+    GetDistances(selected);
+	//Calculate selected object or whole battering wall distances
+	GetWallDistances(selected);
 
 	GExternalProp *dlg = new GExternalProp ;
-
-	float comparedistX,comparedistY ; //compare purpose 
 
 	dlg->m_code		= code ;
 	dlg->m_descr	= descr ;
@@ -228,6 +231,8 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 	dlg->m_topoth	= topoth ;
 	dlg->m_xdist	= xdist ; comparedistX = xdist; 
 	dlg->m_ydist	= ydist ; comparedistY = ydist;
+	dlg->m_ldist    = Ldist ; compL = Ldist;
+	dlg->m_rdist    = Rdist ; compR = Rdist;
 
 	int res = dlg->DoModal() ;
 
@@ -239,12 +244,19 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 		topoth	= dlg->m_topoth ;
         xdist   = dlg->m_xdist ;
 		ydist   = dlg->m_ydist ;
+        Ldist   = dlg->m_ldist ;
+		Rdist   = dlg->m_rdist ;
 
  		if ((xdist!=comparedistX) || (ydist!=comparedistY)) //if xdist,ydist value has change
         {
 		  //calculate motion for selected object only
 	      MoveObjectTo(selected,xdist,ydist) ;
         }
+
+		if (Rdist!=compR) { SetWallDistances(selected ,1); }
+         
+		if (Ldist!=compL) { SetWallDistances(selected ,0); }
+
 		SaveProperties() ;    
 	}
 
@@ -310,7 +322,9 @@ void CGExternal::GetObjRefPoints(CGExternal *ext_obj)
 	
 	
 	//AfxMessageBox("points :"+lib.floattostr(pointX1)+" "+lib.floattostr(pointY1)+" "+lib.floattostr(pointZ1)+
-	//                   " , "+lib.floattostr(pointX2)+" "+lib.floattostr(pointY2)+" "+lib.floattostr(pointZ2));
+	//" , "+lib.floattostr(pointX2)+" "+lib.floattostr(pointY2)+" "+lib.floattostr(pointZ2));
+    //float x = (pointX2-pointX1);
+	//AfxMessageBox(lib.floattostr(pointX1));
 }
 
 
@@ -388,6 +402,126 @@ void CGExternal::GetDistances(CGExternal *ext_obj)
 
 }
 
+/*** get the right and left wall distances from the object or battering ****/
+void CGExternal::GetWallDistances(CGExternal *ext_obj)
+{
+	int my_next, my_prev ;
+	SbVec3f values ;
+	int meter ;
+	float x1 , x2 , d ;
+	CLib0 lib;
+
+	//AfxMessageBox(lib.floattostr(pointX1));
+    SoSeparator *sep = ((CGExternal*)ext_obj)->sep ; //get the selected object node 
+
+	my_next = ext_obj->next_id ;  //get the selected object next number
+	my_prev = ext_obj->prior_id ;  //get the selected object previous number
+
+	//get translation of selected object ...
+    SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+    values = trans->translation.getValue();
+
+    //because we want the right distance calculate the object distance ...
+	x1 = ext_obj->left_base_point[0] ;
+	x2 = ext_obj->right_base_point[0] ;
+	d = (x2 - x1);
+ 
+    //finaly calculate the left and right distances of selected object ...
+    Ldist =  values[0] - pointX2 ; 
+    Rdist =  pointX1 - values[0] - d ; 
+
+    //if battering ... find the very next and very previous left and right distances 
+	meter=0;
+    while (my_next!=0)
+	{
+       CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+	   SoSeparator *sep = ((CGExternal*)nxt)->sep ; 
+
+	   //get next object
+	   my_next = nxt->next_id ;
+
+	   //get translation ...
+	   SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+	   values = trans->translation.getValue();
+
+	   //because we want the right distance calculate the object distance ...
+	   x1 = nxt->left_base_point[0] ;
+	   x2 = nxt->right_base_point[0] ;
+	   d = (x2 - x1);
+ 
+       //finaly calculate the distance...
+	   Rdist =  pointX1 - values[0] - d ; 
+
+	   meter+=1; 
+	}
+    //CLib0 lib;
+    //AfxMessageBox(lib.inttostr(meter));
+
+    meter=0;
+	while (my_prev!=0)
+	{
+       CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+	   SoSeparator *sep = ((CGExternal*)prv)->sep ; 
+	   
+	   //get prev object
+	   my_prev = prv->prior_id ;
+
+	   //get translation ...
+	   SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+	   values = trans->translation.getValue();
+
+	   //the left distance ...
+	   Ldist =  values[0] - pointX2 ; 
+
+	   meter+=1;
+	}
+	//CLib0 lib;
+    //AfxMessageBox(lib.inttostr(meter));
+}
+
+/*** set the right or left wall distances from the object or battering ****/
+//0 =left , 1 =right
+void CGExternal::SetWallDistances(CGExternal *ext_obj , int RightOrLeft)
+{ 
+	SbVec3f values ;
+	float xL , xR ;
+	float x1 , x2 , d ;
+	CLib0 lib ;
+   
+	SoSeparator *sep = ((CGExternal*)ext_obj)->sep ; //get the selected object node 
+
+	//get translation of selected object ...
+    SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+    values = trans->translation.getValue();
+
+	//calculations...
+    if (RightOrLeft==0)  //left distance
+	{
+       
+	   xL = pointX2 + Ldist ;
+	   values[0] = xL ;
+	}
+	else  //right distance
+	{
+      
+      //because we want the right distance calculate the object distance ...
+      x1 = ext_obj->left_base_point[0] ;
+	  x2 = ext_obj->right_base_point[0] ;
+	  d = (x2 - x1);
+
+      xR = pointX1 - d - Rdist ;
+	  values[0] = xR ;
+	}
+
+    //}
+	//put new translation
+	trans->translation	= values;
+
+	//move all the others battering objects
+	MovRebuildButtering(ext_obj);
+	
+}
+
 /********************* Move object **************************/
 void CGExternal::MoveObjectTo(CGExternal *ext_obj,float d1,float d2)
 {
@@ -420,21 +554,29 @@ void CGExternal::MoveObjectTo(CGExternal *ext_obj,float d1,float d2)
 	trans->translation	=  vector;
 
 	//move all the others battering objects
-	MovRebuildButtering();
+	MovRebuildButtering(ext_obj);
 }
 
 
 //move all the battering objects...
-void CGExternal::MovRebuildButtering()
+//ext = the selected or base of battering object
+void CGExternal::MovRebuildButtering(CGExternal *ext)
 {
 	int my_next, my_prev , meter;
 	SbVec3f sourcevec , targetvec;
-
-    CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
+	SbVec3f Rotaxis ;
+	float Rotangle ; 
 
     SoSeparator *sep = ((CGExternal*)ext)->sep ; //get the selected object translation 
 	SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
     sourcevec = trans->translation.getValue(); //εχει αλλαξει ηδη το translation και έχει την νέα τιμή
+
+	SoRotation *r = (SoRotation *)sep->getChild(2) ;
+	r->rotation.getValue(Rotaxis , Rotangle); //get selected object rotation values
+
+	SbRotation *sbrot = new SbRotation(Rotaxis , Rotangle); //get selected object rotation  
+	sbrot->getValue(matrix);                                //and transfer it to the new
+    //matrix multiply with the new rotation and the result is the real rotation of the new object
 
 	my_next = ext->next_id ;  //get the selected object next number
 	my_prev = ext->prior_id ;  //get the selected object previous number
@@ -501,22 +643,26 @@ void CGExternal::MovRebuildButtering()
 //**************** battering ************************
 void CGExternal::CalculateObjectDistance(CGExternal *e_obj)
 {
+	float pX1 , pY1 , pZ1 ,
+	      pX2 , pY2 , pZ2 ;
+
 	//get left and right base points of selected object
     CGExternal *ext = ((CGExternal*)e_obj);
-    pointX1 = ext->left_base_point[0] ;
-    pointY1 = ext->left_base_point[1] ;
-    pointZ1 = ext->left_base_point[2] ;
+    pX1 = ext->left_base_point[0] ;
+    pY1 = ext->left_base_point[1] ;
+    pZ1 = ext->left_base_point[2] ;
 
-    pointX2 = ext->right_base_point[0] ;
-    pointY2 = ext->right_base_point[1] ;
-    pointZ2 = ext->right_base_point[2] ;
+    pX2 = ext->right_base_point[0] ;
+    pY2 = ext->right_base_point[1] ;
+    pZ2 = ext->right_base_point[2] ;
 
     //get distances
-    dianisma[0] = pointX2 - pointX1;
-    dianisma[1] = pointY2 - pointY1;
-    dianisma[2] = pointZ2 - pointZ1; 
+    dianisma[0] = pX2 - pX1;
+    dianisma[1] = pY2 - pY1;
+    dianisma[2] = pZ2 - pZ1; 
 			   
     //multiply dianisma by matrix 
+	//πεπε να εχει υπολογιστει πιο πριν
     matrix.multVecMatrix(dianisma , destdianisma);
 }
 
@@ -1331,6 +1477,8 @@ GExternalProp::GExternalProp(CWnd* pParent /*=NULL*/)
 	m_xdist = 0.0f;
 	m_yangle = 0.0f;
 	m_ydist = 0.0f;
+	m_ldist = 0.0f;
+	m_rdist = 0.0f;
 	//}}AFX_DATA_INIT
 }
 
@@ -1345,6 +1493,8 @@ void GExternalProp::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_XDIST, m_xdist);
 	DDX_Text(pDX, IDC_YANGLE, m_yangle);
 	DDX_Text(pDX, IDC_YDIST, m_ydist);
+	DDX_Text(pDX, IDC_LDIST, m_ldist);
+	DDX_Text(pDX, IDC_RDIST, m_rdist);
 	//}}AFX_DATA_MAP
 }
 

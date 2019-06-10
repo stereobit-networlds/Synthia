@@ -51,6 +51,7 @@ public:
 	float pointX2,pointY2,pointZ2;
     float xdist, ydist ;  //calculated distances
 
+    float Ldist , Rdist ; //object distance from walls (left and right)
 
 // Operations
 public:
@@ -60,8 +61,10 @@ public:
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
 	void GetObjRefPoints(CGExternal *ext_obj);
 	void GetDistances(CGExternal *ext_obj) ;
+	void GetWallDistances(CGExternal *ext_obj) ;
+	void SetWallDistances(CGExternal *ext_obj , int RightOrLeft) ;
 	void MoveObjectTo(CGExternal *ext_obj ,float d1,float d2) ;
-	void MovRebuildButtering() ;
+	void MovRebuildButtering(CGExternal *ext) ;
 	void CalculateObjectDistance(CGExternal *e_obj) ;
 	void AttachObject(SoSeparator *obj_sep) ;
 	void InsChangeAttributes() ;
@@ -98,6 +101,8 @@ public:
 	float	m_xdist;
 	float	m_yangle;
 	float	m_ydist;
+	float   m_ldist;
+	float   m_rdist;
 	//}}AFX_DATA
 
 

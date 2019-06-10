@@ -51,10 +51,10 @@ Resource18=IDR_MYTBAR (English (U.S.))
 Class20=CIvfTreeView
 Class21=dummy
 Class22=IvfListView
-Resource19=SYNTH_GEXTERNAL_PROP (Greek)
+Resource19=IDR_SYNTHTYPE (Greek)
 Class23=DeleteObj
 Resource20=SYNTH_DELETE_OBJ (Greek)
-Resource21=IDR_SYNTHTYPE (Greek)
+Resource21=SYNTH_GEXTERNAL_PROP (Greek)
 
 [CLS:CSYNTHApp]
 Type=0
@@ -456,7 +456,7 @@ VirtualFilter=dWC
 [DLG:SYNTH_GEXTERNAL_PROP (Greek)]
 Type=1
 Class=GExternalProp
-ControlCount=14
+ControlCount=18
 Control1=IDC_CODE,edit,1350631552
 Control2=IDC_DESCR,edit,1350631552
 Control3=IDC_YANGLE,edit,1350631552
@@ -471,6 +471,10 @@ Control11=IDC_XDIST,edit,1350631552
 Control12=65535,static,1342308354
 Control13=IDC_YDIST,edit,1350631552
 Control14=65535,static,1342308354
+Control15=IDC_LDIST,edit,1350631552
+Control16=IDC_RDIST,edit,1350631552
+Control17=65535,static,1342308354
+Control18=65535,static,1342308354
 
 [DLG:SYNTH_ROOMBASE_PROP (Greek)]
 Type=1

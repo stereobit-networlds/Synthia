@@ -411,7 +411,7 @@ void CSYNTHDoc::OnProperties()
 	if (res == IDOK) 
 	{
 		SetModifiedFlag();
-		//UpdateAllViews(NULL);   
+		UpdateAllViews(NULL);   
 	} 	
 }
 

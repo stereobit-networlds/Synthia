@@ -415,6 +415,7 @@ void CSYNTHView::OnEditCopy()
 	  sdoc->Copy_Obj[1] = sdoc->Obj[sdoc->obj_selector];
 	  // copy the node to my copy buffer node
       sdoc->copysep = ((CGExternal *)sdoc->Obj[sdoc->obj_selector])->sep;
+      //πρεπει να αντιγραφεται απο τον inventor...
 
 	  sdoc->copy_external = true ;
     }
