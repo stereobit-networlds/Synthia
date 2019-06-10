@@ -13,6 +13,10 @@
 class SoSelection;
 // IVF_EXAMPLE_END
 
+// We'll need an instance of SoWinClipboard for cut/copy/paste
+class SoWinClipboard;   //SelectB
+// IVF_EXAMPLE_END
+
 
 class CSYNTHDoc;
 
@@ -79,11 +83,17 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
+    
+	void OnDelete();
 
 protected:
 // IVF_EXAMPLE_BEGIN
     // Selection node to manage selection
-    SoSelection *m_pSelectionNode;
+    SoSelection *m_pSelectionNode; 
+
+    SoWinClipboard *m_pClipboard;   //SelectB
+
+    static void OnPasteCB( void *data, SoPathList *pList );
 // IVF_EXAMPLE_END
 
 
@@ -100,6 +110,7 @@ protected:
 
 	afx_msg void OnViewPicedit();
 	afx_msg void OnUpdateViewPicedit(CCmdUI* pCmdUI);
+	//afx_msg void OnDelete(); must be public (look above)
 	afx_msg void OnEditCut();
 	afx_msg void OnUpdateEditCut(CCmdUI* pCmdUI);
 	afx_msg void OnEditCopy();

@@ -13,6 +13,8 @@
 #define SYNTH_ROOMBASE_PROP             137
 #define SYNTH_ROOMWALL_PROP             138
 #define SYNTH_GEXTERNAL_PROP            139
+#define SYNTH_DELETE_OBJ                140
+#define IDR_MYTBAR                      141
 #define IDM_VIEWPOINTS                  997
 #define IDC_VIEWER                      998
 #define IDC_ABOUT_TEXT                  999
@@ -72,14 +74,18 @@
 #define SYNTH_PROPERTIES                32821
 #define SYNTH_KATAXKOYZIN               32822
 #define SYNTH_SELECT                    32823
+#define ID_OBJECT_LEFT                  32825
+#define ID_OBJECT_RIGHT                 32827
+#define ID_BUTTON32828                  32828
+#define ID_BUTTON32829                  32829
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        139
-#define _APS_NEXT_COMMAND_VALUE         32824
+#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_COMMAND_VALUE         32830
 #define _APS_NEXT_CONTROL_VALUE         1023
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

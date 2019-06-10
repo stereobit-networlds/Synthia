@@ -1,5 +1,5 @@
 --------------------Configuration: SYNTH - Win32 Debug--------------------
-Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\SYNTH.DSP", at root.
+Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_26\SYNTH\SYNTH.DSP", at root.
 Active configuration is Win32 (x86) Application (based on Win32 (x86) Application)
 
 Project's tools are:
@@ -11,50 +11,13 @@ Project's tools are:
 			"Custom Build" with flags ""
 			"<Component 0xa>" with flags ""
 
-Creating temp file "C:\WINDOWS\TEMP\RSP31A4.BAT" with contents <@echo off
-call ".\makehelp.bat"
+Creating temp file "C:\WINDOWS\TEMP\RSPD252.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\DevStudio\CKOSMOS\CKOSMOS_26\SYNTH\GExternal.cpp"
 >
-Creating command line "C:\WINDOWS\TEMP\RSP31A4.BAT" 
-Creating command line "rc.exe /l 0x408 /fo"Debug/SYNTH.res" /d "_DEBUG" /d "_AFXDLL" "D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\SYNTH.rc"" 
-Making help file...
-Building Win32 Help files
-
-        1 file(s) copied
-        1 file(s) copied
-
-Creating temp file "C:\WINDOWS\TEMP\RSP3243.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\ChildFrm.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\dummy.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\GExternal.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\GObject.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\IvfListView.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\IvfTreeView.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\LObj2.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\MainFrm.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\RoomBase.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\RoomWall.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\SelectObj.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\SYNTH.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\SYNTHDoc.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\SYNTHView.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\Wizz0.cpp"
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\WorldBase.cpp"
->
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP3243.TMP" 
-Creating temp file "C:\WINDOWS\TEMP\RSP3244.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /I "..\SYNTH" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\Lib\glib0.cpp"
->
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP3244.TMP" 
-Creating temp file "C:\WINDOWS\TEMP\RSP3245.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /I "..\Synth" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\Lib\lib0.cpp"
->
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP3245.TMP" 
-Creating temp file "C:\WINDOWS\TEMP\RSP3246.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_16\SYNTH\StdAfx.cpp"
->
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP3246.TMP" 
-Creating temp file "C:\WINDOWS\TEMP\RSP3247.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPD252.TMP" 
+Creating temp file "C:\WINDOWS\TEMP\RSPD253.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
 .\Debug\ChildFrm.obj
+.\Debug\DeleteObj.obj
 .\Debug\dummy.obj
 .\Debug\GExternal.obj
 .\Debug\glib0.obj
@@ -74,36 +37,14 @@ Creating temp file "C:\WINDOWS\TEMP\RSP3247.TMP" with contents </nologo /subsyst
 .\Debug\Wizz0.obj
 .\Debug\WorldBase.obj
 .\Debug\SYNTH.res>
-Creating command line "link.exe @C:\WINDOWS\TEMP\RSP3247.TMP" 
-Compiling resources...
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPD253.TMP" 
 Compiling...
-StdAfx.cpp
-Compiling...
-ChildFrm.cpp
-dummy.cpp
 GExternal.cpp
-GObject.cpp
-IvfListView.cpp
-IvfTreeView.cpp
-LObj2.cpp
-MainFrm.cpp
-RoomBase.cpp
-RoomWall.cpp
-SelectObj.cpp
-SYNTH.cpp
-SYNTHDoc.cpp
-SYNTHView.cpp
-Wizz0.cpp
-WorldBase.cpp
-Generating Code...
-Compiling...
-glib0.cpp
-Compiling...
-lib0.cpp
 Linking...
-Creating temp file "C:\WINDOWS\TEMP\RSP5214.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
+Creating temp file "C:\WINDOWS\TEMP\RSPD375.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
 .\Debug\StdAfx.sbr
 .\Debug\ChildFrm.sbr
+.\Debug\DeleteObj.sbr
 .\Debug\dummy.sbr
 .\Debug\GExternal.sbr
 .\Debug\glib0.sbr
@@ -121,7 +62,7 @@ Creating temp file "C:\WINDOWS\TEMP\RSP5214.TMP" with contents </nologo /o"Debug
 .\Debug\SYNTHView.sbr
 .\Debug\Wizz0.sbr
 .\Debug\WorldBase.sbr>
-Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSP5214.TMP" 
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSPD375.TMP" 
 Creating browse info file...
 
 

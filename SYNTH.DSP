@@ -95,6 +95,10 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DeleteObj.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\dummy.cpp
 # End Source File
 # Begin Source File
@@ -228,6 +232,10 @@ SOURCE=.\WorldBase.cpp
 # Begin Source File
 
 SOURCE=.\ChildFrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DeleteObj.h
 # End Source File
 # Begin Source File
 
@@ -376,6 +384,10 @@ SOURCE=.\hlp\HlpSBar.bmp
 # Begin Source File
 
 SOURCE=.\hlp\HlpTBar.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mytbar.bmp
 # End Source File
 # Begin Source File
 

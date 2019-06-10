@@ -1,7 +1,7 @@
 #Inventor V2.1 ascii
 
 
-DEF WorldBase Separator {
+DEF WorldBase0 Separator {
 
   Material {
 	diffuseColor 1 0 0
@@ -11,59 +11,64 @@ DEF WorldBase Separator {
 	height 100
 	depth 7000
   }
+  PickStyle {
+	style UNPICKABLE
+  }
   DrawStyle {
 	style INVISIBLE
   }
-  Text2 {
-	string "7000" =
-	DEF width GlobalField {
-	  type "SFFloat"
-	  width 7000
-	}	. width
-  }
-  Text2 {
-	string "7000" =
-	DEF depth GlobalField {
-	  type "SFFloat"
-	  depth 7000
-	}	. depth
-  }
-  Text2 {
-	string "100" =
-	DEF height GlobalField {
-	  type "SFFloat"
-	  height 100
-	}	. height
-  }
-  Text2 {
-	string "паукидгс яажагк" =
-	DEF c_name GlobalField {
-	  type "SFString"
-	  c_name "паукидгс яажагк"
-	}	. c_name
-  }
-  Text2 {
-	string "" =
-	DEF c_address GlobalField {
-	  type "SFString"
-	  c_address ""
-	}	. c_address
-  }
-  Text2 {
-	string "" =
-	DEF c_city GlobalField {
-	  type "SFString"
-	  c_city ""
-	}	. c_city
-  }
-  Text2 {
-	string "" =
-	DEF c_tel GlobalField {
-	  type "SFString"
-	  c_tel ""
-	}	. c_tel
-  }}
-DEF RoomBase Separator {
+  DEF Attributes Separator {
+
+	Text2 {
+	  string "7000" =
+	  DEF width GlobalField {
+		type "SFFloat"
+		width 7000
+	  }	  . width
+	}
+	Text2 {
+	  string "7000" =
+	  DEF depth GlobalField {
+		type "SFFloat"
+		depth 7000
+	  }	  . depth
+	}
+	Text2 {
+	  string "100" =
+	  DEF height GlobalField {
+		type "SFFloat"
+		height 100
+	  }	  . height
+	}
+	Text2 {
+	  string "паукидгс яажагк" =
+	  DEF c_name GlobalField {
+		type "SFString"
+		c_name "паукидгс яажагк"
+	  }	  . c_name
+	}
+	Text2 {
+	  string "" =
+	  DEF c_address GlobalField {
+		type "SFString"
+		c_address ""
+	  }	  . c_address
+	}
+	Text2 {
+	  string "" =
+	  DEF c_city GlobalField {
+		type "SFString"
+		c_city ""
+	  }	  . c_city
+	}
+	Text2 {
+	  string "" =
+	  DEF c_tel GlobalField {
+		type "SFString"
+		c_tel ""
+	  }	  . c_tel
+	}  }}
+DEF RoomBase1 Separator {
 
   Normal {
 	vector 0 1 0
@@ -77,119 +82,168 @@ DEF RoomBase Separator {
   Coordinate3 {
 	point [ -2500 105 2500,
 	    2500 105 2500,
-	    2500 105 2500 ]
+	    2500 105 -2500,
+	    -2500 105 -2500,
+	    -2500 105 -2500 ]
   }
   FaceSet {
-	numVertices 3
+	numVertices 5
+  }
+  PickStyle {
+	style UNPICKABLE
   }
   DrawStyle {
 	style INVISIBLE
   }
-  Text2 {
-	string "5" =
-	DEF rb_height GlobalField {
-	  type "SFFloat"
-	  rb_height 5
-	}	. rb_height
-  }
-  Text2 {
-	string "3" =
-	DEF KoryfCount GlobalField {
-	  type "SFLong"
-	  KoryfCount 3
-	}	. KoryfCount
-  }
-  Text2 {
-	string "-2500" =
-	DEF rb_Koryfsx0 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsx0 -2500
-	}	. rb_Koryfsx0
-  }
-  Text2 {
-	string "100" =
-	DEF rb_Koryfsy0 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsy0 100
-	}	. rb_Koryfsy0
-  }
-  Text2 {
-	string "2500" =
-	DEF rb_Koryfsz0 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsz0 2500
-	}	. rb_Koryfsz0
-  }
-  Text2 {
-	string "2500" =
-	DEF rb_Koryfsx1 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsx1 2500
-	}	. rb_Koryfsx1
-  }
-  Text2 {
-	string "100" =
-	DEF rb_Koryfsy1 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsy1 100
-	}	. rb_Koryfsy1
-  }
-  Text2 {
-	string "2500" =
-	DEF rb_Koryfsz1 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsz1 2500
-	}	. rb_Koryfsz1
-  }
-  Text2 {
-	string "2500" =
-	DEF rb_Koryfsx2 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsx2 2500
-	}	. rb_Koryfsx2
-  }
-  Text2 {
-	string "100" =
-	DEF rb_Koryfsy2 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsy2 100
-	}	. rb_Koryfsy2
-  }
-  Text2 {
-	string "2500" =
-	DEF rb_Koryfsz2 GlobalField {
-	  type "SFFloat"
-	  rb_Koryfsz2 2500
-	}	. rb_Koryfsz2
-  }
-  Text2 {
-	string "" =
-	DEF rb_plakaki GlobalField {
-	  type "SFString"
-	  rb_plakaki ""
-	}	. rb_plakaki
-  }
-  Text2 {
-	string "0" =
-	DEF rb_plakaki1 GlobalField {
-	  type "SFFloat"
-	  rb_plakaki1 0
-	}	. rb_plakaki1
-  }
-  Text2 {
-	string "0" =
-	DEF rb_plakaki2 GlobalField {
-	  type "SFFloat"
-	  rb_plakaki2 0
-	}	. rb_plakaki2
-  }}
-DEF RoomWall0 Separator {
+  DEF Attributes Separator {
+
+	Text2 {
+	  string "5" =
+	  DEF rb_height GlobalField {
+		type "SFFloat"
+		rb_height 5
+	  }	  . rb_height
+	}
+	Text2 {
+	  string "5" =
+	  DEF KoryfCount GlobalField {
+		type "SFLong"
+		KoryfCount 5
+	  }	  . KoryfCount
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsx0 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx0 -2500
+	  }	  . rb_Koryfsx0
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy0 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy0 100
+	  }	  . rb_Koryfsy0
+	}
+	Text2 {
+	  string "2500" =
+	  DEF rb_Koryfsz0 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz0 2500
+	  }	  . rb_Koryfsz0
+	}
+	Text2 {
+	  string "2500" =
+	  DEF rb_Koryfsx1 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx1 2500
+	  }	  . rb_Koryfsx1
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy1 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy1 100
+	  }	  . rb_Koryfsy1
+	}
+	Text2 {
+	  string "2500" =
+	  DEF rb_Koryfsz1 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz1 2500
+	  }	  . rb_Koryfsz1
+	}
+	Text2 {
+	  string "2500" =
+	  DEF rb_Koryfsx2 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx2 2500
+	  }	  . rb_Koryfsx2
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy2 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy2 100
+	  }	  . rb_Koryfsy2
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsz2 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz2 -2500
+	  }	  . rb_Koryfsz2
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsx3 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx3 -2500
+	  }	  . rb_Koryfsx3
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy3 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy3 100
+	  }	  . rb_Koryfsy3
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsz3 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz3 -2500
+	  }	  . rb_Koryfsz3
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsx4 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx4 -2500
+	  }	  . rb_Koryfsx4
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy4 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy4 100
+	  }	  . rb_Koryfsy4
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsz4 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz4 -2500
+	  }	  . rb_Koryfsz4
+	}
+	Text2 {
+	  string "" =
+	  DEF rb_plakaki GlobalField {
+		type "SFString"
+		rb_plakaki ""
+	  }	  . rb_plakaki
+	}
+	Text2 {
+	  string "0" =
+	  DEF rb_plakaki1 GlobalField {
+		type "SFFloat"
+		rb_plakaki1 0
+	  }	  . rb_plakaki1
+	}
+	Text2 {
+	  string "0" =
+	  DEF rb_plakaki2 GlobalField {
+		type "SFFloat"
+		rb_plakaki2 0
+	  }	  . rb_plakaki2
+	}  }}
+DEF RoomWall2 Separator {
 
   Normal {
-	vector [ 0 0 1,
-	    1 0 0,
+	vector [ 1 0 0,
 	    0 0 -1,
 	    -1 0 0,
+	    0 0 1,
 	    0 1 0 ]
   }
   NormalBinding {
@@ -203,118 +257,249 @@ DEF RoomWall0 Separator {
   }
   Coordinate3 {
 	point [ -2500 100 2500,
-	    2500 100 2500,
-	    2500 3100 2500,
+	    -2500 100 -2500,
+	    -2500 3100 -2500,
 	    -2500 3100 2500,
-	    2500 100 2500,
-	    2500 100 2497,
-	    2500 3100 2497,
-	    2500 3100 2500,
-	    2500 100 2497,
-	    -2500 100 2497,
-	    -2500 3100 2497,
-	    2500 3100 2497,
-	    -2500 100 2497,
+	    -2500 100 -2500,
+	    -2503 100 -2500,
+	    -2503 3100 -2500,
+	    -2500 3100 -2500,
+	    -2503 100 -2500,
+	    -2503 100 2500,
+	    -2503 3100 2500,
+	    -2503 3100 -2500,
+	    -2503 100 2500,
 	    -2500 100 2500,
 	    -2500 3100 2500,
-	    -2500 3100 2497,
+	    -2503 3100 2500,
 	    -2500 3100 2500,
-	    2500 3100 2500,
-	    2500 3100 2497,
-	    -2500 3100 2497 ]
-  }
-  Transform {
+	    -2500 3100 -2500,
+	    -2503 3100 -2500,
+	    -2503 3100 2500 ]
   }
   FaceSet {
 	numVertices [ 4, 4, 4, 4, 4 ]
   }
+  PickStyle {
+	style UNPICKABLE
+  }
   DrawStyle {
 	style INVISIBLE
   }
-  Text2 {
-	string "3000" =
-	DEF height0 GlobalField {
-	  type "SFFloat"
-	  height0 3000
-	}	. height0
+  DEF Attributes Separator {
+
+	Text2 {
+	  string "3000" =
+	  DEF height0 GlobalField {
+		type "SFFloat"
+		height0 3000
+	  }	  . height0
+	}
+	Text2 {
+	  string "3" =
+	  DEF depth0 GlobalField {
+		type "SFFloat"
+		depth0 3
+	  }	  . depth0
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF Koryfsx00 GlobalField {
+		type "SFFloat"
+		Koryfsx00 -2500
+	  }	  . Koryfsx00
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy00 GlobalField {
+		type "SFFloat"
+		Koryfsy00 100
+	  }	  . Koryfsy00
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsz00 GlobalField {
+		type "SFFloat"
+		Koryfsz00 2500
+	  }	  . Koryfsz00
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF Koryfsx10 GlobalField {
+		type "SFFloat"
+		Koryfsx10 -2500
+	  }	  . Koryfsx10
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy10 GlobalField {
+		type "SFFloat"
+		Koryfsy10 100
+	  }	  . Koryfsy10
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF Koryfsz10 GlobalField {
+		type "SFFloat"
+		Koryfsz10 -2500
+	  }	  . Koryfsz10
+	}
+	Text2 {
+	  string "" =
+	  DEF rw_plakaki0 GlobalField {
+		type "SFString"
+		rw_plakaki0 ""
+	  }	  . rw_plakaki0
+	}
+	Text2 {
+	  string "0" =
+	  DEF rw_plakaki10 GlobalField {
+		type "SFFloat"
+		rw_plakaki10 0
+	  }	  . rw_plakaki10
+	}
+	Text2 {
+	  string "0" =
+	  DEF rw_plakaki20 GlobalField {
+		type "SFFloat"
+		rw_plakaki20 0
+	  }	  . rw_plakaki20
+	}  }}
+DEF RoomWall3 Separator {
+
+  Normal {
+	vector [ 0 0 -1,
+	    -1 0 0,
+	    0 0 1,
+	    1 0 0,
+	    0 1 0 ]
   }
-  Text2 {
-	string "3" =
-	DEF depth0 GlobalField {
-	  type "SFFloat"
-	  depth0 3
-	}	. depth0
+  NormalBinding {
+	value PER_FACE
   }
-  Text2 {
-	string "-2500" =
-	DEF Koryfsx00 GlobalField {
-	  type "SFFloat"
-	  Koryfsx00 -2500
-	}	. Koryfsx00
+  Complexity {
+	textureQuality 0.5
   }
-  Text2 {
-	string "100" =
-	DEF Koryfsy00 GlobalField {
-	  type "SFFloat"
-	  Koryfsy00 100
-	}	. Koryfsy00
+  Material {
+	diffuseColor 1 1 1
   }
-  Text2 {
-	string "2500" =
-	DEF Koryfsz00 GlobalField {
-	  type "SFFloat"
-	  Koryfsz00 2500
-	}	. Koryfsz00
+  Coordinate3 {
+	point [ 2500 100 2500,
+	    -2500 100 2500,
+	    -2500 3100 2500,
+	    2500 3100 2500,
+	    -2500 100 2500,
+	    -2500 100 2503,
+	    -2500 3100 2503,
+	    -2500 3100 2500,
+	    -2500 100 2503,
+	    2500 100 2503,
+	    2500 3100 2503,
+	    -2500 3100 2503,
+	    2500 100 2503,
+	    2500 100 2500,
+	    2500 3100 2500,
+	    2500 3100 2503,
+	    2500 3100 2500,
+	    -2500 3100 2500,
+	    -2500 3100 2503,
+	    2500 3100 2503 ]
   }
-  Text2 {
-	string "2500" =
-	DEF Koryfsx10 GlobalField {
-	  type "SFFloat"
-	  Koryfsx10 2500
-	}	. Koryfsx10
+  FaceSet {
+	numVertices [ 4, 4, 4, 4, 4 ]
   }
-  Text2 {
-	string "100" =
-	DEF Koryfsy10 GlobalField {
-	  type "SFFloat"
-	  Koryfsy10 100
-	}	. Koryfsy10
+  PickStyle {
+	style UNPICKABLE
   }
-  Text2 {
-	string "2500" =
-	DEF Koryfsz10 GlobalField {
-	  type "SFFloat"
-	  Koryfsz10 2500
-	}	. Koryfsz10
+  DrawStyle {
+	style INVISIBLE
   }
-  Text2 {
-	string "" =
-	DEF rw_plakaki0 GlobalField {
-	  type "SFString"
-	  rw_plakaki0 ""
-	}	. rw_plakaki0
-  }
-  Text2 {
-	string "0" =
-	DEF rw_plakaki10 GlobalField {
-	  type "SFFloat"
-	  rw_plakaki10 0
-	}	. rw_plakaki10
-  }
-  Text2 {
-	string "0" =
-	DEF rw_plakaki20 GlobalField {
-	  type "SFFloat"
-	  rw_plakaki20 0
-	}	. rw_plakaki20
-  }}
-DEF S-AK0001829 Separator {
+  DEF Attributes Separator {
+
+	Text2 {
+	  string "3000" =
+	  DEF height1 GlobalField {
+		type "SFFloat"
+		height1 3000
+	  }	  . height1
+	}
+	Text2 {
+	  string "3" =
+	  DEF depth1 GlobalField {
+		type "SFFloat"
+		depth1 3
+	  }	  . depth1
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsx01 GlobalField {
+		type "SFFloat"
+		Koryfsx01 2500
+	  }	  . Koryfsx01
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy01 GlobalField {
+		type "SFFloat"
+		Koryfsy01 100
+	  }	  . Koryfsy01
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsz01 GlobalField {
+		type "SFFloat"
+		Koryfsz01 2500
+	  }	  . Koryfsz01
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF Koryfsx11 GlobalField {
+		type "SFFloat"
+		Koryfsx11 -2500
+	  }	  . Koryfsx11
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy11 GlobalField {
+		type "SFFloat"
+		Koryfsy11 100
+	  }	  . Koryfsy11
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsz11 GlobalField {
+		type "SFFloat"
+		Koryfsz11 2500
+	  }	  . Koryfsz11
+	}
+	Text2 {
+	  string "" =
+	  DEF rw_plakaki1 GlobalField {
+		type "SFString"
+		rw_plakaki1 ""
+	  }	  . rw_plakaki1
+	}
+	Text2 {
+	  string "0" =
+	  DEF rw_plakaki11 GlobalField {
+		type "SFFloat"
+		rw_plakaki11 0
+	  }	  . rw_plakaki11
+	}
+	Text2 {
+	  string "0" =
+	  DEF rw_plakaki21 GlobalField {
+		type "SFFloat"
+		rw_plakaki21 0
+	  }	  . rw_plakaki21
+	}  }}
+DEF GExternal4 Separator {
 
   DrawStyle {
 	style FILLED
   }
   Translation {
-	translation 230.163 2313.8 2497
+	translation -52.9141 1816.63 2500
   }
   Rotation {
 	rotation 0 1 0  3.14159
@@ -334,9 +519,9 @@ DEF S-AK0001829 Separator {
 	  }
 	  Coordinate3 {
 		point [ 0 0 0,
-		    0 0 360,
-		    900 0 360,
-		    900 0 0.00012207 ]
+		    0 0 580,
+		    300 0 580,
+		    300 0 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -351,8 +536,8 @@ DEF S-AK0001829 Separator {
 	  }
 	  Coordinate3 {
 		point [ 0 0 0,
-		    0 0 360,
-		    0 15 360,
+		    0 0 580,
+		    0 15 580,
 		    0 15 0 ]
 	  }
 	  FaceSet {
@@ -367,10 +552,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 0 360,
-		    900 0 360,
-		    900 15 360,
-		    0 15 360 ]
+		point [ 0 0 580,
+		    300 0 580,
+		    300 15 580,
+		    0 15 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -384,10 +569,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 360,
-		    900 0 0.00012207,
-		    900 15 0.00012207,
-		    900 15 360 ]
+		point [ 300 0 580,
+		    300 0 0.000183105,
+		    300 15 0.000183105,
+		    300 15 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -395,16 +580,16 @@ DEF S-AK0001829 Separator {
 	Separator {
 
 	  Normal {
-		vector 1.35634e-007 0 -1
+		vector 6.10352e-007 0 -1
 	  }
 	  NormalBinding {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 0.00012207,
+		point [ 300 0 0.000183105,
 		    0 0 0,
 		    0 15 0,
-		    900 15 0.00012207 ]
+		    300 15 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -419,9 +604,9 @@ DEF S-AK0001829 Separator {
 	  }
 	  Coordinate3 {
 		point [ 0 15 0,
-		    0 15 360,
-		    900 15 360,
-		    900 15 0.00012207 ]
+		    0 15 580,
+		    300 15 580,
+		    300 15 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -438,10 +623,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 150 0,
-		    0 150 360,
-		    900 150 360,
-		    900 150 0.00012207 ]
+		point [ 0 860 0,
+		    0 860 580,
+		    300 860 580,
+		    300 860 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -455,10 +640,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 150 0,
-		    0 150 360,
-		    0 165 360,
-		    0 165 0 ]
+		point [ 0 860 0,
+		    0 860 580,
+		    0 875 580,
+		    0 875 0 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -472,10 +657,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 150 360,
-		    900 150 360,
-		    900 165 360,
-		    0 165 360 ]
+		point [ 0 860 580,
+		    300 860 580,
+		    300 875 580,
+		    0 875 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -489,10 +674,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 150 360,
-		    900 150 0.00012207,
-		    900 165 0.00012207,
-		    900 165 360 ]
+		point [ 300 860 580,
+		    300 860 0.000183105,
+		    300 875 0.000183105,
+		    300 875 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -500,16 +685,16 @@ DEF S-AK0001829 Separator {
 	Separator {
 
 	  Normal {
-		vector 1.35634e-007 0 -1
+		vector 6.10352e-007 0 -1
 	  }
 	  NormalBinding {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 150 0.00012207,
-		    0 150 0,
-		    0 165 0,
-		    900 165 0.00012207 ]
+		point [ 300 860 0.000183105,
+		    0 860 0,
+		    0 875 0,
+		    300 875 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -523,10 +708,430 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 165 0,
-		    0 165 360,
-		    900 165 360,
-		    900 165 0.00012207 ]
+		point [ 0 875 0,
+		    0 875 580,
+		    300 875 580,
+		    300 875 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 0,
+		    0 120 580,
+		    300 120 580,
+		    300 120 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 0,
+		    0 120 580,
+		    0 130 580,
+		    0 130 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 130 580,
+		    0 130 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 120 580,
+		    300 120 0.000183105,
+		    300 130 0.000183105,
+		    300 130 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 120 0.000183105,
+		    0 120 0,
+		    0 130 0,
+		    300 130 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 130 0,
+		    0 130 580,
+		    300 130 580,
+		    300 130 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 0,
+		    0 300 580,
+		    300 300 580,
+		    300 300 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 0,
+		    0 300 580,
+		    0 310 580,
+		    0 310 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 310 580,
+		    0 310 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 580,
+		    300 300 0.000183105,
+		    300 310 0.000183105,
+		    300 310 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 0.000183105,
+		    0 300 0,
+		    0 310 0,
+		    300 310 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 310 0,
+		    0 310 580,
+		    300 310 580,
+		    300 310 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 0,
+		    0 480 580,
+		    300 480 580,
+		    300 480 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 0,
+		    0 480 580,
+		    0 490 580,
+		    0 490 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 490 580,
+		    0 490 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 580,
+		    300 480 0.000183105,
+		    300 490 0.000183105,
+		    300 490 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 0.000183105,
+		    0 480 0,
+		    0 490 0,
+		    300 490 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 490 0,
+		    0 490 580,
+		    300 490 580,
+		    300 490 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 0,
+		    0 660 580,
+		    300 660 580,
+		    300 660 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 0,
+		    0 660 580,
+		    0 670 580,
+		    0 670 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 670 580,
+		    0 670 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 580,
+		    300 660 0.000183105,
+		    300 670 0.000183105,
+		    300 670 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 0.000183105,
+		    0 660 0,
+		    0 670 0,
+		    300 670 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 670 0,
+		    0 670 580,
+		    300 670 580,
+		    300 670 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -544,8 +1149,8 @@ DEF S-AK0001829 Separator {
 	  }
 	  Coordinate3 {
 		point [ 0 0 0,
-		    0 0 360,
-		    15 0 360,
+		    0 0 580,
+		    15 0 580,
 		    15 0 0 ]
 	  }
 	  FaceSet {
@@ -561,9 +1166,9 @@ DEF S-AK0001829 Separator {
 	  }
 	  Coordinate3 {
 		point [ 0 0 0,
-		    0 0 360,
-		    0 150 360,
-		    0 150 0 ]
+		    0 0 580,
+		    0 860 580,
+		    0 860 0 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -577,10 +1182,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 0 360,
-		    15 0 360,
-		    15 150 360,
-		    0 150 360 ]
+		point [ 0 0 580,
+		    15 0 580,
+		    15 860 580,
+		    0 860 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -594,10 +1199,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 15 0 360,
+		point [ 15 0 580,
 		    15 0 0,
-		    15 150 0,
-		    15 150 360 ]
+		    15 860 0,
+		    15 860 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -613,8 +1218,8 @@ DEF S-AK0001829 Separator {
 	  Coordinate3 {
 		point [ 15 0 0,
 		    0 0 0,
-		    0 150 0,
-		    15 150 0 ]
+		    0 860 0,
+		    15 860 0 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -628,10 +1233,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 150 0,
-		    0 150 360,
-		    15 150 360,
-		    15 150 0 ]
+		point [ 0 860 0,
+		    0 860 580,
+		    15 860 580,
+		    15 860 0 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -648,10 +1253,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 360,
-		    900 0 0.00012207,
-		    885 0 0.00012207,
-		    885 0 360 ]
+		point [ 300 0 580,
+		    300 0 0.000183105,
+		    285 0 0.000183105,
+		    285 0 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -665,10 +1270,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 360,
-		    900 0 0.00012207,
-		    900 150 0.00012207,
-		    900 150 360 ]
+		point [ 300 0 580,
+		    300 0 0.000183105,
+		    300 860 0.000183105,
+		    300 860 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -682,10 +1287,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 0.00012207,
-		    885 0 0.00012207,
-		    885 150 0.00012207,
-		    900 150 0.00012207 ]
+		point [ 300 0 0.000183105,
+		    285 0 0.000183105,
+		    285 860 0.000183105,
+		    300 860 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -699,10 +1304,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 885 0 0.00012207,
-		    885 0 360,
-		    885 150 360,
-		    885 150 0.00012207 ]
+		point [ 285 0 0.000183105,
+		    285 0 580,
+		    285 860 580,
+		    285 860 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -716,10 +1321,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 885 0 360,
-		    900 0 360,
-		    900 150 360,
-		    885 150 360 ]
+		point [ 285 0 580,
+		    300 0 580,
+		    300 860 580,
+		    285 860 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -733,10 +1338,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 150 360,
-		    900 150 0.00012207,
-		    885 150 0.00012207,
-		    885 150 360 ]
+		point [ 300 860 580,
+		    300 860 0.000183105,
+		    285 860 0.000183105,
+		    285 860 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -753,10 +1358,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 0.00012207,
+		point [ 300 0 0.000183105,
 		    0 0 0,
-		    -2.03451e-006 0 15,
-		    900 0 15.0001 ]
+		    -9.15528e-006 0 15,
+		    300 0 15.0002 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -764,16 +1369,16 @@ DEF S-AK0001829 Separator {
 	Separator {
 
 	  Normal {
-		vector 1.35634e-007 0 -1
+		vector 6.10352e-007 0 -1
 	  }
 	  NormalBinding {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 0.00012207,
+		point [ 300 0 0.000183105,
 		    0 0 0,
-		    0 150 0,
-		    900 150 0.00012207 ]
+		    0 860 0,
+		    300 860 0.000183105 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -781,16 +1386,16 @@ DEF S-AK0001829 Separator {
 	Separator {
 
 	  Normal {
-		vector -1 0 -1.35634e-007
+		vector -1 0 -6.10352e-007
 	  }
 	  NormalBinding {
 		value PER_FACE
 	  }
 	  Coordinate3 {
 		point [ 0 0 0,
-		    -2.03451e-006 0 15,
-		    -2.03451e-006 150 15,
-		    0 150 0 ]
+		    -9.15528e-006 0 15,
+		    -9.15528e-006 860 15,
+		    0 860 0 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -798,16 +1403,16 @@ DEF S-AK0001829 Separator {
 	Separator {
 
 	  Normal {
-		vector -1.35634e-007 0 1
+		vector -6.10352e-007 0 1
 	  }
 	  NormalBinding {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ -2.03451e-006 0 15,
-		    900 0 15.0001,
-		    900 150 15.0001,
-		    -2.03451e-006 150 15 ]
+		point [ -9.15528e-006 0 15,
+		    300 0 15.0002,
+		    300 860 15.0002,
+		    -9.15528e-006 860 15 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -821,10 +1426,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 15.0001,
-		    900 0 0.00012207,
-		    900 150 0.00012207,
-		    900 150 15.0001 ]
+		point [ 300 0 15.0002,
+		    300 0 0.000183105,
+		    300 860 0.000183105,
+		    300 860 15.0002 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -838,10 +1443,117 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 150 0.00012207,
-		    0 150 0,
-		    -2.03451e-006 150 15,
-		    900 150 15.0001 ]
+		point [ 300 860 0.000183105,
+		    0 860 0,
+		    -9.15528e-006 860 15,
+		    300 860 15.0002 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	Material {
+	  diffuseColor 0.988235 0.803922 0.619608
+	}
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 580,
+		    300 0 580,
+		    300 0 570,
+		    0 0 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 580,
+		    300 0 580,
+		    300 120 580,
+		    0 120 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 580,
+		    300 0 570,
+		    300 120 570,
+		    300 120 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 570,
+		    0 0 570,
+		    0 120 570,
+		    300 120 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 570,
+		    0 0 580,
+		    0 120 580,
+		    0 120 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 120 570,
+		    0 120 570 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -858,10 +1570,1737 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 0 360,
-		    900 0 360,
-		    900 0 340,
-		    0 0 340 ]
+		point [ 0 120 580,
+		    300 120 580,
+		    300 120 560,
+		    0 120 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	DEF +1 Texture2 {
+	  filename "d:/ckosmos/synth/data/COPAT-AMICA-CILIEGIO_NATURALE-S.jpg"
+	  model DECAL
+	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 300 580,
+		    0 300 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 120 580,
+		    300 120 560,
+		    300 300 560,
+		    300 300 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 120 560,
+		    0 120 560,
+		    0 300 560,
+		    300 300 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 560,
+		    0 120 580,
+		    0 300 580,
+		    0 300 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 300 560,
+		    0 300 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 300 560,
+		    0 300 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 480 580,
+		    0 480 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 580,
+		    300 300 560,
+		    300 480 560,
+		    300 480 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 560,
+		    0 300 560,
+		    0 480 560,
+		    300 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 560,
+		    0 300 580,
+		    0 480 580,
+		    0 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 480 560,
+		    0 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 480 560,
+		    0 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 660 580,
+		    0 660 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 580,
+		    300 480 560,
+		    300 660 560,
+		    300 660 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 560,
+		    0 480 560,
+		    0 660 560,
+		    300 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 560,
+		    0 480 580,
+		    0 660 580,
+		    0 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 660 560,
+		    0 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 660 560,
+		    0 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 840 580,
+		    0 840 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 580,
+		    300 660 560,
+		    300 840 560,
+		    300 840 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 560,
+		    0 660 560,
+		    0 840 560,
+		    300 840 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 560,
+		    0 660 580,
+		    0 840 580,
+		    0 840 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 840 580,
+		    300 840 580,
+		    300 840 560,
+		    0 840 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  PickStyle {
+	style UNPICKABLE
+  }
+  DrawStyle {
+	style INVISIBLE
+  }
+  DEF Attributes Separator {
+
+	Text2 {
+	  string "S-BC0304                                          " =
+	  DEF ob_code0 GlobalField {
+		type "SFString"
+		ob_code0 "S-BC0304                                          "
+	  }	  . ob_code0
+	}
+	Text2 {
+	  string "BASE CASSETTI METALLO                                                           " =
+	  DEF ob_descr0 GlobalField {
+		type "SFString"
+		ob_descr0 "BASE CASSETTI METALLO                                                           "
+	  }	  . ob_descr0
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid00 GlobalField {
+		type "SFString"
+		ob_eid00 ""
+	  }	  . ob_eid00
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid10 GlobalField {
+		type "SFString"
+		ob_eid10 ""
+	  }	  . ob_eid10
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid20 GlobalField {
+		type "SFString"
+		ob_eid20 ""
+	  }	  . ob_eid20
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid30 GlobalField {
+		type "SFString"
+		ob_eid30 ""
+	  }	  . ob_eid30
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid40 GlobalField {
+		type "SFString"
+		ob_eid40 ""
+	  }	  . ob_eid40
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid50 GlobalField {
+		type "SFString"
+		ob_eid50 ""
+	  }	  . ob_eid50
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid60 GlobalField {
+		type "SFString"
+		ob_eid60 ""
+	  }	  . ob_eid60
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid70 GlobalField {
+		type "SFString"
+		ob_eid70 ""
+	  }	  . ob_eid70
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid80 GlobalField {
+		type "SFString"
+		ob_eid80 ""
+	  }	  . ob_eid80
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid90 GlobalField {
+		type "SFString"
+		ob_eid90 ""
+	  }	  . ob_eid90
+	}
+	Text2 {
+	  string "0" =
+	  DEF next0 GlobalField {
+		type "SFLong"
+		next0 0
+	  }	  . next0
+	}
+	Text2 {
+	  string "0" =
+	  DEF prior0 GlobalField {
+		type "SFLong"
+		prior0 0
+	  }	  . prior0
+	}
+	Text2 {
+	  string "3" =
+	  DEF carrier0 GlobalField {
+		type "SFLong"
+		carrier0 3
+	  }	  . carrier0
+	}
+	Text2 {
+	  string "-842150451" =
+	  DEF topoth0 GlobalField {
+		type "SFLong"
+		topoth0 -842150451
+	  }	  . topoth0
+	}
+	Text2 {
+	  string "-4.31602e+008" =
+	  DEF yangle0 GlobalField {
+		type "SFFloat"
+		yangle0 -4.31602e+008
+	  }	  . yangle0
+	}
+	Text2 {
+	  string "0" =
+	  DEF lbp00 GlobalField {
+		type "SFFloat"
+		lbp00 0
+	  }	  . lbp00
+	}
+	Text2 {
+	  string "0" =
+	  DEF lbp10 GlobalField {
+		type "SFFloat"
+		lbp10 0
+	  }	  . lbp10
+	}
+	Text2 {
+	  string "0" =
+	  DEF lbp20 GlobalField {
+		type "SFFloat"
+		lbp20 0
+	  }	  . lbp20
+	}
+	Text2 {
+	  string "300" =
+	  DEF rbp00 GlobalField {
+		type "SFFloat"
+		rbp00 300
+	  }	  . rbp00
+	}
+	Text2 {
+	  string "0" =
+	  DEF rbp10 GlobalField {
+		type "SFFloat"
+		rbp10 0
+	  }	  . rbp10
+	}
+	Text2 {
+	  string "0.000183105" =
+	  DEF rbp20 GlobalField {
+		type "SFFloat"
+		rbp20 0.000183105
+	  }	  . rbp20
+	}
+	Text2 {
+	  string "0" =
+	  DEF ltp00 GlobalField {
+		type "SFFloat"
+		ltp00 0
+	  }	  . ltp00
+	}
+	Text2 {
+	  string "860" =
+	  DEF ltp10 GlobalField {
+		type "SFFloat"
+		ltp10 860
+	  }	  . ltp10
+	}
+	Text2 {
+	  string "0" =
+	  DEF ltp20 GlobalField {
+		type "SFFloat"
+		ltp20 0
+	  }	  . ltp20
+	}
+	Text2 {
+	  string "300" =
+	  DEF rtp00 GlobalField {
+		type "SFFloat"
+		rtp00 300
+	  }	  . rtp00
+	}
+	Text2 {
+	  string "860" =
+	  DEF rtp10 GlobalField {
+		type "SFFloat"
+		rtp10 860
+	  }	  . rtp10
+	}
+	Text2 {
+	  string "0.000183105" =
+	  DEF rtp20 GlobalField {
+		type "SFFloat"
+		rtp20 0.000183105
+	  }	  . rtp20
+	}  }}
+DEF GExternal5 Separator {
+
+  DrawStyle {
+	style FILLED
+  }
+  Translation {
+	translation -2500 2084.4 -779.09
+  }
+  Rotation {
+	rotation 0 1 0  1.5708
+  }
+  Separator {
+
+	DEF +0 Material {
+	  diffuseColor 0.988235 0.803922 0.619608
+	}
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 0,
+		    0 0 580,
+		    300 0 580,
+		    300 0 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 0,
+		    0 0 580,
+		    0 15 580,
+		    0 15 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 580,
+		    300 0 580,
+		    300 15 580,
+		    0 15 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 580,
+		    300 0 0.000183105,
+		    300 15 0.000183105,
+		    300 15 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 0.000183105,
+		    0 0 0,
+		    0 15 0,
+		    300 15 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 15 0,
+		    0 15 580,
+		    300 15 580,
+		    300 15 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 860 0,
+		    0 860 580,
+		    300 860 580,
+		    300 860 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 860 0,
+		    0 860 580,
+		    0 875 580,
+		    0 875 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 860 580,
+		    300 860 580,
+		    300 875 580,
+		    0 875 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 860 580,
+		    300 860 0.000183105,
+		    300 875 0.000183105,
+		    300 875 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 860 0.000183105,
+		    0 860 0,
+		    0 875 0,
+		    300 875 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 875 0,
+		    0 875 580,
+		    300 875 580,
+		    300 875 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 0,
+		    0 120 580,
+		    300 120 580,
+		    300 120 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 0,
+		    0 120 580,
+		    0 130 580,
+		    0 130 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 130 580,
+		    0 130 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 120 580,
+		    300 120 0.000183105,
+		    300 130 0.000183105,
+		    300 130 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 120 0.000183105,
+		    0 120 0,
+		    0 130 0,
+		    300 130 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 130 0,
+		    0 130 580,
+		    300 130 580,
+		    300 130 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 0,
+		    0 300 580,
+		    300 300 580,
+		    300 300 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 0,
+		    0 300 580,
+		    0 310 580,
+		    0 310 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 310 580,
+		    0 310 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 580,
+		    300 300 0.000183105,
+		    300 310 0.000183105,
+		    300 310 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 0.000183105,
+		    0 300 0,
+		    0 310 0,
+		    300 310 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 310 0,
+		    0 310 580,
+		    300 310 580,
+		    300 310 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 0,
+		    0 480 580,
+		    300 480 580,
+		    300 480 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 0,
+		    0 480 580,
+		    0 490 580,
+		    0 490 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 490 580,
+		    0 490 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 580,
+		    300 480 0.000183105,
+		    300 490 0.000183105,
+		    300 490 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 0.000183105,
+		    0 480 0,
+		    0 490 0,
+		    300 490 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 490 0,
+		    0 490 580,
+		    300 490 580,
+		    300 490 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 0,
+		    0 660 580,
+		    300 660 580,
+		    300 660 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 0,
+		    0 660 580,
+		    0 670 580,
+		    0 670 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 670 580,
+		    0 670 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 580,
+		    300 660 0.000183105,
+		    300 670 0.000183105,
+		    300 670 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 0.000183105,
+		    0 660 0,
+		    0 670 0,
+		    300 670 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 670 0,
+		    0 670 580,
+		    300 670 580,
+		    300 670 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 0,
+		    0 0 580,
+		    15 0 580,
+		    15 0 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 0,
+		    0 0 580,
+		    0 860 580,
+		    0 860 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 580,
+		    15 0 580,
+		    15 860 580,
+		    0 860 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 15 0 580,
+		    15 0 0,
+		    15 860 0,
+		    15 860 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 15 0 0,
+		    0 0 0,
+		    0 860 0,
+		    15 860 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 860 0,
+		    0 860 580,
+		    15 860 580,
+		    15 860 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 580,
+		    300 0 0.000183105,
+		    285 0 0.000183105,
+		    285 0 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 580,
+		    300 0 0.000183105,
+		    300 860 0.000183105,
+		    300 860 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 0.000183105,
+		    285 0 0.000183105,
+		    285 860 0.000183105,
+		    300 860 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 285 0 0.000183105,
+		    285 0 580,
+		    285 860 580,
+		    285 860 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 285 0 580,
+		    300 0 580,
+		    300 860 580,
+		    285 860 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 860 580,
+		    300 860 0.000183105,
+		    285 860 0.000183105,
+		    285 860 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 0.000183105,
+		    0 0 0,
+		    -9.15528e-006 0 15,
+		    300 0 15.0002 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 6.10352e-007 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 0.000183105,
+		    0 0 0,
+		    0 860 0,
+		    300 860 0.000183105 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 -6.10352e-007
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 0,
+		    -9.15528e-006 0 15,
+		    -9.15528e-006 860 15,
+		    0 860 0 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -6.10352e-007 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ -9.15528e-006 0 15,
+		    300 0 15.0002,
+		    300 860 15.0002,
+		    -9.15528e-006 860 15 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 15.0002,
+		    300 0 0.000183105,
+		    300 860 0.000183105,
+		    300 860 15.0002 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 860 0.000183105,
+		    0 860 0,
+		    -9.15528e-006 860 15,
+		    300 860 15.0002 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	Material {
+	  diffuseColor 0.988235 0.803922 0.619608
+	}
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 580,
+		    300 0 580,
+		    300 0 570,
+		    0 0 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 580,
+		    300 0 580,
+		    300 120 580,
+		    0 120 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 580,
+		    300 0 570,
+		    300 120 570,
+		    300 120 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 0 570,
+		    0 0 570,
+		    0 120 570,
+		    300 120 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 0 570,
+		    0 0 580,
+		    0 120 580,
+		    0 120 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 120 570,
+		    0 120 570 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 120 560,
+		    0 120 560 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -879,12 +3318,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 0 360,
-		    900 0 360,
-		    900 150 360,
-		    0 150 360 ]
-	  }
-	  Transform {
+		point [ 0 120 580,
+		    300 120 580,
+		    300 300 580,
+		    0 300 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -899,10 +3336,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 360,
-		    900 0 340,
-		    900 150 340,
-		    900 150 360 ]
+		point [ 300 120 580,
+		    300 120 560,
+		    300 300 560,
+		    300 300 580 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -918,10 +3355,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 900 0 340,
-		    0 0 340,
-		    0 150 340,
-		    900 150 340 ]
+		point [ 300 120 560,
+		    0 120 560,
+		    0 300 560,
+		    300 300 560 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -937,10 +3374,10 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 0 340,
-		    0 0 360,
-		    0 150 360,
-		    0 150 340 ]
+		point [ 0 120 560,
+		    0 120 580,
+		    0 300 580,
+		    0 300 560 ]
 	  }
 	  FaceSet {
 		numVertices 4
@@ -955,14 +3392,558 @@ DEF S-AK0001829 Separator {
 		value PER_FACE
 	  }
 	  Coordinate3 {
-		point [ 0 150 360,
-		    900 150 360,
-		    900 150 340,
-		    0 150 340 ]
+		point [ 0 300 580,
+		    300 300 580,
+		    300 300 560,
+		    0 300 560 ]
 	  }
 	  FaceSet {
 		numVertices 4
 	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 300 560,
+		    0 300 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 580,
+		    300 300 580,
+		    300 480 580,
+		    0 480 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 580,
+		    300 300 560,
+		    300 480 560,
+		    300 480 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 300 560,
+		    0 300 560,
+		    0 480 560,
+		    300 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 300 560,
+		    0 300 580,
+		    0 480 580,
+		    0 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 480 560,
+		    0 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 480 560,
+		    0 480 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 580,
+		    300 480 580,
+		    300 660 580,
+		    0 660 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 580,
+		    300 480 560,
+		    300 660 560,
+		    300 660 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 480 560,
+		    0 480 560,
+		    0 660 560,
+		    300 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 480 560,
+		    0 480 580,
+		    0 660 580,
+		    0 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 660 560,
+		    0 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  Separator {
+
+	USE +0
+	Separator {
+
+	  Normal {
+		vector 0 -1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 660 560,
+		    0 660 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 0 0 1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 580,
+		    300 660 580,
+		    300 840 580,
+		    0 840 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  Normal {
+		vector 1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 580,
+		    300 660 560,
+		    300 840 560,
+		    300 840 580 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 0 -1
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 300 660 560,
+		    0 660 560,
+		    0 840 560,
+		    300 840 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	USE +1
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector -1 0 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 660 560,
+		    0 660 580,
+		    0 840 580,
+		    0 840 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}
+	Separator {
+
+	  USE +1
+	  Normal {
+		vector 0 1 0
+	  }
+	  NormalBinding {
+		value PER_FACE
+	  }
+	  Coordinate3 {
+		point [ 0 840 580,
+		    300 840 580,
+		    300 840 560,
+		    0 840 560 ]
+	  }
+	  FaceSet {
+		numVertices 4
+	  }	}  }
+  PickStyle {
+	style UNPICKABLE
+  }
   DrawStyle {
 	style INVISIBLE
-  }}
+  }
+  DEF Attributes Separator {
+
+	Text2 {
+	  string "S-BC0300                                          " =
+	  DEF ob_code1 GlobalField {
+		type "SFString"
+		ob_code1 "S-BC0300                                          "
+	  }	  . ob_code1
+	}
+	Text2 {
+	  string "BASE CASSETTI METALLO                                                           " =
+	  DEF ob_descr1 GlobalField {
+		type "SFString"
+		ob_descr1 "BASE CASSETTI METALLO                                                           "
+	  }	  . ob_descr1
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid01 GlobalField {
+		type "SFString"
+		ob_eid01 ""
+	  }	  . ob_eid01
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid11 GlobalField {
+		type "SFString"
+		ob_eid11 ""
+	  }	  . ob_eid11
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid21 GlobalField {
+		type "SFString"
+		ob_eid21 ""
+	  }	  . ob_eid21
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid31 GlobalField {
+		type "SFString"
+		ob_eid31 ""
+	  }	  . ob_eid31
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid41 GlobalField {
+		type "SFString"
+		ob_eid41 ""
+	  }	  . ob_eid41
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid51 GlobalField {
+		type "SFString"
+		ob_eid51 ""
+	  }	  . ob_eid51
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid61 GlobalField {
+		type "SFString"
+		ob_eid61 ""
+	  }	  . ob_eid61
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid71 GlobalField {
+		type "SFString"
+		ob_eid71 ""
+	  }	  . ob_eid71
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid81 GlobalField {
+		type "SFString"
+		ob_eid81 ""
+	  }	  . ob_eid81
+	}
+	Text2 {
+	  string "" =
+	  DEF ob_eid91 GlobalField {
+		type "SFString"
+		ob_eid91 ""
+	  }	  . ob_eid91
+	}
+	Text2 {
+	  string "0" =
+	  DEF next1 GlobalField {
+		type "SFLong"
+		next1 0
+	  }	  . next1
+	}
+	Text2 {
+	  string "0" =
+	  DEF prior1 GlobalField {
+		type "SFLong"
+		prior1 0
+	  }	  . prior1
+	}
+	Text2 {
+	  string "2" =
+	  DEF carrier1 GlobalField {
+		type "SFLong"
+		carrier1 2
+	  }	  . carrier1
+	}
+	Text2 {
+	  string "-842150451" =
+	  DEF topoth1 GlobalField {
+		type "SFLong"
+		topoth1 -842150451
+	  }	  . topoth1
+	}
+	Text2 {
+	  string "-4.31602e+008" =
+	  DEF yangle1 GlobalField {
+		type "SFFloat"
+		yangle1 -4.31602e+008
+	  }	  . yangle1
+	}
+	Text2 {
+	  string "0" =
+	  DEF lbp01 GlobalField {
+		type "SFFloat"
+		lbp01 0
+	  }	  . lbp01
+	}
+	Text2 {
+	  string "0" =
+	  DEF lbp11 GlobalField {
+		type "SFFloat"
+		lbp11 0
+	  }	  . lbp11
+	}
+	Text2 {
+	  string "0" =
+	  DEF lbp21 GlobalField {
+		type "SFFloat"
+		lbp21 0
+	  }	  . lbp21
+	}
+	Text2 {
+	  string "300" =
+	  DEF rbp01 GlobalField {
+		type "SFFloat"
+		rbp01 300
+	  }	  . rbp01
+	}
+	Text2 {
+	  string "0" =
+	  DEF rbp11 GlobalField {
+		type "SFFloat"
+		rbp11 0
+	  }	  . rbp11
+	}
+	Text2 {
+	  string "0.000183105" =
+	  DEF rbp21 GlobalField {
+		type "SFFloat"
+		rbp21 0.000183105
+	  }	  . rbp21
+	}
+	Text2 {
+	  string "0" =
+	  DEF ltp01 GlobalField {
+		type "SFFloat"
+		ltp01 0
+	  }	  . ltp01
+	}
+	Text2 {
+	  string "860" =
+	  DEF ltp11 GlobalField {
+		type "SFFloat"
+		ltp11 860
+	  }	  . ltp11
+	}
+	Text2 {
+	  string "0" =
+	  DEF ltp21 GlobalField {
+		type "SFFloat"
+		ltp21 0
+	  }	  . ltp21
+	}
+	Text2 {
+	  string "300" =
+	  DEF rtp01 GlobalField {
+		type "SFFloat"
+		rtp01 300
+	  }	  . rtp01
+	}
+	Text2 {
+	  string "860" =
+	  DEF rtp11 GlobalField {
+		type "SFFloat"
+		rtp11 860
+	  }	  . rtp11
+	}
+	Text2 {
+	  string "0.000183105" =
+	  DEF rtp21 GlobalField {
+		type "SFFloat"
+		rtp21 0.000183105
+	  }	  . rtp21
+	}  }}

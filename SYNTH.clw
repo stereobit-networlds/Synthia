@@ -2,22 +2,22 @@
 
 [General Info]
 Version=1
-LastClass=IvfListView
-LastTemplate=CListView
+LastClass=DeleteObj
+LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "SYNTH.h"
 LastPage=0
 
-ClassCount=22
+ClassCount=23
 Class1=CSYNTHApp
 Class2=CSYNTHDoc
 Class3=CSYNTHView
 Class4=CMainFrame
 
-ResourceCount=19
+ResourceCount=21
 Resource1=IDD_ABOUTBOX
 Resource2=SYNTH_SELECT_OBJ
-Resource3=IDR_MAINFRAME (English (U.S.))
+Resource3=SYNTH_SELECT_OBJ (Greek)
 Class5=CAboutDlg
 Class6=CChildFrame
 Resource4=SYNTH_ROOMBASE_PROP
@@ -30,7 +30,7 @@ Class10=CGLib0
 Class11=CRoomBase
 Class12=CRoomWall
 Resource7=SYNTH_WIZZ0
-Resource8=IDD_ABOUTBOX (English (U.S.))
+Resource8=SYNTH_ROOMWALL_PROP (Greek)
 Class13=CRoomWallPro
 Class14=CSelectObj
 Class15=LObj2
@@ -41,17 +41,20 @@ Class18=CRoomBasePro
 Resource10=SYNTH_ROOMWALL_PROP
 Resource11=SYNTH_GEXTERNAL_PROP
 Class19=GExternalProp
-Resource12=SYNTH_GEXTERNAL_PROP (Greek)
-Resource13=SYNTH_ROOMBASE_PROP (Greek)
-Resource14=SYNTH_ROOMWALL_PROP (Greek)
-Resource15=SYNTH_SELECT_OBJ (Greek)
-Resource16=SYNTH_WIZZ0 (Greek)
-Resource17=SYNTH_WORLDBASE_PROP (Greek)
-Resource18=IDR_MAINFRAME (Greek)
+Resource12=SYNTH_ROOMBASE_PROP (Greek)
+Resource13=IDD_ABOUTBOX (English (U.S.))
+Resource14=SYNTH_WIZZ0 (Greek)
+Resource15=SYNTH_WORLDBASE_PROP (Greek)
+Resource16=IDR_MAINFRAME (English (U.S.))
+Resource17=IDR_MAINFRAME (Greek)
+Resource18=IDR_SYNTHTYPE (Greek)
 Class20=CIvfTreeView
 Class21=dummy
 Class22=IvfListView
-Resource19=IDR_SYNTHTYPE (Greek)
+Resource19=SYNTH_GEXTERNAL_PROP (Greek)
+Class23=DeleteObj
+Resource20=SYNTH_DELETE_OBJ (Greek)
+Resource21=IDR_MYTBAR (English (U.S.))
 
 [CLS:CSYNTHApp]
 Type=0
@@ -74,7 +77,7 @@ Type=0
 HeaderFile=SYNTHView.h
 ImplementationFile=SYNTHView.cpp
 Filter=C
-LastObject=CSYNTHView
+LastObject=ID_VIEW_STATUS_BAR
 
 [CLS:CMainFrame]
 Type=0
@@ -609,7 +612,7 @@ CommandCount=12
 
 [MNU:IDR_SYNTHTYPE (Greek)]
 Type=1
-Class=?
+Class=CSYNTHView
 Command1=ID_FILE_NEW
 Command2=ID_FILE_OPEN
 Command3=ID_FILE_RELOAD
@@ -630,17 +633,19 @@ Command17=SYNTH_NEW_SPHERE
 Command18=SYNTH_PROPERTIES
 Command19=SYNTH_KATAXKOYZIN
 Command20=SYNTH_SELECT
-Command21=ID_VIEW_TOOLBAR
-Command22=ID_VIEW_STATUS_BAR
-Command23=ID_VIEW_PICEDIT
-Command24=ID_WINDOW_NEW
-Command25=ID_WINDOW_CASCADE
-Command26=ID_WINDOW_TILE_HORZ
-Command27=ID_WINDOW_ARRANGE
-Command28=IDM_VIEWPOINTS
-Command29=ID_HELP_FINDER
-Command30=ID_APP_ABOUT
-CommandCount=30
+Command21=ID_OBJECT_RIGHT
+Command22=ID_OBJECT_LEFT
+Command23=ID_VIEW_TOOLBAR
+Command24=ID_VIEW_STATUS_BAR
+Command25=ID_VIEW_PICEDIT
+Command26=ID_WINDOW_NEW
+Command27=ID_WINDOW_CASCADE
+Command28=ID_WINDOW_TILE_HORZ
+Command29=ID_WINDOW_ARRANGE
+Command30=IDM_VIEWPOINTS
+Command31=ID_HELP_FINDER
+Command32=ID_APP_ABOUT
+CommandCount=32
 
 [CLS:dummy]
 Type=0
@@ -655,7 +660,7 @@ HeaderFile=IvfListView.h
 ImplementationFile=IvfListView.cpp
 BaseClass=CListView
 Filter=C
-LastObject=IvfListView
+LastObject=ID_APP_ABOUT
 
 [CLS:CIvfTreeView]
 Type=0
@@ -663,4 +668,26 @@ HeaderFile=ivftreeview.h
 ImplementationFile=ivftreeview.cpp
 BaseClass=CTreeView
 Filter=C
+
+[DLG:SYNTH_DELETE_OBJ (Greek)]
+Type=1
+Class=DeleteObj
+ControlCount=3
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308353
+
+[CLS:DeleteObj]
+Type=0
+HeaderFile=DeleteObj.h
+ImplementationFile=DeleteObj.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=DeleteObj
+
+[TB:IDR_MYTBAR (English (U.S.))]
+Type=1
+Command1=ID_BUTTON32828
+Command2=ID_BUTTON32829
+CommandCount=2
 

@@ -280,8 +280,7 @@ void CRoomWall::SaveProperties ()
 
 	CLib0 lib ;
 	CString soff = lib.inttostr(offset) ;
-    lib.setSoSFFloatProp ( attr, SbName("Id03_"+soff), sdoc->ObjCount ) ; //save object's counter as id
-
+ 
 	lib.setSoSFFloatProp ( attr, SbName("height"+soff), height ) ;
 	lib.setSoSFFloatProp ( attr, SbName("depth"+soff), depth ) ;
 

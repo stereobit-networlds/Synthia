@@ -9,6 +9,8 @@
 #include "SYNTHDoc.h"
 #include "SYNTHView.h"
 
+#include "lib0.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -32,6 +34,13 @@ BEGIN_MESSAGE_MAP(CSYNTHApp, CWinApp)
 
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
+
+	// my commands
+    ON_COMMAND(ID_OBJECT_RIGHT, OnRight)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_RIGHT, OnUpdateRight)
+    ON_COMMAND(ID_OBJECT_LEFT, OnLeft)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_LEFT, OnUpdateLeft)
+
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -113,6 +122,7 @@ BOOL CSYNTHApp::InitInstance()
 	CMainFrame* pMainFrame = new CMainFrame;
 	if (!pMainFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
+
 	m_pMainWnd = pMainFrame;
 
 	// Enable DDE Execute open
@@ -142,6 +152,9 @@ BOOL CSYNTHApp::InitInstance()
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
+
+    //init direction ...left,right...
+	ObjDirection = 1;
 
 	// OPEN DATABASE / DATASETS
 	// open the database 
@@ -331,10 +344,6 @@ void CSYNTHApp::OnFileOpen()
 			
 		}
 
-		//pDoc->InventorToObjects() ;
-		//CString Open_susami = openDlg.m_ofn.lpstrFile; //??????
-		//if (Open_susami==NULL) return;
-
 		pDoc->OpenSYNTHFile();
 	}
 }
@@ -378,7 +387,6 @@ CIvfDocument *pIvfDoc = IvfGetDocument();
 pIvfDoc->OnFileViewInfo();
 }
 
-
 void CSYNTHApp::OnUpdateFileViewInfo(CCmdUI* pCmdUI) 
 {
 pCmdUI->Enable(TRUE);
@@ -395,4 +403,43 @@ CDocTemplate* pTemplate = GetNextDocTemplate(pos);
 pTemplate->OpenDocumentFile(NULL);
 }
 // END_IVWGEN
+
+//******************************************************** my routines
+void CSYNTHApp::OnRight()
+{
+  //CLib0 lib;
+
+  ObjDirection = 1;
+  //AfxMessageBox(lib.inttostr(ObjDirection));
+}
+
+void CSYNTHApp::OnUpdateRight(CCmdUI* pCmdUI) 
+{
+    ASSERT( ObjDirection != NULL );
+    if (ObjDirection == 1)
+        //pCmdUI->Enable( TRUE );	
+		pCmdUI->SetCheck(TRUE);
+    else
+        //pCmdUI->Enable( FALSE );
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHApp::OnLeft()
+{
+  //CLib0 lib;
+
+  ObjDirection = 2;
+  //AfxMessageBox(lib.inttostr(ObjDirection));
+}
+
+void CSYNTHApp::OnUpdateLeft(CCmdUI* pCmdUI) 
+{
+    ASSERT( ObjDirection != NULL );
+    if (ObjDirection == 2)
+        //pCmdUI->Enable( TRUE );	
+		pCmdUI->SetCheck(TRUE);
+    else
+        //pCmdUI->Enable( FALSE );
+		pCmdUI->SetCheck(FALSE);
+}
 

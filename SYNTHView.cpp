@@ -8,6 +8,7 @@
 #include "SYNTHView.h"
 #include "GExternal.h"
 #include "Lib0.h"
+//#include "DeleteObj.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -26,6 +27,10 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/SbLinear.h>
 #include <Inventor/nodes/SoText2.h>
 
+#include <Inventor/Win/SoWinClipboard.h>    
+#include <Inventor/SoLists.h>             
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CSYNTHView
 
@@ -42,7 +47,8 @@ BEGIN_MESSAGE_MAP(CSYNTHView, CView)
 	ON_WM_ERASEBKGND()
 	ON_COMMAND(ID_VIEW_PICEDIT, OnViewPicedit)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PICEDIT, OnUpdateViewPicedit)
-	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
+	//ON_COMMAND(ID_EDIT_CUT, OnDelete)  this command called from OnDelete of doc
+	//ON_COMMAND(ID_EDIT_CUT, OnEditCut) redirect this command to "OnDelete"
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateEditCut)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateEditCopy)
@@ -67,6 +73,9 @@ CSYNTHView::CSYNTHView()
     m_pSelectionNode = NULL;    // Initialize new member variable
 
     m_nEnableSelection = TRUE;  // Set existing member variable
+
+    m_pClipboard = NULL;    //SelectB
+
 // IVF_EXAMPLE_END
    
 }
@@ -77,6 +86,11 @@ CSYNTHView::~CSYNTHView()
     // Don't delete Inventor nodes, just decrement the ref count
     if (m_pSelectionNode != NULL)
         m_pSelectionNode->unref();
+
+	if (m_pClipboard != NULL) { //SelectB
+        delete m_pClipboard;
+        m_pClipboard = NULL;
+	}
 // IVF_EXAMPLE_END
 }
 
@@ -120,7 +134,6 @@ SoPath *pickFilterCB(void *, const SoPickedPoint *pick) ;
 SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,  
 										const SbVec2s &cursorPosition ) ;
 
-//SoPath *myHitPath ;
 void GetPickObjectID(SoPath *path);
 
 void MousePressCB(void *userData, SoEventCallback *eventCB ) ;
@@ -151,10 +164,10 @@ void CSYNTHView::OnInitialUpdate()
 //	m_nEnableSelection = TRUE; has defined already in construction
 
 //	SoSelection *pSelectionNode = IvfGetSelectionNode();
-	m_pSelectionNode->policy = SoSelection::SINGLE ;
+	m_pSelectionNode->policy = SoSelection::SHIFT ;
 	//m_pSelectionNode->addSelectionCallback(selectionCallback, NULL);
 	//m_pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
-//    m_pSelectionNode->setPickFilterCallback(pickFilterCB);
+    m_pSelectionNode->setPickFilterCallback(pickFilterCB);
 
 /*
 	myHandleBox = new SoHandleBoxManip;
@@ -198,6 +211,11 @@ void CSYNTHView::OnInitialUpdate()
     m_pViewer->redrawOnSelectionChange( m_pSelectionNode ) ;
 
 	} //---/
+
+	// Create an instance of the clipboard and associate with our window
+    if (m_pClipboard == NULL) {
+        m_pClipboard = new SoWinClipboard( GetSafeHwnd() );
+    }
     
 }
 
@@ -373,39 +391,151 @@ void CSYNTHView::OnUpdateViewPicedit (CCmdUI* pCmdUI)
 }
 
 
-void CSYNTHView::OnEditCut() 
-{
-	IvfOnEditCut();	
-}
-
-void CSYNTHView::OnUpdateEditCut(CCmdUI* pCmdUI)
-{
-	IvfOnUpdateEditCut(pCmdUI);
-}
-
 void CSYNTHView::OnEditCopy() 
 {
-	IvfOnEditCopy();	
+    // Get list of all selected objects
+    Time eventTime = time(NULL);
+	const SoPathList *pPathList = m_pSelectionNode->getList();
+    ASSERT( pPathList != NULL );
+
+    // Copy all selected objects to clipboard
+    if (pPathList->getLength() > 0)
+        m_pClipboard->copy( (SoPathList*)pPathList, eventTime );
+
+	// Copy the object to my copy array
+	sdoc->Copy_Obj[1] = sdoc->Obj[sdoc->obj_selector];
 }
 
-void CSYNTHView::OnUpdateEditCopy(CCmdUI* pCmdUI)
+void CSYNTHView::OnUpdateEditCopy(CCmdUI* pCmdUI) 
 {
-	IvfOnUpdateEditCopy(pCmdUI);
+    // Copy is only valid if at least one object is selected
+    ASSERT( m_pSelectionNode != NULL );
+    if (m_pSelectionNode->getNumSelected() > 0)
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
 }
 
+void CSYNTHView::OnEditCut() 
+{
+    // Copy all selected objects to clipboard
+    OnEditCopy();
+
+    // Loop over all selected objects
+    int i = m_pSelectionNode->getNumSelected() - 1;
+
+    while (i >= 0) {
+        // Get next path
+        SoPath *pPath = (*m_pSelectionNode)[i];
+        pPath->ref();
+	
+        // Deselect this path
+        m_pSelectionNode->deselect(i);
+
+        // Remove the tail node from the graph
+        // 1) Get parent of tail node (which must be a group).
+        // 2) Remove tail node from the group.
+        SoGroup *pGroup = (SoGroup *) pPath->getNodeFromTail( 1 );
+        pGroup->removeChild( pPath->getTail() );
+
+        pPath->unref();
+        i--;
+    }
+
+	//delete object from Object array
+	sdoc->Obj[sdoc->obj_selector]=NULL;   
+}
+
+void CSYNTHView::OnUpdateEditCut(CCmdUI* pCmdUI) 
+{
+    // Cut is only valid if at least one object is selected
+    ASSERT( m_pSelectionNode != NULL );
+    if (m_pSelectionNode->getNumSelected() > 0)
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+}
+
+void CSYNTHView::OnPasteCB( void *data, SoPathList *pList )
+{
+    // Get ptr to view that requested paste
+    ASSERT( data != NULL );
+    CSYNTHView *pView = (CSYNTHView*)data;
+
+    // Get number of objects (pick paths) to be pasted
+    ASSERT( pList != NULL );
+    int numPath = pList->getLength();
+
+    // Unselect any current selections
+    pView->m_pSelectionNode->deselectAll();
+
+    // Loop over objects to be pasted
+    for (int i = 0; i < numPath; i++) {
+        SoPath *pPath = (*pList)[i];
+        ASSERT( pPath != NULL);
+
+        SoNode *pNode = pPath->getHead();
+        ASSERT( pNode != NULL );
+
+        // If top of path is another selection node
+        // (and it usually will be if it was copied or cut)
+        // just add its children to the scene graph.
+        // Otherwise we'll have multiple selection nodes
+        // and the user will see very puzzling behavior!
+        if (pNode->isOfType(SoSelection::getClassTypeId())) {
+
+            SoGroup *pGroup = (SoGroup*)pNode;        
+            int numKids = pGroup->getNumChildren();
+
+            for (int j = 0; j < numKids; j++) {    
+                SoNode *pNode = pGroup->getChild( j );
+                ASSERT( pNode != NULL);
+                // Add object to toplevel node and select it
+                pView->m_pSelectionNode->addChild( pNode );
+                pView->m_pSelectionNode->select( pNode );
+            }
+        }
+        else {
+            // Add object to toplevel node and select it
+            pView->m_pSelectionNode->addChild( pNode );
+            pView->m_pSelectionNode->select( pNode );
+        }
+    }
+}
 
 void CSYNTHView::OnEditPaste() 
 {
-	CDocument *pDoc = CIvfApp::IvfGetAfxDocument(this);
-	pDoc->SetModifiedFlag();
-	IvfOnEditPaste();	
+    // Request current contents of clipboard
+    // On completion the callback will be called.
+    // It's a static function so pass it "this" as the data word.
+    Time eventTime = time(NULL);
+	m_pClipboard->paste( eventTime, CSYNTHView::OnPasteCB, this );
+
+/*
+    LObj2 obj2;
+
+	sdoc->new_object = TRUE ;
+	obj2.CreateObject( TRUE, sdoc->root, eid_id, rs_eidh0, rs_mrec ) ;
+
+    Η ιδεα είναι εφοσον στο oncopy εχουμε σωσει το array index και τα eid_id κλπ.
+	σ'αυτο το σημειο κανουμε createobject οπως στο select
+
+    Αυτο σημαινει οτι ο υπαρχον κωδικας του copy paste ( μεσω winClipboard )
+	δεν χρειαζεται
+*/
 }
 
-
-void CSYNTHView::OnUpdateEditPaste(CCmdUI* pCmdUI)
+void CSYNTHView::OnUpdateEditPaste(CCmdUI* pCmdUI) 
 {
-	IvfOnUpdateEditPaste(pCmdUI);
+    // Update "Paste" UI items
+    // Paste is only valid if there is something in the clipboard
+    if (IsClipboardFormatAvailable(CF_TEXT))
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
 }
+
+
 
 BOOL CSYNTHView::IsDocLoaded(void)
 {
@@ -444,6 +574,16 @@ void CSYNTHView::OnViewViewmodesViewingmode()
 {
 	IvfViewmodesViewingmode();
 }
+
+
+/**** just redirect onEditCut ****/
+void CSYNTHView::OnDelete()
+{
+      OnEditCut(); //call OnEditCut (ετοιμη ρουτινα)
+	  // εδω μπορει να γινει η δικιά μου delete routine
+	  //....
+}
+
 
 /*======================= selectionCallback =============*/
 
@@ -524,22 +664,24 @@ SoPath *pickFilterCB(void *, const SoPickedPoint *pick)
   //See whitch child of selection got picked
   SoPath *p = pick->getPath();
 
-  //int length = p->getLength(); //get length
-  //SoSeparator *parent = (SoSeparator *)p->getNode(length-2); //get parent
-  // to be continue ...
-  
   int i;
-  for (i=0;i<p->getLength()-1;i++)
+  SoNode *n;
+  for (i=p->getLength()-1;i>=0;i--)
   {
-	  SoNode *n = p->getNode(i);
-
-	  if (n->isOfType(SoSelection::getClassTypeId()))
+	  n = p->getNode(i);
+	  if (n->isOfType(SoSeparator::getClassTypeId()))
 		  break;
   }
-  //Copy 2 nodes from the path:
-  //selection and the picked child
-  return p->copy(i,2); 
-  
+
+//change bounding box  
+  const char *name = ((SoSeparator *)n)->getName().getString();//get name
+  if (strcmp(name,"")==0) //it is external 
+	  return p->copy(0,i-1); 
+  else                    //it is roomwall,worldbase ...
+	  return p->copy(0,i+1);
+      //return p;
+
+  return p;
 }
 
 
@@ -676,9 +818,8 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 
 	if (PickedPoint == NULL) return FALSE;
 
-	//**** find object ID	
-	sdoc->myHitPath = PickedPoint->getPath(); //get the picking path
-	GetPickObjectID(sdoc->myHitPath);
+	SoPath *p = PickedPoint->getPath();
+	GetPickObjectID(p);                 //find my object id
 
 	const SbVec3f *pp = &PickedPoint->getPoint() ;
 	const SbVec3f *nn = &PickedPoint->getNormal() ;
@@ -689,23 +830,16 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 	return TRUE;
 }
 
-#include <Inventor/fields/SoSFString.h>
-#include <Inventor/fields/SoSFFloat.h>
-#include <Inventor/fields/SoSFInt32.h>
-void modSoSFIntProp ( SbName pname , int val ) 
-{
-	SoSFInt32 *f = (SoSFInt32 *)(SoDB::getGlobalField(pname)) ;
-	if (f) ((SoSFInt32 *)f)->setValue(val) ;
-}
-
 //********************* GetPickObjectID *********************
+//Η ρουτινα αυτη  βρίσκει το id του clicked object. 
+//επιστρεφει το ονομα ως τυπου αντικειμένου και το νουμερο του ονοματος ως object counter
 void GetPickObjectID(SoPath *path)
 {
 	CLib0 lib;
-	CString sname ;
-	int myvalue ; //= the carrier number
+	int id ;
 
-	sdoc->obj_selector = -1; //initializate selector with invalid number
+	id = -1; //initializate id=selector with invalid number
+	sdoc->BUTTERING = false ; //init buttering  
 
 	int length = path->getLength(); //get length
 	if (length > 2)
@@ -715,39 +849,32 @@ void GetPickObjectID(SoPath *path)
 	  const char *name = ((SoSeparator *)parent)->getName().getString();  //get name
 	  //AfxMessageBox(name) ;
       
-	  sname="";
-      if (strcmp(name,"WorldBase")==0)
+      if (strncmp(name,"WorldBase",9)==0)
       {
-		  //do ...
-		  myvalue = -2; // επειδη είναι μοναδικό και worldbase
-		  sname = "Id01"; // name με το οποίο γίνεται searching στο database του Inventor
-
-		  sdoc->obj_selector = 0; //= obj_counter (παντα ειναι 0)
-      }
-	  if (strcmp(name,"RoomBase")==0)
-      {
-		  //do ...
-		  myvalue = -1; // επειδη είναι μοναδικό και roombase
-		  sname = "Id02";
-
-		  sdoc->obj_selector = 1; //= obj_counter (παντα είναι 1)
-      }
-	  if (strncmp(name,"RoomWall",8)==0)
-      {
-		  //do ...
 		  //get the wall number
- 
           char *digits = "0123456789";
 		  char *mynum ;
 
 		  mynum = strpbrk(name,digits) ; //get the number from name
+          id = lib.strtoint(mynum);
+      }
+	  if (strncmp(name,"RoomBase",8)==0)
+      {
+		  //get the wall number
+          char *digits = "0123456789";
+		  char *mynum ;
 
-          myvalue = lib.strtoint(mynum);
-		  sname = "Id03"+lib.inttostr(myvalue);
+		  mynum = strpbrk(name,digits) ; //get the number from name
+          id = lib.strtoint(mynum);
+      }
+	  if (strncmp(name,"RoomWall",8)==0)
+      {
+		  //get the wall number
+          char *digits = "0123456789";
+		  char *mynum ;
 
-		  sdoc->obj_selector = myvalue + 2; 
-		  //my value = roomwall meter (0..1..2..) 
-		  //2 = the worldbase + roombase
+		  mynum = strpbrk(name,digits) ; //get the number from name
+          id = lib.strtoint(mynum);
       }
 	  if (strcmp(name,"")==0)
       {
@@ -756,56 +883,46 @@ void GetPickObjectID(SoPath *path)
 		 const char *name = ((SoSeparator *)ofparent)->getName().getString();//get name
 	     //AfxMessageBox(name) ; //all ok !!!
 
-		 sname="";
 		 if (strncmp(name,"GExternal",9)==0) 
 		 {
 			 char *digits = "0123456789";
 		     char *mynum ;
 			 
-		     mynum = strpbrk(name,digits) ; //get the number from name
+		     mynum = strpbrk(name,digits) ; //get the object number from name 
+             id = lib.strtoint(mynum);     // convert to int
 
-             myvalue = lib.strtoint(mynum);     // convert to int
-             CString mstr = lib.inttostr(myvalue); //convert to CString
-			 //AfxMessageBox(mstr) ;
-
-			 //display carrier
-			 int mycarrier	= lib.getSoSFIntProp(SbName("carrier"+mstr)) ;
-		     AfxMessageBox(lib.inttostr(mycarrier)); //no value to mycarrier
-
-
-			 int walls_num = (sdoc->ObjCount - sdoc->ob_offset) - 1 ;
-			 //calculate the walls = (μετρητης ολων των Objects  - μετρητης των External) - 1
-			 //1 = roombase (  το worldbase=0 δεν υπολογιζεται ) 
-			 sdoc->obj_selector = myvalue + walls_num + 2;
-			 //2 = worldbase + roombase 
-		 }	 
-
-		 // θα χρειαστει οταν θα θελουμε να βαλουμε τιμές στα next,prior ???
-		 // οπου myvalue = το carrier του external object που έγινε κλίκ...
+			 sdoc->BUTTERING = true;
+		 }
+		 else
+         {
+			 AfxMessageBox("Unknown Object ,2");
+         }
       }
 
-
-	  if (sname!="") //δεν είναι external
+      sdoc->obj_selector = id ;
+	  if (id!=-1) //αυτο σημαινει οτι το object ειναι εγκυρο
       {
-        //float val  = lib.getSoSFFloatProp(SbName(sname)) ; //get object id βαση πεδίου
-		//CString myid = lib.floattostr( val );
-		//AfxMessageBox(myid);
-
-        // change carrier attribute
-        CString soff = lib.inttostr(sdoc->ob_offset-1) ;
-		if ( sdoc->new_object ) 
-			modSoSFIntProp(SbName("carrier"+soff),myvalue) ;  
-
-		//AfxMessageBox(lib.inttostr(myvalue)+" "+sname);
+        //do something....
+        //sdoc->obj_selector = id ;
+		sdoc->obj_type = name ;
+		//AfxMessageBox(lib.inttostr(sdoc->obj_selector)+" "+sdoc->obj_type);
+      }
+	  else
+      {
+		  AfxMessageBox("Invalid Object");
       }
 	}
-    AfxMessageBox(lib.inttostr(sdoc->obj_selector));  
+    else
+	{
+		AfxMessageBox("Unknown Object ,1");
+    } 
 }
 
 //======================== MousePressCB =====================
 
 void MousePressCB(void *userData, SoEventCallback *eventCB)
 {
+	CLib0 lib;
 	SoSeparator *root = (SoSeparator *) userData;
 	const SoEvent *event = eventCB->getEvent();
 
@@ -819,9 +936,6 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 
 	if ( sdoc->new_object ) 
 	{
-
-        //GetPickObjectID(sdoc->myHitPath); //δεν "βλέπει" την total μεταβλητή myHitPath
-
 		SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1])->sep ;
 		
 		SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
@@ -834,9 +948,21 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 		SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),picked_normal) ;
 		rot->rotation.setValue(*sbrot) ;
 
-		sdoc->new_object = FALSE ;
+		//set carrier
+		CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]) ;
+	    ext->carrier_id = sdoc->obj_selector ;
+	    ext->SaveProperties();
+        //AfxMessageBox(lib.inttostr( ext->carrier_id ) );
+
+		sdoc->new_object = FALSE ; 
 		
-//		sview->GetSelectionNode()->select(sep) ;
+		//select it..
+		sview->GetSelectionNode()->deselectAll();
+		sview->GetSelectionNode()->select(sep) ;
+		sdoc->obj_selector = sdoc->ObjCount-1 ;
+		//.. and set buttering on..
+		sdoc->BUTTERING = true;
+
 
 		sdoc->SetModifiedFlag() ;
 		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)

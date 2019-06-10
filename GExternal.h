@@ -49,6 +49,8 @@ public:
 
 	float pointX1,pointY1,pointZ1; //reference points for change translation
 	float pointX2,pointY2,pointZ2;
+    float xdist, ydist ;  //calculated distances
+
 
 // Operations
 public:
@@ -56,9 +58,16 @@ public:
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
-	void GetPoints();
+	void GetObjRefPoints();
 	void GetDistances() ;
-	void FindNewState(float d1,float d2) ;
+	void MoveObjectTo(float d1,float d2) ;
+	void CalculateSelectedObjectDistance() ;
+	void CalculateNewObjectDistance();
+	void AttachObject(SoSeparator *obj_sep) ;
+	void ChangeAttributes() ;
+	void ChangeButteringAttributes() ;
+	void RebuildRight() ;
+	void RebuildLeft() ;
 };
 
 /////////////////////////////////////////////////////////////////////////////

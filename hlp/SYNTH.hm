@@ -8,12 +8,17 @@ HID_VIEW_SELECTIONMODE                  0x18026
 HID_VIEW_VIEWINGMODE                    0x18027
 HID_FILE_IMPORT                         0x18031
 HID_FILE_RELOAD                         0x18032
+HID_OBJECT_LEFT                         0x18039
+HID_OBJECT_RIGHT                        0x1803B
+HID_BUTTON32828                         0x1803C
+HID_BUTTON32829                         0x1803D
  
 // Prompts (IDP_*) 
  
 // Resources (IDR_*) 
 HIDR_MAINFRAME                          0x20080
 HIDR_SYNTHTYPE                          0x20081
+HIDR_MYTBAR                             0x2008D
  
 // Dialogs (IDD_*) 
 HIDD_ABOUTBOX                           0x20064

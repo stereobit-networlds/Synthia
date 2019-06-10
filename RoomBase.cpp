@@ -146,7 +146,6 @@ void CRoomBase::SaveProperties ()
 	attr->setName("Attributes") ;
 
 	CLib0	lib ;
-    lib.setSoSFFloatProp ( attr, SbName("Id02"), sdoc->ObjCount ) ; //save object's counter
 
 	lib.setSoSFFloatProp ( attr, "rb_height", height ) ;
 	lib.setSoSFIntProp	 ( attr, "KoryfCount", KoryfCount ) ;

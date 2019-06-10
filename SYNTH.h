@@ -28,6 +28,9 @@ public:
 	CDaoTableDef	*tdf_eidh0, *tdf_omad, *tdf_mrec ;
 	CDaoRecordset	*rs_eidh0, *rs_omad, *rs_mrec ;
 
+	int ObjDirection ;  //variable for left,right...
+
+
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSYNTHApp)
@@ -41,10 +44,13 @@ public:
 	//}}AFX_VIRTUAL
 
 // Implementation
-
+	void OnRight();
+	void OnLeft();
+    afx_msg void OnUpdateRight(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLeft(CCmdUI* pCmdUI);
 	//{{AFX_MSG(CSYNTHApp)
 	afx_msg void OnAppAbout();
-        afx_msg void OnFileNew();
+    afx_msg void OnFileNew();
 	afx_msg void OnFileOpen();
 	afx_msg void OnFileViewInfo();
 	afx_msg void OnUpdateFileViewInfo(CCmdUI *pCmdUI);

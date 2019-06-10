@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "SYNTH.h"
 
+#include "SYNTHDoc.h"
 #include "SYNTHView.h"
 #include "MainFrm.h"
 
@@ -70,6 +71,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create toolbar\n");
 		return -1;      // fail to create
 	}
+
 
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
@@ -149,11 +151,14 @@ BOOL CMainFrame::OnQueryNewPalette()
 	return CMDIFrameWnd::OnQueryNewPalette();
 }
 
-#include <Ivf/IvfDocument.h>
+
+#include <Ivf/IvfDocument.h>                  // choose from menu directly δεν εμφανίζει το scene
 void CMainFrame::OnDropFiles(HDROP hDropInfo) 
 {
 char newName[2048];
 	::DragQueryFile(hDropInfo,0,newName,2048);
+
+	CSYNTHDoc *pDoc ;  //add by me (and the headerfile SYNTHdoc.h)
 
     if(! CIvfDocument::IvfIsInventorFile(newName) )
     {
@@ -167,7 +172,10 @@ char newName[2048];
         return; // Not a supported file
     }
 
+    pDoc->OpenSYNTHFile(); //add by me
+
 	CFrameWnd::OnDropFiles(hDropInfo);
+
 }
 
 

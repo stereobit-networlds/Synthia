@@ -28,13 +28,17 @@ public:
 
 	SoSeparator *root ;		// the scene root
 	CObject *Obj[100] ;		// then various RoomBase, WorldBase, ...
+	CObject *Copy_Obj[1];   // my copy command array buffer
 	int ObjCount ;			// number of Objs
 	int SelId ;				// selected Obj[SelId]
 	BOOL	new_object ;	// true if a new objcect is added
 	int ob_offset ;			// counter for the GExternal objects
 
-	SoPath *myHitPath ;     // my hit point path
-	int obj_selector ;      // my selection generated number
+	int obj_value ;         // my selection coded number (-2,-1,0..) for world base and walls
+	int obj_selector ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
+	CString obj_type ;      // object type character string
+
+	bool BUTTERING ;
 
 
 	void SetSelectedObj ( SoSelection *sel ) ;
@@ -75,8 +79,11 @@ protected:
 	afx_msg void OnUpdateFileReload(CCmdUI *pCmdUI);
 	afx_msg void OnNewSphere();
 	afx_msg void OnProperties();
+	afx_msg void OnUpdateProperties(CCmdUI* pCmdUI);
 	afx_msg void OnKataxkoyzin();
 	afx_msg void OnSelectObj();
+	afx_msg void OnUpdateSelectObj(CCmdUI* pCmdUI);
+	afx_msg void OnDelete();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

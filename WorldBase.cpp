@@ -98,7 +98,6 @@ void CWorldBase::SaveProperties ()
 	attr->setName("Attributes") ;
 	// add global fields
 	CLib0 lib ;
-    lib.setSoSFFloatProp ( attr, SbName("Id01"), sdoc->ObjCount ) ; //save object's counter as id
 
 	lib.setSoSFFloatProp ( attr, "width", width ) ;
 	lib.setSoSFFloatProp ( attr, "depth", depth ) ;

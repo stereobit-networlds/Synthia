@@ -17,6 +17,7 @@
 #include "WorldBase.h"
 #include "GExternal.h"
 #include "SelectObj.h"
+#include "DeleteObj.h"
 
 #include <Inventor/manips/SoHandleBoxManip.h>
 #include <Inventor/manips/SoTrackballManip.h>
@@ -43,8 +44,11 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_FILE_RELOAD, OnUpdateFileReload)
 	ON_COMMAND(SYNTH_NEW_SPHERE, OnNewSphere)
 	ON_COMMAND(SYNTH_PROPERTIES, OnProperties)
+	ON_UPDATE_COMMAND_UI(SYNTH_PROPERTIES, OnUpdateProperties)
 	ON_COMMAND(SYNTH_KATAXKOYZIN, OnKataxkoyzin)
 	ON_COMMAND(SYNTH_SELECT, OnSelectObj)
+	ON_UPDATE_COMMAND_UI(SYNTH_SELECT, OnUpdateSelectObj)
+	ON_COMMAND(ID_EDIT_CUT, OnDelete)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -61,8 +65,16 @@ CSYNTHDoc::CSYNTHDoc()
 	m_eOpenType = IVFDOC_OPEN_NORMAL;
 // END_IVWGEN
 
-  new_object = FALSE ;  
-  ob_offset = 0; //external object counte+
+  new_object = FALSE ;
+  root = NULL;
+
+  //init counters
+  ObjCount  = 0; //general object counter
+  ob_offset = 0; //external object counter
+
+  obj_value = 0 ;         
+  obj_selector = -1 ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
+  BUTTERING = false ; 
 
 }
 
@@ -244,6 +256,20 @@ void CSYNTHDoc::IvfSetupUrlFetchCallback(void)
 	CIvfDocument::IvfSetupUrlFetchCallback();
 }
 
+/******** just set modified flag ************/
+void CSYNTHDoc::OnDelete() 
+{
+	// Ανοίγει το παράθυρο διαγραφής αντικειμένου
+	DeleteObj *dlg = new DeleteObj ;
+   
+	if (dlg->DoModal() == IDOK)   
+	{
+      sview->OnDelete(); //call delete of view
+	  SetModifiedFlag();
+	}
+
+}
+
 #include <Inventor/nodes/SoSphere.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoSelection.h>
@@ -301,7 +327,7 @@ void CSYNTHDoc::OnNewSphere()
 
    // look if the file is a synth file
    SoSeparator *testsep ;
-   testsep = (SoSeparator *)SoNode::getByName("WorldBase");
+   testsep = (SoSeparator *)SoNode::getByName("WorldBase0");
    if (testsep==NULL)
    {   
 	   AfxMessageBox("Το αρχείο δεν είναι τύπου SYNTHESIS");
@@ -324,9 +350,15 @@ void CSYNTHDoc::OnProperties()
 
 	pos = GetFirstViewPosition() ;   
 	if (pos != NULL) 
-		pView = GetNextView(pos);        //εβγαλα το Ivf απο το GetSelectionNode για να βλεπει την m_pSelectionNode
-	SoSelection *pSel = ((CSYNTHView *)pView)->GetSelectionNode();
-	SetSelectedObj(pSel) ;
+		pView = GetNextView(pos);
+
+	// ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ ΤΟΥ INVENTOR ΣΤΗΝ ΑΝΑΖΗΤΗΣΗΣ ΤΗΣ ΕΠΙΛΟΓΗ 
+	                                          //εβγαλα το Ivf απο το GetSelectionNode για να βλεπει την m_pSelectionNode
+	//SoSelection *pSel = ((CSYNTHView *)pView)->GetSelectionNode();
+	//SetSelectedObj(pSel) ;
+
+	// ΕΝΕΡΓΟΠΟΙΗΣΗ ΤΟΥ OBJ_SELECTOR
+    SelId =obj_selector ;
 
 	// Ανοίγει το παράθυρο ιδιοτήτων του επιλεγμένου αντικειμένου
 	int res ;
@@ -353,6 +385,17 @@ void CSYNTHDoc::OnProperties()
 		UpdateAllViews(NULL);   
 //	} 	
 }
+
+void CSYNTHDoc::OnUpdateProperties(CCmdUI* pCmdUI) 
+{
+	// Properties is only valid if at least one object is selected
+    //ASSERT( obj_selector != NULL );
+    if (obj_selector >= 0)
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+}
+
 
 void CSYNTHDoc::OnKataxkoyzin() 
 {
@@ -447,6 +490,8 @@ void CSYNTHDoc::OnKataxkoyzin()
 			xx[i] = x0 ; yy[i] = y0 ; zz[i] = z0 ;
 		} // for i
 
+		if (root!=NULL) root->removeAllChildren();
+		
 		root = new SoSeparator ;
 		root->ref() ;
 		
@@ -456,7 +501,7 @@ void CSYNTHDoc::OnKataxkoyzin()
 		ObjCount = 0 ;
 		SelId	 = 0 ;
 		Obj[ObjCount] = wb ; ObjCount++ ;
-		wb->name    = "WorldBase" ;
+		wb->name    = "WorldBase"+lib.inttostr(ObjCount-1) ; //name + counter
 		wb->width	= xmax-xmin + 2000 ;
 		wb->depth	= zmax-zmin + 2000 ;
 		wb->height	= 100 ;
@@ -466,7 +511,7 @@ void CSYNTHDoc::OnKataxkoyzin()
 		// setup the room base
 		CRoomBase *rb = new CRoomBase ;
 		Obj[ObjCount] = rb ; ObjCount++ ;
-		rb->name   = "RoomBase" ;
+		rb->name   = "RoomBase"+lib.inttostr(ObjCount-1) ; //name + counter 
 		rb->height = 5 ;
 		rb->KoryfCount = pleyres ;
 		for ( i = 0 ; i < pleyres ; i++ )
@@ -487,7 +532,7 @@ void CSYNTHDoc::OnKataxkoyzin()
 			if (toix[i] == 0) continue ;
 			rw[off] = new CRoomWall ;
 			Obj[ObjCount] = rw[off] ; ObjCount++ ;
-			rw[off]->name   = "RoomWall" + lib.inttostr(off) ;
+			rw[off]->name   = "RoomWall" + lib.inttostr(ObjCount-1) ; //name + counter
 			rw[off]->offset = off ;
 			rw[off]->depth	= 3 ;
 			rw[off]->height	= 3000 ;
@@ -519,7 +564,7 @@ void CSYNTHDoc::OnKataxkoyzin()
 }
 
 /*======================== SetSelectedObj ========================*/
-
+// ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΗ !!!
 void CSYNTHDoc::SetSelectedObj ( SoSelection *sel ) 
 {
 //	theApp.DoMessageBox(buff,MB_OK,0) ;
@@ -601,37 +646,8 @@ out : ;
 /********************** OpenSYNTHFile ****************************/
 void CSYNTHDoc::OpenSYNTHFile()
 {
-  CLib0 lib;
-  //char *file;
-
-   	// Open the data file
-   SoInput in;   
-   //lib.CStringToChar(myFile,file);
-   char *datafile = "test02.iv";
-   if (! in.openFile(datafile)) {
-      AfxMessageBox("Cannot open %s for reading.");
-      return;
-   }
-	// Read the input file
-   SoNode *n;
-   SoSeparator *sep = new SoSeparator; 
-   root = new SoSeparator ;  //my global root 
-   root->ref() ;
-
-   while ((SoDB::read(&in, n) != FALSE) && (n != NULL))
-      sep->addChild(n);
-
-   // look if the file is a synth file
-   SoSeparator *testsep ;
-   testsep = (SoSeparator *)SoNode::getByName("WorldBase");
-   if (testsep==NULL)
-   {   
-	   AfxMessageBox("Το αρχείο δεν είναι τύπου SYNTHESIS");
-	   return;
-   }
-
-   root = sep;
-   IvfSetSceneGraph( root );
+ 
+   IvfSceneGraphChanged();
    InventorToObjects();
 
 }
@@ -648,28 +664,29 @@ void CSYNTHDoc::InventorToObjects()
 	char		dummy[10] ;
 	CLib0		lib ;
 
-//	IvfSetSceneGraph(m_pSceneRoot);
-//	root = m_pSceneRoot; 
 
+	root = m_pSceneRoot; 
 
 	ObjCount  = 0 ;
 	ob_offset = 0 ;
 
 	for ( int i = 0 ; i < root->getNumChildren() ; i++ )
 	{
+        CString id = lib.inttostr(i) ;
+
 		name = root->getChild(i)->getName().getString() ;
-		if (strcmp(name,"WorldBase")==0) 
+		if (strcmp(name,"WorldBase0")==0) 
 		{
 			wb = new CWorldBase ;
-			wb->name = "WorldBase" ;
+			wb->name = "WorldBase0" ;
 			wb->InventorToObject((SoSeparator *)root->getChild(i)) ;
 			Obj[ObjCount] = wb ; ObjCount++ ;
 		}
 		else
-		if (strcmp(name,"RoomBase")==0) 
+		if (strcmp(name,"RoomBase1")==0) 
 		{
 			rb = new CRoomBase ;
-			rb->name = "RoomBase" ;
+			rb->name = "RoomBase1" ;
 			rb->InventorToObject((SoSeparator *)root->getChild(i)) ;
 			Obj[ObjCount] = rb ; ObjCount++ ;
 		}
@@ -709,9 +726,17 @@ void CSYNTHDoc::OnSelectObj()
 	
 }
 
+void CSYNTHDoc::OnUpdateSelectObj(CCmdUI* pCmdUI)
+{
+//  CSelect Object is only valid if a scene has created
+    if ( root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE ); 
+}
 
 /////////////////////////////////////////////////////////////////////////////
-// TreeView section
+// TreeView section overwrite
 
 void CSYNTHDoc::IvfSceneGraphChanged()
 {
