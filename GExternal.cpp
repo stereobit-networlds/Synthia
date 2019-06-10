@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "SYNTH.h"
+#include "SYNTHdoc.h"
 #include "GExternal.h"
 #include "glib0.h"
 #include "lib0.h"
@@ -27,6 +28,8 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/nodes/SoTexture2Transform.h>
 #include <Inventor/nodes/SoTextureCoordinatePlane.h>
 #include <Inventor/nodes/SoComplexity.h>
+#include <Inventor/nodes/SoPickStyle.h>
+#include <Inventor/nodes/SoTranslation.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // CGExternal
@@ -49,15 +52,19 @@ void CGExternal::ObjectToInventor ( SoSeparator *root )
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
 	
+    SoPickStyle *ps = new SoPickStyle;
+	sep->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
+
 	SoDrawStyle *ds = new SoDrawStyle ;
 	sep->addChild(ds) ;
 	ds->style = SoDrawStyle::INVISIBLE ;
-
 	
-	//SaveProperties() ;  ?????????????????? δεν παιρνουν σωστες τιμες τα saved πεδια (το offset ειναι ενας big num )
+	SaveProperties() ; 
     
-	CString& mycode = code.SpanExcluding(_T(" ")); //βγάζω τα κενά απο το τέλος του string
-	sep->setName(SbName(mycode)); //set node name 
+	//code for sep name = code 
+	//CString& mycode = code.SpanExcluding(_T(" ")); //βγάζω τα κενά απο το τέλος του string
+	//sep->setName(SbName(mycode)); //set node name 
 
 	root->addChild(sep) ;
 
@@ -69,47 +76,53 @@ void CGExternal::SaveProperties ()
 {
 	// inherited action
 	CGObject::SaveProperties() ;
+    
+	sep->setName(name) ;  // set node name
 
-	//sep->setName(name) ;  // set node name
+	SoSeparator *attr = new SoSeparator ;
+	attr->setName("Attributes") ;
 
 	CLib0 lib ;
-	CString soff = lib.inttostr(offset) ;
+	CString soff = lib.inttostr(offset) ; 
 
-	lib.setSoSFStringProp ( sep, SbName("ob_code"+soff), code ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_descr"+soff), descr ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Id04_"+soff), sdoc->ObjCount ) ; //save object's counter as id
+
+	lib.setSoSFStringProp ( attr, SbName("ob_code"+soff), code ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_descr"+soff), descr ) ;
 	
-	lib.setSoSFStringProp ( sep, SbName("ob_eid0"+soff), eid_id[0] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid1"+soff), eid_id[1] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid2"+soff), eid_id[2] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid3"+soff), eid_id[3] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid4"+soff), eid_id[4] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid5"+soff), eid_id[5] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid6"+soff), eid_id[6] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid7"+soff), eid_id[7] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid8"+soff), eid_id[8] ) ;
-	lib.setSoSFStringProp ( sep, SbName("ob_eid9"+soff), eid_id[9] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid0"+soff), eid_id[0] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid1"+soff), eid_id[1] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid2"+soff), eid_id[2] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid3"+soff), eid_id[3] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid4"+soff), eid_id[4] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid5"+soff), eid_id[5] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid6"+soff), eid_id[6] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid7"+soff), eid_id[7] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid8"+soff), eid_id[8] ) ;
+	lib.setSoSFStringProp ( attr, SbName("ob_eid9"+soff), eid_id[9] ) ;
 
-	lib.setSoSFIntProp ( sep, SbName("next"+soff), next_id ) ;
-	lib.setSoSFIntProp ( sep, SbName("prior"+soff), prior_id ) ;
-	lib.setSoSFIntProp ( sep, SbName("carrier"+soff), carrier_id ) ;
-	lib.setSoSFIntProp ( sep, SbName("topoth"+soff), topoth ) ;
+	lib.setSoSFIntProp ( attr, SbName("next"+soff), next_id ) ;
+	lib.setSoSFIntProp ( attr, SbName("prior"+soff), prior_id ) ;
+	lib.setSoSFIntProp ( attr, SbName("carrier"+soff), carrier_id ) ;
+	lib.setSoSFIntProp ( attr, SbName("topoth"+soff), topoth ) ;
 	
-	lib.setSoSFFloatProp ( sep, SbName("yangle"+soff), yangle ) ;
+	lib.setSoSFFloatProp ( attr, SbName("yangle"+soff), yangle ) ;
 
-	lib.setSoSFFloatProp ( sep, SbName("lbp0"+soff), left_base_point[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("lbp1"+soff), left_base_point[1] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("lbp2"+soff), left_base_point[2] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rbp0"+soff), right_base_point[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rbp1"+soff), right_base_point[1] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rbp2"+soff), right_base_point[2] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("lbp0"+soff), left_base_point[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("lbp1"+soff), left_base_point[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("lbp2"+soff), left_base_point[2] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rbp0"+soff), right_base_point[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rbp1"+soff), right_base_point[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rbp2"+soff), right_base_point[2] ) ;
 
-	lib.setSoSFFloatProp ( sep, SbName("ltp0"+soff), left_top_point[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("ltp1"+soff), left_top_point[1] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("ltp2"+soff), left_top_point[2] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rtp0"+soff), right_top_point[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rtp1"+soff), right_top_point[1] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rtp2"+soff), right_top_point[2] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("ltp0"+soff), left_top_point[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("ltp1"+soff), left_top_point[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("ltp2"+soff), left_top_point[2] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rtp0"+soff), right_top_point[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rtp1"+soff), right_top_point[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rtp2"+soff), right_top_point[2] ) ;
 
+	sep->addChild( attr ) ;
 }
 
 /*======================== InventorToObject ================*/
@@ -159,21 +172,29 @@ void CGExternal::InventorToObject ( SoSeparator *root )
 
 /*======================= EditProperties ========================*/
 
+float xdist, ydist ;
+
 int CGExternal::EditProperties ( CDocument *d, SoSeparator *root ) 
 {
 	// inherited action
 	CGObject::EditProperties(d,root) ;
 
+	//Get reference points
+	GetPoints();
+	//Calculate object distances
+	GetDistances();
+
 	GExternalProp *dlg = new GExternalProp ;
 
-	float xdist, ydist ;
+	//float xdist, ydist ;
+	float comparedistX,comparedistY ; //compare purpose 
 
 	dlg->m_code		= code ;
 	dlg->m_descr	= descr ;
 	dlg->m_yangle	= yangle ;
 	dlg->m_topoth	= topoth ;
-	dlg->m_xdist	= xdist ;
-	dlg->m_ydist	= ydist ;
+	dlg->m_xdist	= xdist ; comparedistX = xdist; 
+	dlg->m_ydist	= ydist ; comparedistY = ydist;
 
 	int res = dlg->DoModal() ;
 
@@ -186,11 +207,184 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 		xdist	= dlg->m_xdist ;
 		ydist	= dlg->m_ydist ;
 
-		ObjectToInventor ( root ) ;
+		if ((xdist!=comparedistX) || (ydist!=comparedistY)) //if xdist,ydist value has change
+        {
+		  //calculate new state
+	      FindNewState(xdist,ydist) ;
+        }
+ 
+		//ObjectToInventor ( root ) ; οχι απαραιτητο γιατι ξαναβαζει το external 2η φορα
+		//SaveProperties() ;    οχι γιατι ξαναπροσθετει
+		//πρεπει να γινει modify ρουτινα
 	}
 
 	return res ;
 }
+ 
+/****************************  get points ****************************/
+void CGExternal::GetPoints()
+{
+	CLib0 lib;
+
+	//int carrier_attr = lib.getSoSFIntProp(SbName("carrier"+soff)) ;
+	//i can't read carrier because i don't know the soff 
+
+	int CarrierDum = 0; //=roomwall0
+
+	//get points data x1,y1,z1 ,x2,y2,z2
+	int ofs = CarrierDum; 
+
+	if (ofs>=0) // αυτο σημαίνει οτι το ofs ειναι RoomWall+ofs
+    {
+	  CString soff = lib.inttostr(ofs) ; ; // ofs must be the carrier
+
+      pointX1 = lib.getSoSFFloatProp ( SbName("Koryfsx0"+soff) ) ;
+      pointY1 = lib.getSoSFFloatProp ( SbName("Koryfsy0"+soff) ) ;
+      pointZ1 = lib.getSoSFFloatProp ( SbName("Koryfsz0"+soff) ) ;
+
+      pointX2 = lib.getSoSFFloatProp ( SbName("Koryfsx1"+soff) ) ;
+      pointY2 = lib.getSoSFFloatProp ( SbName("Koryfsy1"+soff) ) ;
+      pointZ2 = lib.getSoSFFloatProp ( SbName("Koryfsz1"+soff) ) ;
+    }
+	else // <0  αυτο σημαίνει οτι το ofs είναι RoomBase or WorldBase
+	{
+      if (ofs == -1) // αυτο σημαίνει οτι το ofs είναι RoomBase και επειδη είναι μοναδικό object ...
+      {
+        pointX1 = lib.getSoSFFloatProp ( SbName("rb_Koryfsx0") ) ;
+        pointY1 = lib.getSoSFFloatProp ( SbName("rb_Koryfsy0") ) ;
+        pointZ1 = lib.getSoSFFloatProp ( SbName("rb_Koryfsz0") ) ;
+
+        pointX2 = lib.getSoSFFloatProp ( SbName("rb_Koryfsx1") ) ;
+        pointY2 = lib.getSoSFFloatProp ( SbName("rb_Koryfsy1") ) ;
+        pointZ2 = lib.getSoSFFloatProp ( SbName("rb_Koryfsz1") ) ;
+	    // κατα σύμβαση παίρνουμε τις 2 πρώτες κορυφές της RoomBase
+      }
+	  else 
+	  if (ofs == -2) // αυτο σημαίνει οτι το ofs είναι WorldBase και επειδη είναι μοναδικό object ...
+      {
+        pointX1 = lib.getSoSFFloatProp ( SbName("rb_Koryfsx0") ) ;
+        pointY1 = lib.getSoSFFloatProp ( SbName("rb_Koryfsy0") ) ;
+        pointZ1 = lib.getSoSFFloatProp ( SbName("rb_Koryfsz0") ) ;
+
+        pointX2 = lib.getSoSFFloatProp ( SbName("rb_Koryfsx1") ) ;
+        pointY2 = lib.getSoSFFloatProp ( SbName("rb_Koryfsy1") ) ;
+        pointZ2 = lib.getSoSFFloatProp ( SbName("rb_Koryfsz1") ) ;
+	    // κατα σύμβαση παίρνουμε τις 2 πρώτες κορυφές της WorldBase
+      }
+	}
+	
+	AfxMessageBox("points :"+lib.floattostr(pointX1)+" "+lib.floattostr(pointY1)+" "+lib.floattostr(pointZ1)+
+	                   " , "+lib.floattostr(pointX2)+" "+lib.floattostr(pointY2)+" "+lib.floattostr(pointZ2));
+}
+
+
+#define PI 3.1415926
+/********************* GetDistances **************************/
+void CGExternal::GetDistances()
+{
+    CLib0 lib;
+	float objX,objY,objZ ;
+	float d,f,d1,d2; 
+	SbVec3f vals;
+
+    
+	SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->SelId])->sep ; //get node
+    //test code
+	SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;  
+	ds->style = SoDrawStyle::FILLED ;
+	
+	SoNode *mynode ;
+	mynode = sep->getChild(1);
+	if (mynode->isOfType(SoTranslation::getClassTypeId())) //if it is translation node
+    {     
+      SoTranslation *trans = (SoTranslation *) mynode ; //get translation node
+	  vals = trans->translation.getValue(); //get values
+	  
+	  objX = vals[0];
+      objY = vals[1];
+      objZ = vals[2];
+
+	  AfxMessageBox("object :"+lib.floattostr(vals[0])+" "+lib.floattostr(vals[1])+" "+lib.floattostr(vals[2]));
+
+	  //begin calculations...
+	  //step 1 : calc d
+      d = sqrt( (pow( (objX-pointX1), 2)) +  
+		        (pow( (objY-pointY1), 2)) + 
+				(pow( (objZ-pointZ1), 2)) );
+	  d = abs(d);
+      //step 2 : calc f =cos(f)
+      f = ( ( ((pointX2-pointX1)*(objX-pointX1)) +
+		      ((pointY2-pointY1)*(objY-pointY1)) +
+			  ((pointZ2-pointZ1)*(objZ-pointZ1)) ) /
+            ( abs(d) *
+			  sqrt( (pow( (pointX2-pointX1), 2)) +
+			        (pow( (pointY2-pointY1), 2)) +
+					(pow( (pointZ2-pointZ1), 2)) )
+			)
+		  );
+	  
+	  //finally step 3 : calc d1 
+      d1 = ( ( ((pointX2-pointX1)*(objX-pointX1)) +
+		       ((pointY2-pointY1)*(objY-pointY1)) +
+			   ((pointZ2-pointZ1)*(objZ-pointZ1)) ) /
+              ( sqrt( (pow( (pointX2-pointX1), 2)) +
+			          (pow( (pointY2-pointY1), 2)) +
+					  (pow( (pointZ2-pointZ1), 2)) )
+		      )
+			);
+	  //step 4 : calc d2
+	  d2 = ( abs(d) * ( cos( (PI/2) - acos(f) ) ) );
+
+
+	  d1 = abs(d1);
+	  d2 = abs(d2);
+      
+	  //transfer d1,d2
+	  xdist = d1 ;
+	  ydist = d2 ;
+
+	  AfxMessageBox("distances :"+lib.floattostr(d1)+" "+lib.floattostr(d2));
+    }
+	else
+    {
+	  AfxMessageBox("Unable to translate the object.");
+    }
+
+}
+
+/********************* FindNewSimio **************************/
+void CGExternal::FindNewState(float d1,float d2)
+{
+    CLib0 lib;
+	float objX,objY,objZ ;
+	float b; 
+
+	AfxMessageBox("distances :"+lib.floattostr(d1)+" "+lib.floattostr(d2));
+	//calculations...
+	b = sqrt( (pow( (pointX2-pointX1), 2)) +  
+		      (pow( (pointY2-pointY1), 2)) + 
+			  (pow( (pointZ2-pointZ1), 2)) );
+
+
+    objX = ( ( (pointX2-pointX1) / abs(b) ) * d1 ) ;
+    objY = ( ( ( (pointY2-pointY1) / abs(b) ) * d1 ) + d2 ) ;
+	objZ = ( ( (pointZ2-pointZ1) / abs(b) ) * d1 ) ;
+
+	AfxMessageBox("object :"+lib.floattostr(objX)+" "+
+		                     lib.floattostr(objY)+" "+
+				             lib.floattostr(objZ)) ;
+
+	//put new translation
+    SbVec3f vector ;
+	vector.setValue(objX , objY , objZ);
+
+	SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->SelId])->sep ;
+	SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+
+	trans->translation	=  vector;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // GExternalProp dialog
 

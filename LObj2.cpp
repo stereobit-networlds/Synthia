@@ -435,8 +435,10 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	// CREATE THE GObject ...
 	if (add)
 	{
+        CString& mycode = code.SpanExcluding(_T(" ")); //βγάζω τα κενά απο το τέλος του string 
+
 		ob->offset = sdoc->ob_offset ; sdoc->ob_offset++ ;
-		ob->name   = "GExternal"  + lib.inttostr(ob->offset) ;;
+		ob->name   = "GExternal" + lib.inttostr(ob->offset); //+ "/" + mycode ;
 		ob->code   = code ;
 		ob->descr  = descr ;
 		for ( i = 0 ; i < 10 ; i++ )

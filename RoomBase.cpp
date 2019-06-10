@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "SYNTH.h"
 #include "lib0.h"
+#include "SYNTHDoc.h"
 
 #include <Inventor/nodes/SoCube.h>
 #include <Inventor/nodes/SoMaterial.h>
@@ -119,6 +120,10 @@ void CRoomBase::ObjectToInventor ( SoSeparator *root )
 	sep->addChild( c3 );	
 	sep->addChild( fs );
 
+    SoPickStyle *ps = new SoPickStyle;
+	sep->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
+
 	SoDrawStyle *ds = new SoDrawStyle ;
 	sep->addChild(ds) ;
 	ds->style = SoDrawStyle::INVISIBLE ;
@@ -137,22 +142,29 @@ void CRoomBase::SaveProperties ()
 
 	sep->setName(name) ;  // set node name
 
+	SoSeparator *attr = new SoSeparator ;
+	attr->setName("Attributes") ;
+
 	CLib0	lib ;
-	lib.setSoSFFloatProp ( sep, "rb_height", height ) ;
-	lib.setSoSFIntProp	 ( sep, "KoryfCount", KoryfCount ) ;
+    lib.setSoSFFloatProp ( attr, SbName("Id02"), sdoc->ObjCount ) ; //save object's counter
+
+	lib.setSoSFFloatProp ( attr, "rb_height", height ) ;
+	lib.setSoSFIntProp	 ( attr, "KoryfCount", KoryfCount ) ;
 
 	CString soff ;
 	for ( int i = 0 ; i < KoryfCount ; i++ )
 	{
 		soff = lib.inttostr(i) ;
-		lib.setSoSFFloatProp ( sep, SbName("rb_Koryfsx"+soff), Koryfsx[i] ) ;
-		lib.setSoSFFloatProp ( sep, SbName("rb_Koryfsy"+soff), Koryfsy[i] ) ;
-		lib.setSoSFFloatProp ( sep, SbName("rb_Koryfsz"+soff), Koryfsz[i] ) ;
+		lib.setSoSFFloatProp ( attr, SbName("rb_Koryfsx"+soff), Koryfsx[i] ) ;
+		lib.setSoSFFloatProp ( attr, SbName("rb_Koryfsy"+soff), Koryfsy[i] ) ;
+		lib.setSoSFFloatProp ( attr, SbName("rb_Koryfsz"+soff), Koryfsz[i] ) ;
 	}
 
-	lib.setSoSFStringProp ( sep, "rb_plakaki", plakaki ) ;
-	lib.setSoSFFloatProp ( sep, "rb_plakaki1", plakaki1 ) ;
-	lib.setSoSFFloatProp ( sep, "rb_plakaki2", plakaki2 ) ;
+	lib.setSoSFStringProp ( attr, "rb_plakaki", plakaki ) ;
+	lib.setSoSFFloatProp ( attr, "rb_plakaki1", plakaki1 ) ;
+	lib.setSoSFFloatProp ( attr, "rb_plakaki2", plakaki2 ) ;
+
+	sep->addChild( attr ) ;
 }
 
 /*======================== InventorToObject ================*/

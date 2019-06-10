@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	ON_COMMAND(ID_FILE_SAVE_AS, OnFileSaveAs)
 	ON_COMMAND(ID_FILE_RELOAD, OnFileReload)
 	ON_UPDATE_COMMAND_UI(ID_FILE_RELOAD, OnUpdateFileReload)
+	ON_COMMAND(SYNTH_NEW_SPHERE, OnNewSphere)
 	ON_COMMAND(SYNTH_PROPERTIES, OnProperties)
 	ON_COMMAND(SYNTH_KATAXKOYZIN, OnKataxkoyzin)
 	ON_COMMAND(SYNTH_SELECT, OnSelectObj)
@@ -59,10 +60,15 @@ CSYNTHDoc::CSYNTHDoc()
 	m_bContainsCamera = FALSE;
 	m_eOpenType = IVFDOC_OPEN_NORMAL;
 // END_IVWGEN
+
+  new_object = FALSE ;  
+  ob_offset = 0; //external object counte+
+
 }
 
 CSYNTHDoc::~CSYNTHDoc()
 {
+	//root->unref(); //destroy scene    δεν χρειάζεται !!!!
 }
 
 BOOL CSYNTHDoc::OnNewDocument()
@@ -250,6 +256,66 @@ void CSYNTHDoc::IvfSetupUrlFetchCallback(void)
 #include <Inventor/nodes/SoCamera.h>
 #include <Inventor/nodes/SoLight.h>
 #include <Inventor/nodekits/SoWrapperKit.h>
+
+
+void CSYNTHDoc::OnNewSphere() 
+{
+	// TODO: Add your command handler code here
+	
+//	if ( m_pSceneRoot == NULL )
+//	{
+//		SoSelection *selectionRoot = new SoSelection;
+//		selectionRoot->ref() ;
+//		selectionRoot->policy = SoSelection::SINGLE ;
+//		selectionRoot-> addSelectionCallback(mySelectionCB) ;
+//		selectionRoot-> addDeselectionCallback(myDeselectionCB) ;
+
+		// Create the scene graph
+		//m_pSceneRoot = new SoSeparator ;
+		//m_pSceneRoot->ref() ;
+//		selectionRoot->addChild(m_pSceneRoot) ;
+//	}
+/* this is Ok
+	SoSeparator *mroot = new SoSeparator;
+	SoSphere *mySphere = new SoSphere ;
+	mroot->addChild(mySphere) ;
+	IvfSetSceneGraph(mroot) ;		
+*/
+   
+	// Open the data file
+   SoInput in;   
+   char *datafile = "test02.iv";
+   if (! in.openFile(datafile)) {
+      AfxMessageBox("Cannot open %s for reading.");
+      return;
+   }
+
+   // Read the input file
+   SoNode *n;
+   SoSeparator *sep = new SoSeparator; 
+   root = new SoSeparator ;  //my global root 
+   root->ref() ;
+
+   while ((SoDB::read(&in, n) != FALSE) && (n != NULL))
+      sep->addChild(n);
+
+   // look if the file is a synth file
+   SoSeparator *testsep ;
+   testsep = (SoSeparator *)SoNode::getByName("WorldBase");
+   if (testsep==NULL)
+   {   
+	   AfxMessageBox("Το αρχείο δεν είναι τύπου SYNTHESIS");
+	   return;
+   }
+
+   root = sep;
+   IvfSetSceneGraph( root );
+   InventorToObjects();
+
+   //SetModifiedFlag();
+   UpdateAllViews(NULL);
+}
+
 
 void CSYNTHDoc::OnProperties() 
 {
@@ -444,6 +510,7 @@ void CSYNTHDoc::OnKataxkoyzin()
 			off++ ;
 		}
 
+        
 		IvfSetSceneGraph( root );
 
    		SetModifiedFlag();
@@ -531,6 +598,44 @@ void CSYNTHDoc::SetSelectedObj ( SoSelection *sel )
 out : ;
 }
 
+/********************** OpenSYNTHFile ****************************/
+void CSYNTHDoc::OpenSYNTHFile()
+{
+  CLib0 lib;
+  //char *file;
+
+   	// Open the data file
+   SoInput in;   
+   //lib.CStringToChar(myFile,file);
+   char *datafile = "test02.iv";
+   if (! in.openFile(datafile)) {
+      AfxMessageBox("Cannot open %s for reading.");
+      return;
+   }
+	// Read the input file
+   SoNode *n;
+   SoSeparator *sep = new SoSeparator; 
+   root = new SoSeparator ;  //my global root 
+   root->ref() ;
+
+   while ((SoDB::read(&in, n) != FALSE) && (n != NULL))
+      sep->addChild(n);
+
+   // look if the file is a synth file
+   SoSeparator *testsep ;
+   testsep = (SoSeparator *)SoNode::getByName("WorldBase");
+   if (testsep==NULL)
+   {   
+	   AfxMessageBox("Το αρχείο δεν είναι τύπου SYNTHESIS");
+	   return;
+   }
+
+   root = sep;
+   IvfSetSceneGraph( root );
+   InventorToObjects();
+
+}
+
 /*===================== InventorToObjects =======================*/
 
 void CSYNTHDoc::InventorToObjects()
@@ -543,7 +648,9 @@ void CSYNTHDoc::InventorToObjects()
 	char		dummy[10] ;
 	CLib0		lib ;
 
-	root = m_pSceneRoot; 
+//	IvfSetSceneGraph(m_pSceneRoot);
+//	root = m_pSceneRoot; 
+
 
 	ObjCount  = 0 ;
 	ob_offset = 0 ;

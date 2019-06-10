@@ -22,6 +22,7 @@
 #include "glib0.h"
 #include "lib0.h"
 #include "RoomWall.h"
+#include "SYNTHDoc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -253,6 +254,10 @@ void CRoomWall::ObjectToInventor ( SoSeparator *root )
 	sep->addChild( c3 );	
 	sep->addChild( fs );
 
+    SoPickStyle *ps = new SoPickStyle;
+	sep->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
+
 	SoDrawStyle *ds = new SoDrawStyle ;
 	sep->addChild(ds) ;
 	ds->style = SoDrawStyle::INVISIBLE ;
@@ -270,21 +275,28 @@ void CRoomWall::SaveProperties ()
 
 	sep->setName(name) ;  // set node name
 
+	SoSeparator *attr = new SoSeparator ;
+	attr->setName("Attributes") ;
+
 	CLib0 lib ;
 	CString soff = lib.inttostr(offset) ;
-	lib.setSoSFFloatProp ( sep, SbName("height"+soff), height ) ;
-	lib.setSoSFFloatProp ( sep, SbName("depth"+soff), depth ) ;
+    lib.setSoSFFloatProp ( attr, SbName("Id03_"+soff), sdoc->ObjCount ) ; //save object's counter as id
 
-	lib.setSoSFFloatProp ( sep, SbName("Koryfsx0"+soff), Koryfsx[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("Koryfsy0"+soff), Koryfsy[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("Koryfsz0"+soff), Koryfsz[0] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("Koryfsx1"+soff), Koryfsx[1] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("Koryfsy1"+soff), Koryfsy[1] ) ;
-	lib.setSoSFFloatProp ( sep, SbName("Koryfsz1"+soff), Koryfsz[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("height"+soff), height ) ;
+	lib.setSoSFFloatProp ( attr, SbName("depth"+soff), depth ) ;
 
-	lib.setSoSFStringProp ( sep, SbName("rw_plakaki"+soff), plakaki ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rw_plakaki1"+soff), plakaki1 ) ;
-	lib.setSoSFFloatProp ( sep, SbName("rw_plakaki2"+soff), plakaki2 ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Koryfsx0"+soff), Koryfsx[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Koryfsy0"+soff), Koryfsy[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Koryfsz0"+soff), Koryfsz[0] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Koryfsx1"+soff), Koryfsx[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Koryfsy1"+soff), Koryfsy[1] ) ;
+	lib.setSoSFFloatProp ( attr, SbName("Koryfsz1"+soff), Koryfsz[1] ) ;
+
+	lib.setSoSFStringProp ( attr, SbName("rw_plakaki"+soff), plakaki ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rw_plakaki1"+soff), plakaki1 ) ;
+	lib.setSoSFFloatProp ( attr, SbName("rw_plakaki2"+soff), plakaki2 ) ;
+
+	sep->addChild( attr ) ;
 }
 
 /*======================== InventorToObject ================*/

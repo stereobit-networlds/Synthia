@@ -47,12 +47,18 @@ public:
 
     int back_side ;     // the back side syrface offset into the Syrfs[]
 
+	float pointX1,pointY1,pointZ1; //reference points for change translation
+	float pointX2,pointY2,pointZ2;
+
 // Operations
 public:
 	void ObjectToInventor ( SoSeparator *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
+	void GetPoints();
+	void GetDistances() ;
+	void FindNewState(float d1,float d2) ;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -5,7 +5,6 @@
 #include <Ivf/IvfDocument.h>
 // END_IVWGEN
 
-
 #include "GLib0.h"
 #include "WorldBase.h"
 
@@ -34,8 +33,13 @@ public:
 	BOOL	new_object ;	// true if a new objcect is added
 	int ob_offset ;			// counter for the GExternal objects
 
+	SoPath *myHitPath ;     // my hit point path
+	int obj_selector ;      // my selection generated number
+
+
 	void SetSelectedObj ( SoSelection *sel ) ;
 	void InventorToObjects() ;
+	void OpenSYNTHFile() ;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -69,7 +73,7 @@ protected:
 	afx_msg void OnFileSaveAs();
 	afx_msg void OnFileReload();
 	afx_msg void OnUpdateFileReload(CCmdUI *pCmdUI);
-	afx_msg void OnNewBox();
+	afx_msg void OnNewSphere();
 	afx_msg void OnProperties();
 	afx_msg void OnKataxkoyzin();
 	afx_msg void OnSelectObj();

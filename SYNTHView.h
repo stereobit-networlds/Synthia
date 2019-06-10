@@ -32,7 +32,6 @@ public:
     SoSelection *GetSelectionNode()
         { return m_pSelectionNode; }
 
-
 	BOOL IsDocLoaded();
 	BOOL IsSelected();
 	UINT GetViewerViewMode();

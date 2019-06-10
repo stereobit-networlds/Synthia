@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=dummy
-LastTemplate=CTreeView
+LastClass=IvfListView
+LastTemplate=CListView
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "SYNTH.h"
 LastPage=0
 
-ClassCount=21
+ClassCount=22
 Class1=CSYNTHApp
 Class2=CSYNTHDoc
 Class3=CSYNTHView
@@ -17,7 +17,7 @@ Class4=CMainFrame
 ResourceCount=19
 Resource1=IDD_ABOUTBOX
 Resource2=SYNTH_SELECT_OBJ
-Resource3=SYNTH_SELECT_OBJ (Greek)
+Resource3=IDR_MAINFRAME (English (U.S.))
 Class5=CAboutDlg
 Class6=CChildFrame
 Resource4=SYNTH_ROOMBASE_PROP
@@ -30,7 +30,7 @@ Class10=CGLib0
 Class11=CRoomBase
 Class12=CRoomWall
 Resource7=SYNTH_WIZZ0
-Resource8=SYNTH_ROOMWALL_PROP (Greek)
+Resource8=IDD_ABOUTBOX (English (U.S.))
 Class13=CRoomWallPro
 Class14=CSelectObj
 Class15=LObj2
@@ -41,15 +41,16 @@ Class18=CRoomBasePro
 Resource10=SYNTH_ROOMWALL_PROP
 Resource11=SYNTH_GEXTERNAL_PROP
 Class19=GExternalProp
-Resource12=SYNTH_WIZZ0 (Greek)
-Resource13=IDR_MAINFRAME (English (U.S.))
-Resource14=SYNTH_WORLDBASE_PROP (Greek)
-Resource15=IDD_ABOUTBOX (English (U.S.))
-Resource16=IDR_MAINFRAME (Greek)
-Resource17=SYNTH_GEXTERNAL_PROP (Greek)
-Resource18=SYNTH_ROOMBASE_PROP (Greek)
-Class20=IvfTreeView
+Resource12=SYNTH_GEXTERNAL_PROP (Greek)
+Resource13=SYNTH_ROOMBASE_PROP (Greek)
+Resource14=SYNTH_ROOMWALL_PROP (Greek)
+Resource15=SYNTH_SELECT_OBJ (Greek)
+Resource16=SYNTH_WIZZ0 (Greek)
+Resource17=SYNTH_WORLDBASE_PROP (Greek)
+Resource18=IDR_MAINFRAME (Greek)
+Class20=CIvfTreeView
 Class21=dummy
+Class22=IvfListView
 Resource19=IDR_SYNTHTYPE (Greek)
 
 [CLS:CSYNTHApp]
@@ -641,17 +642,25 @@ Command29=ID_HELP_FINDER
 Command30=ID_APP_ABOUT
 CommandCount=30
 
-[CLS:IvfTreeView]
-Type=0
-HeaderFile=IvfTreeView.h
-ImplementationFile=IvfTreeView.cpp
-BaseClass=CTreeView
-Filter=C
-
 [CLS:dummy]
 Type=0
 HeaderFile=dummy.h
 ImplementationFile=dummy.cpp
+BaseClass=CTreeView
+Filter=C
+
+[CLS:IvfListView]
+Type=0
+HeaderFile=IvfListView.h
+ImplementationFile=IvfListView.cpp
+BaseClass=CListView
+Filter=C
+LastObject=IvfListView
+
+[CLS:CIvfTreeView]
+Type=0
+HeaderFile=ivftreeview.h
+ImplementationFile=ivftreeview.cpp
 BaseClass=CTreeView
 Filter=C
 

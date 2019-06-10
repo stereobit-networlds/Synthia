@@ -328,9 +328,14 @@ void CSYNTHApp::OnFileOpen()
 
 			if (openDlg.m_ofn.nFilterIndex < NUM_EXT_VALS)
 					m_nLastOpenedFilterIX = openDlg.m_ofn.nFilterIndex;
+			
 		}
 
-		pDoc->InventorToObjects() ;
+		//pDoc->InventorToObjects() ;
+		//CString Open_susami = openDlg.m_ofn.lpstrFile; //??????
+		//if (Open_susami==NULL) return;
+
+		pDoc->OpenSYNTHFile();
 	}
 }
 

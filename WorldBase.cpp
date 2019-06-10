@@ -15,6 +15,7 @@
 
 #include "WorldBase.h"
 #include "lib0.h"
+#include "SYNTHDoc.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -42,6 +43,8 @@ CWorldBase::~CWorldBase()
 
 void CWorldBase::ObjectToInventor ( SoSeparator *root )
 {
+    CLib0 lib ;
+
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
 
@@ -70,6 +73,10 @@ void CWorldBase::ObjectToInventor ( SoSeparator *root )
 	sep->addChild( mat );	
 	sep->addChild( cb );
 
+	SoPickStyle *ps = new SoPickStyle;
+	sep->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
+
 	SoDrawStyle *ds = new SoDrawStyle ;
 	sep->addChild(ds) ;
 	ds->style = SoDrawStyle::INVISIBLE ;
@@ -87,15 +94,21 @@ void CWorldBase::SaveProperties ()
 
 	sep->setName(name) ;  // set node name
 
+	SoSeparator *attr = new SoSeparator ;
+	attr->setName("Attributes") ;
 	// add global fields
 	CLib0 lib ;
-	lib.setSoSFFloatProp ( sep, "width", width ) ;
-	lib.setSoSFFloatProp ( sep, "depth", depth ) ;
-	lib.setSoSFFloatProp ( sep, "height", height ) ;
-	lib.setSoSFStringProp ( sep, "c_name", c_name.getString() ) ;
-	lib.setSoSFStringProp ( sep, "c_address", c_address.getString() ) ;
-	lib.setSoSFStringProp ( sep, "c_city", c_city.getString() ) ;
-	lib.setSoSFStringProp ( sep, "c_tel", c_tel.getString() ) ;
+    lib.setSoSFFloatProp ( attr, SbName("Id01"), sdoc->ObjCount ) ; //save object's counter as id
+
+	lib.setSoSFFloatProp ( attr, "width", width ) ;
+	lib.setSoSFFloatProp ( attr, "depth", depth ) ;
+	lib.setSoSFFloatProp ( attr, "height", height ) ;
+	lib.setSoSFStringProp ( attr, "c_name", c_name.getString() ) ;
+	lib.setSoSFStringProp ( attr, "c_address", c_address.getString() ) ;
+	lib.setSoSFStringProp ( attr, "c_city", c_city.getString() ) ;
+	lib.setSoSFStringProp ( attr, "c_tel", c_tel.getString() ) ;
+
+	sep->addChild(attr);
 }
 
 /*======================== InventorToObject ================*/

@@ -106,7 +106,8 @@ BOOL CIvfTreeView::PreCreateWindow(CREATESTRUCT& cs)
 
     // Set desired options for TreeView
     cs.style |= TVS_HASLINES | TVS_LINESATROOT |
-                TVS_HASBUTTONS | TVS_SHOWSELALWAYS;
+              TVS_HASBUTTONS | TVS_SHOWSELALWAYS;
+
     return TRUE;
 }
 

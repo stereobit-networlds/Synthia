@@ -112,6 +112,10 @@ SOURCE=.\GObject.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\IvfListView.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\IvfTreeView.cpp
 # End Source File
 # Begin Source File
@@ -240,6 +244,10 @@ SOURCE=..\Lib\glib0.h
 # Begin Source File
 
 SOURCE=.\GObject.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IvfListView.h
 # End Source File
 # Begin Source File
 

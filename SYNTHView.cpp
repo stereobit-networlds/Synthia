@@ -24,6 +24,7 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/nodes/SoRotation.h>
 #include <Inventor/nodes/SoDrawStyle.h>
 #include <Inventor/SbLinear.h>
+#include <Inventor/nodes/SoText2.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // CSYNTHView
@@ -67,6 +68,7 @@ CSYNTHView::CSYNTHView()
 
     m_nEnableSelection = TRUE;  // Set existing member variable
 // IVF_EXAMPLE_END
+   
 }
 
 CSYNTHView::~CSYNTHView()
@@ -106,6 +108,7 @@ void CSYNTHView::OnDraw(CDC* pDC)
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/nodes/SoEventCallback.h>
 
+
 SbBool isTransformable(SoNode *myNode) ;
 SoPath *createTransformPath(SoPath *inputPath) ;
 void selectionCallback(   void *, SoPath *selectionPath ) ;
@@ -116,6 +119,10 @@ SoPath *pickFilterCB(void *, const SoPickedPoint *pick) ;
 
 SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,  
 										const SbVec2s &cursorPosition ) ;
+
+//SoPath *myHitPath ;
+void GetPickObjectID(SoPath *path);
+
 void MousePressCB(void *userData, SoEventCallback *eventCB ) ;
 
 SoHandleBoxManip    *myHandleBox;
@@ -132,11 +139,14 @@ void CSYNTHView::OnInitialUpdate()
 
 
 // IVF_EXAMPLE_BEGIN
-    if (m_pSelectionNode == NULL) { /***/
+    if (m_pSelectionNode == NULL) { //---/
         // Create the SoSelection node that will be root of scene graph
         m_pSelectionNode = new SoSelection;
         m_pSelectionNode->ref();
+
+
 // IVF EXAMPLE_End
+
 
 //	m_nEnableSelection = TRUE; has defined already in construction
 
@@ -179,6 +189,7 @@ void CSYNTHView::OnInitialUpdate()
     m_pViewer->setSceneGraph( m_pSelectionNode );
 
 
+
     // Use a bounding box to highlight selected objects
     m_pViewer->setGLRenderAction( new SoBoxHighlightRenderAction() );
 
@@ -186,7 +197,8 @@ void CSYNTHView::OnInitialUpdate()
     // (so the highlight will be drawn in the right place)
     m_pViewer->redrawOnSelectionChange( m_pSelectionNode ) ;
 
-	} /***/
+	} //---/
+    
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -510,8 +522,12 @@ SoPath *pickFilterCallback (void *, const SoPickedPoint *pick)
 SoPath *pickFilterCB(void *, const SoPickedPoint *pick)
 {
   //See whitch child of selection got picked
-  int ok=0;
   SoPath *p = pick->getPath();
+
+  //int length = p->getLength(); //get length
+  //SoSeparator *parent = (SoSeparator *)p->getNode(length-2); //get parent
+  // to be continue ...
+  
   int i;
   for (i=0;i<p->getLength()-1;i++)
   {
@@ -656,8 +672,13 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 
 	// Start a pick traversal
 	PickAction.apply(root) ;
-	const SoPickedPoint *PickedPoint =  PickAction.getPickedPoint();
+	SoPickedPoint *PickedPoint =  PickAction.getPickedPoint();
+
 	if (PickedPoint == NULL) return FALSE;
+
+	//**** find object ID	
+	sdoc->myHitPath = PickedPoint->getPath(); //get the picking path
+	GetPickObjectID(sdoc->myHitPath);
 
 	const SbVec3f *pp = &PickedPoint->getPoint() ;
 	const SbVec3f *nn = &PickedPoint->getNormal() ;
@@ -666,6 +687,119 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 	picked_normal	= *nn ;
 
 	return TRUE;
+}
+
+#include <Inventor/fields/SoSFString.h>
+#include <Inventor/fields/SoSFFloat.h>
+#include <Inventor/fields/SoSFInt32.h>
+void modSoSFIntProp ( SbName pname , int val ) 
+{
+	SoSFInt32 *f = (SoSFInt32 *)(SoDB::getGlobalField(pname)) ;
+	if (f) ((SoSFInt32 *)f)->setValue(val) ;
+}
+
+//********************* GetPickObjectID *********************
+void GetPickObjectID(SoPath *path)
+{
+	CLib0 lib;
+	CString sname ;
+	int myvalue ; //= the carrier number
+
+	sdoc->obj_selector = -1; //initializate selector with invalid number
+
+	int length = path->getLength(); //get length
+	if (length > 2)
+    {
+      //SoNode *tail = myHitPath->getTail(); //get tail
+	  SoSeparator *parent = (SoSeparator *)path->getNode(length-2); //get parent 
+	  const char *name = ((SoSeparator *)parent)->getName().getString();  //get name
+	  //AfxMessageBox(name) ;
+      
+	  sname="";
+      if (strcmp(name,"WorldBase")==0)
+      {
+		  //do ...
+		  myvalue = -2; // επειδη είναι μοναδικό και worldbase
+		  sname = "Id01"; // name με το οποίο γίνεται searching στο database του Inventor
+
+		  sdoc->obj_selector = 0; //= obj_counter (παντα ειναι 0)
+      }
+	  if (strcmp(name,"RoomBase")==0)
+      {
+		  //do ...
+		  myvalue = -1; // επειδη είναι μοναδικό και roombase
+		  sname = "Id02";
+
+		  sdoc->obj_selector = 1; //= obj_counter (παντα είναι 1)
+      }
+	  if (strncmp(name,"RoomWall",8)==0)
+      {
+		  //do ...
+		  //get the wall number
+ 
+          char *digits = "0123456789";
+		  char *mynum ;
+
+		  mynum = strpbrk(name,digits) ; //get the number from name
+
+          myvalue = lib.strtoint(mynum);
+		  sname = "Id03"+lib.inttostr(myvalue);
+
+		  sdoc->obj_selector = myvalue + 2; 
+		  //my value = roomwall meter (0..1..2..) 
+		  //2 = the worldbase + roombase
+      }
+	  if (strcmp(name,"")==0)
+      {
+		 // must be external
+         SoSeparator *ofparent = (SoSeparator *)path->getNode(length-4); //get parent of parent
+		 const char *name = ((SoSeparator *)ofparent)->getName().getString();//get name
+	     //AfxMessageBox(name) ; //all ok !!!
+
+		 sname="";
+		 if (strncmp(name,"GExternal",9)==0) 
+		 {
+			 char *digits = "0123456789";
+		     char *mynum ;
+			 
+		     mynum = strpbrk(name,digits) ; //get the number from name
+
+             myvalue = lib.strtoint(mynum);     // convert to int
+             CString mstr = lib.inttostr(myvalue); //convert to CString
+			 //AfxMessageBox(mstr) ;
+
+			 //display carrier
+			 int mycarrier	= lib.getSoSFIntProp(SbName("carrier"+mstr)) ;
+		     AfxMessageBox(lib.inttostr(mycarrier)); //no value to mycarrier
+
+
+			 int walls_num = (sdoc->ObjCount - sdoc->ob_offset) - 1 ;
+			 //calculate the walls = (μετρητης ολων των Objects  - μετρητης των External) - 1
+			 //1 = roombase (  το worldbase=0 δεν υπολογιζεται ) 
+			 sdoc->obj_selector = myvalue + walls_num + 2;
+			 //2 = worldbase + roombase 
+		 }	 
+
+		 // θα χρειαστει οταν θα θελουμε να βαλουμε τιμές στα next,prior ???
+		 // οπου myvalue = το carrier του external object που έγινε κλίκ...
+      }
+
+
+	  if (sname!="") //δεν είναι external
+      {
+        //float val  = lib.getSoSFFloatProp(SbName(sname)) ; //get object id βαση πεδίου
+		//CString myid = lib.floattostr( val );
+		//AfxMessageBox(myid);
+
+        // change carrier attribute
+        CString soff = lib.inttostr(sdoc->ob_offset-1) ;
+		if ( sdoc->new_object ) 
+			modSoSFIntProp(SbName("carrier"+soff),myvalue) ;  
+
+		//AfxMessageBox(lib.inttostr(myvalue)+" "+sname);
+      }
+	}
+    AfxMessageBox(lib.inttostr(sdoc->obj_selector));  
 }
 
 //======================== MousePressCB =====================
@@ -685,6 +819,9 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 
 	if ( sdoc->new_object ) 
 	{
+
+        //GetPickObjectID(sdoc->myHitPath); //δεν "βλέπει" την total μεταβλητή myHitPath
+
 		SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1])->sep ;
 		
 		SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
@@ -696,13 +833,14 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 
 		SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),picked_normal) ;
 		rot->rotation.setValue(*sbrot) ;
-		
+
 		sdoc->new_object = FALSE ;
 		
-//		sview->IvfGetSelectionNode()->select(sep) ;
+//		sview->GetSelectionNode()->select(sep) ;
 
 		sdoc->SetModifiedFlag() ;
 		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)
+		
 	}
 }
 
