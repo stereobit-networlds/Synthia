@@ -80,6 +80,7 @@
 #define ID_BUTTON32829                  32829
 #define ID_EXTENTED_CUT                 32830
 #define ID_UNGROUP                      32831
+#define ID_REPLACE                      32832
 
 // Next default values for new objects
 // 
@@ -87,7 +88,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        143
-#define _APS_NEXT_COMMAND_VALUE         32832
+#define _APS_NEXT_COMMAND_VALUE         32833
 #define _APS_NEXT_CONTROL_VALUE         1023
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

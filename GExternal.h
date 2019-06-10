@@ -72,6 +72,10 @@ public:
 	void ExtDelChangeAttributes() ;
 	void ExtDelRebuildButtering() ;
 	void UnGroupObjects();
+	void ReplaceObject(SoSeparator *obj_sep) ;
+	void RepRebuildButtering() ;
+	void PasteObject() ;
+	void DeleteObject() ;
 };
 
 /////////////////////////////////////////////////////////////////////////////

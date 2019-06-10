@@ -253,14 +253,6 @@ void CRoomWall::ObjectToInventor ( SoSeparator *root )
 	sep->addChild( mat );	
 	sep->addChild( c3 );	
 	sep->addChild( fs );
-
-    SoPickStyle *ps = new SoPickStyle;
-	sep->addChild(ps) ;
-    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
-
-	SoDrawStyle *ds = new SoDrawStyle ;
-	sep->addChild(ds) ;
-	ds->style = SoDrawStyle::INVISIBLE ;
 	
 	SaveProperties() ;
 	if (first_time) root->addChild(sep) ;
@@ -277,6 +269,15 @@ void CRoomWall::SaveProperties ()
 
 	SoSeparator *attr = new SoSeparator ;
 	attr->setName("Attributes") ;
+
+    //set attributes invisible & unpickable
+	SoDrawStyle *ds = new SoDrawStyle ;
+	attr->addChild(ds) ;
+	ds->style = SoDrawStyle::INVISIBLE ;
+
+	SoPickStyle *ps = new SoPickStyle;
+	attr->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
 
 	CLib0 lib ;
 	CString soff = lib.inttostr(offset) ;

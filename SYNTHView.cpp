@@ -398,7 +398,7 @@ void CSYNTHView::OnUpdateViewPicedit (CCmdUI* pCmdUI)
 
 void CSYNTHView::OnEditCopy() 
 {
-    // Get list of all selected objects
+/*    // Get list of all selected objects
     Time eventTime = time(NULL);
 	const SoPathList *pPathList = m_pSelectionNode->getList();
     ASSERT( pPathList != NULL );
@@ -406,9 +406,20 @@ void CSYNTHView::OnEditCopy()
     // Copy all selected objects to clipboard
     if (pPathList->getLength() > 0)
         m_pClipboard->copy( (SoPathList*)pPathList, eventTime );
+*/
+	//**************** my routine
+	//if the object is GExternal type...
+    if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+    {
+	  // Copy the object to my copy buffer array
+	  sdoc->Copy_Obj[1] = sdoc->Obj[sdoc->obj_selector];
+	  // copy the node to my copy buffer node
+      sdoc->copysep = ((CGExternal *)sdoc->Obj[sdoc->obj_selector])->sep;
 
-	// Copy the object to my copy array
-	sdoc->Copy_Obj[1] = sdoc->Obj[sdoc->obj_selector];
+	  sdoc->copy_external = true ;
+    }
+	else
+      AfxMessageBox("Invalid selection. Access denied.");
 }
 
 void CSYNTHView::OnUpdateEditCopy(CCmdUI* pCmdUI) 
@@ -550,8 +561,8 @@ void CSYNTHView::OnEditPaste()
     // Request current contents of clipboard
     // On completion the callback will be called.
     // It's a static function so pass it "this" as the data word.
-    Time eventTime = time(NULL);
-	m_pClipboard->paste( eventTime, CSYNTHView::OnPasteCB, this );
+//    Time eventTime = time(NULL);
+//	m_pClipboard->paste( eventTime, CSYNTHView::OnPasteCB, this );
 
 /*
     LObj2 obj2;
@@ -565,13 +576,21 @@ void CSYNTHView::OnEditPaste()
     Αυτο σημαινει οτι ο υπαρχον κωδικας του copy paste ( μεσω winClipboard )
 	δεν χρειαζεται
 */
+
+	CGExternal *ext ;
+
+    ext->PasteObject();
+
+	sdoc->copy_external = false ; //end of copy/paste
 }
 
 void CSYNTHView::OnUpdateEditPaste(CCmdUI* pCmdUI) 
 {
     // Update "Paste" UI items
     // Paste is only valid if there is something in the clipboard
-    if (IsClipboardFormatAvailable(CF_TEXT))
+    //if (IsClipboardFormatAvailable(CF_TEXT))
+
+    if (sdoc->copy_external==true)
         pCmdUI->Enable( TRUE );	
     else
         pCmdUI->Enable( FALSE );
@@ -621,6 +640,7 @@ void CSYNTHView::OnViewViewmodesViewingmode()
 /**************************/
 void CSYNTHView::OnDelete()
 {
+	CLib0 lib;
     CGExternal  *external_obj ;
 
 	if (sdoc->obj_selector>0) //delete only walls, roombase ,externals
@@ -628,27 +648,32 @@ void CSYNTHView::OnDelete()
 	  //if the object is GExternal type...
       if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
       {
-         //.. my delete .. (make object invisible)
+        /* //make object invisible and unpickable
 	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;		
+		 //set draw style
 	     SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
          ds->style = SoDrawStyle::INVISIBLE  ;
+		 //set pick style
+	     SoPickStyle *ps = (SoPickStyle *)sep->getChild(3) ;
+         ps->style.setValue(SoPickStyle::UNPICKABLE) ;
+		 */
+		 //δεν είναι απαραιτητα τα παραπάνω...   
 
-         //rebuild the buttering -before- delete the selected object
+         //rebuild the battering -before- delete the selected object
          external_obj->DelRebuildButtering(); 
-      }
-      //OnEditCut(); //call OnEditCut (ετοιμη ρουτινα) delete the selected object  (κολλαει μετά στην εισαγωγη object)
-      else  AfxMessageBox("Access denied."); 
 
-	  //delete object from Object array
-	  sdoc->Obj[sdoc->obj_selector]=NULL;
-	  //deselect ...
-	  GetSelectionNode()->deselectAll();
+		 //delete object from inventor...
+		 external_obj->DeleteObject();
+	  }
+      //OnEditCut(); //call OnEditCut (ετοιμη ρουτινα) delete the selected object  (κολλαει μετά στην εισαγωγη object)
+      else  AfxMessageBox("Invalid selection. Access denied."); 
 	}
 	else AfxMessageBox("Access denied."); 
 }
 
 void CSYNTHView::OnExtDelete()
 {
+	CLib0 lib;
     CGExternal  *external_obj ;
 
 	if (sdoc->obj_selector>0) //delete only walls, roombase ,externals
@@ -656,20 +681,26 @@ void CSYNTHView::OnExtDelete()
 	  //if the object is GExternal type...
       if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
       {
-         //.. my delete .. (make object invisible)
-	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;		
+         /*
+         //make object invisible and unpickable
+	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;	
+		 //set draw style
 	     SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
          ds->style = SoDrawStyle::INVISIBLE  ;
-         //rebuild the buttering -before- delete the selected object
-         external_obj->ExtDelRebuildButtering(); 
+		 //set pick style
+	     SoPickStyle *ps = (SoPickStyle *)sep->getChild(3) ;
+         ps->style.setValue(SoPickStyle::UNPICKABLE) ;
+		 */
+		 //δεν είναι απαραιτητα τα παραπάνω... 
+
+         //rebuild the battering -before- delete the selected object
+         external_obj->ExtDelRebuildButtering();
+		 
+         //delete object from inventor...
+		 external_obj->DeleteObject();
       }
       else //OnExtentedCut(); 
            AfxMessageBox("Invalid selection. Access denied."); 
-
-	  //delete object from Object array
-	  sdoc->Obj[sdoc->obj_selector]=NULL;
-	  //deselect ...
-	  GetSelectionNode()->deselectAll();
 	}
 	else AfxMessageBox("Invalid selection. Access denied."); 
 }
@@ -800,8 +831,8 @@ SoPath *pickFilterCB(void *, const SoPickedPoint *pick)
   if (strcmp(name,"")==0) //it is external 
 	  return p->copy(0,i-1); 
   else                    //it is roomwall,worldbase ...
-	  return p->copy(0,i+1);
-      //return p;
+	  //return p->copy(0,i+1);
+      return p; //no change
 
   return p;
 }
@@ -961,7 +992,7 @@ void GetPickObjectID(SoPath *path)
 	int id ;
 
 	id = -1; //initializate id=selector with invalid number
-	sdoc->BUTTERING = false ; //init buttering  
+	sdoc->BATTERING = false ; //init battering  
 
 	int length = path->getLength(); //get length
 	if (length > 2)
@@ -1001,7 +1032,7 @@ void GetPickObjectID(SoPath *path)
 	  if (strcmp(name,"")==0)
       {
 		 // must be external
-         SoSeparator *ofparent = (SoSeparator *)path->getNode(length-4); //get parent of parent
+         SoSeparator *ofparent = (SoSeparator *)path->getNode(length-5); //get parent of parent
 		 const char *name = ((SoSeparator *)ofparent)->getName().getString();//get name
 	     //AfxMessageBox(name) ; //all ok !!!
 
@@ -1013,7 +1044,7 @@ void GetPickObjectID(SoPath *path)
 		     mynum = strpbrk(name,digits) ; //get the object number from name 
              id = lib.strtoint(mynum);     // convert to int
 
-			 sdoc->BUTTERING = true;
+			 sdoc->BATTERING = true;
 		 }
 		 else
          {
@@ -1080,10 +1111,10 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 		
 		//select it..
 		sview->GetSelectionNode()->deselectAll();
-		sview->GetSelectionNode()->select(sep) ;
+		sview->GetSelectionNode()->select(sep->getChild(4)) ; //get "geometry" node
 		sdoc->obj_selector = sdoc->ObjCount-1 ;
-		//.. and set buttering on..
-		sdoc->BUTTERING = true;
+		//.. and set battering on..
+		sdoc->BATTERING = true;
 
 
 		sdoc->SetModifiedFlag() ;

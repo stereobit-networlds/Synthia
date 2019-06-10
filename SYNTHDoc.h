@@ -27,6 +27,7 @@ public:
 public:
 
 	SoSeparator *root ;		// the scene root
+	SoSeparator *copysep ;  // my copy buffer
 	CObject *Obj[100] ;		// then various RoomBase, WorldBase, ...
 	CObject *Copy_Obj[1];   // my copy command array buffer
 	int ObjCount ;			// number of Objs
@@ -38,8 +39,9 @@ public:
 	int obj_selector ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
 	CString obj_type ;      // object type character string
 
-	bool BUTTERING ;
-
+	bool BATTERING ;
+	bool REPLACE ;
+    bool copy_external ;    //boolean for copy/paste
 
 	void SetSelectedObj ( SoSelection *sel ) ;
 	void InventorToObjects() ;
@@ -86,6 +88,8 @@ protected:
 	afx_msg void OnDelete();
 	afx_msg void OnExtDelete();
 	afx_msg void OnUnGroup();
+	afx_msg void OnReplaceObj();
+	afx_msg void OnUpdateReplaceObj(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

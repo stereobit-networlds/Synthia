@@ -1,5 +1,5 @@
 --------------------Configuration: SYNTH - Win32 Debug--------------------
-Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_30\SYNTH\SYNTH.DSP", at root.
+Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_35\SYNTH\SYNTH.DSP", at root.
 Active configuration is Win32 (x86) Application (based on Win32 (x86) Application)
 
 Project's tools are:
@@ -11,7 +11,7 @@ Project's tools are:
 			"Custom Build" with flags ""
 			"<Component 0xa>" with flags ""
 
-Creating temp file "C:\WINDOWS\TEMP\RSPD1F5.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
+Creating temp file "C:\WINDOWS\TEMP\RSP80C4.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
 .\Debug\ChildFrm.obj
 .\Debug\DeleteObj.obj
 .\Debug\dummy.obj
@@ -33,8 +33,31 @@ Creating temp file "C:\WINDOWS\TEMP\RSPD1F5.TMP" with contents </nologo /subsyst
 .\Debug\Wizz0.obj
 .\Debug\WorldBase.obj
 .\Debug\SYNTH.res>
-Creating command line "link.exe @C:\WINDOWS\TEMP\RSPD1F5.TMP" 
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP80C4.TMP" 
 Linking...
+Creating temp file "C:\WINDOWS\TEMP\RSP8161.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\ChildFrm.sbr
+.\Debug\DeleteObj.sbr
+.\Debug\dummy.sbr
+.\Debug\GExternal.sbr
+.\Debug\glib0.sbr
+.\Debug\GObject.sbr
+.\Debug\IvfListView.sbr
+.\Debug\IvfTreeView.sbr
+.\Debug\lib0.sbr
+.\Debug\LObj2.sbr
+.\Debug\MainFrm.sbr
+.\Debug\RoomBase.sbr
+.\Debug\RoomWall.sbr
+.\Debug\SelectObj.sbr
+.\Debug\SYNTH.sbr
+.\Debug\SYNTHDoc.sbr
+.\Debug\SYNTHView.sbr
+.\Debug\Wizz0.sbr
+.\Debug\WorldBase.sbr>
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSP8161.TMP" 
+Creating browse info file...
 
 
 

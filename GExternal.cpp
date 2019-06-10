@@ -67,23 +67,20 @@ void CGExternal::ObjectToInventor ( SoSeparator *root )
 {
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
-	
-    SoPickStyle *ps = new SoPickStyle;
-	sep->addChild(ps) ;
-    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
 
-	SoDrawStyle *ds = new SoDrawStyle ;
-	sep->addChild(ds) ;
-	ds->style = SoDrawStyle::INVISIBLE ;
-	
 	SaveProperties() ; 
     
 	root->addChild(sep) ;
 
-	if (sdoc->BUTTERING)
+	if (sdoc->BATTERING)  //battering ...
     {
        AttachObject(sep);
-    }		 
+    }
+	
+	if (sdoc->REPLACE)    //replace ...
+    {
+	   ReplaceObject(sep); 	 
+    }
 } 
 
 /*======================== SaveProperties ===================*/
@@ -110,6 +107,15 @@ void CGExternal::SaveProperties ()
 
 	SoSeparator *attr = new SoSeparator() ; //... rewrite attributes (case modify)
     attr->setName("Attributes") ;
+
+	//set attributes invisible & unpickable...
+    SoDrawStyle *ds = new SoDrawStyle ;
+	attr->addChild(ds) ;
+	ds->style = SoDrawStyle::INVISIBLE ;
+
+	SoPickStyle *ps = new SoPickStyle;
+	attr->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::UNPICKABLE) ;
 
   
 
@@ -413,12 +419,12 @@ void CGExternal::MoveObjectTo(CGExternal *ext_obj,float d1,float d2)
 
 	trans->translation	=  vector;
 
-	//move all the others buttering objects
+	//move all the others battering objects
 	MovRebuildButtering();
 }
 
 
-//move all the buttering objects...
+//move all the battering objects...
 void CGExternal::MovRebuildButtering()
 {
 	int my_next, my_prev , meter;
@@ -439,7 +445,7 @@ void CGExternal::MovRebuildButtering()
 	if ((my_next)!=0) targetvec = sourcevec + destdianisma ; 
     //if at right +destdianisma 
 
-	//first move right objects of buttering
+	//first move right objects of battering
 	meter=0;
     while (my_next!=0)
 	{
@@ -492,7 +498,7 @@ void CGExternal::MovRebuildButtering()
     //AfxMessageBox(lib.inttostr(meter));
 }
 
-//**************** BUTTERING ************************
+//**************** battering ************************
 void CGExternal::CalculateObjectDistance(CGExternal *e_obj)
 {
 	//get left and right base points of selected object
@@ -515,7 +521,7 @@ void CGExternal::CalculateObjectDistance(CGExternal *e_obj)
 }
 
 
-//************** input object (buttering) **************/
+//************** input object (battering) **************/
 void CGExternal::AttachObject(SoSeparator *obj_sep)
 {
 	CLib0 lib;
@@ -569,7 +575,7 @@ void CGExternal::AttachObject(SoSeparator *obj_sep)
 			   break;
              }
     }
-	//rebuild buttering (if there are buttering) inserting mode
+	//rebuild battering (if there are battering) inserting mode
 	InsRebuildButtering();
 
 	//set new object translation & rotation 
@@ -585,16 +591,16 @@ void CGExternal::AttachObject(SoSeparator *obj_sep)
 
     //select the new object..
 	sview->GetSelectionNode()->deselectAll();
-	sview->GetSelectionNode()->select(obj_sep) ;
+	sview->GetSelectionNode()->select(obj_sep->getChild(4)) ; //get "geometry" node
 	sdoc->obj_selector = sdoc->ObjCount-1 ;
-	//.. and set buttering on..
-	sdoc->BUTTERING = true;
+	//.. and set battering on..
+	sdoc->BATTERING = true;
 
 	sdoc->SetModifiedFlag() ;
 	sdoc->UpdateAllViews(NULL);   
 }
 
-//******* standart change of attributes  (end of buttering) *******
+//******* standart change of attributes  (end of battering) *******
 void CGExternal::InsChangeAttributes()
 {
 	CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);
@@ -646,7 +652,7 @@ void CGExternal::InsChangeAttributes()
     }
 }
 
-//******* change of attributes in the middle of the buttering *******
+//******* change of attributes in the middle of the battering *******
 void CGExternal::InsChangeMiddleAttributes()
 {
     CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); //get selected object
@@ -716,7 +722,7 @@ void CGExternal::InsChangeMiddleAttributes()
     }
 }
 
-//rebuild the buttering objects at right and left or change the attributes
+//rebuild the battering objects at right and left or change the attributes
 //insert mode ....
 void CGExternal::InsRebuildButtering()
 {
@@ -785,11 +791,11 @@ void CGExternal::InsRebuildButtering()
 	//AfxMessageBox(lib.inttostr(meter));
 
     //Change the attributes of objects
-	if (meter==0) //it means that the new object is located at the end of buttering
+	if (meter==0) //it means that the new object is located at the end of battering
     {
        InsChangeAttributes();
     }
-	else  //the object has insert somewhere -in- the  buttering
+	else  //the object has insert somewhere -in- the  battering
     {
 	   InsChangeMiddleAttributes();
     }
@@ -825,7 +831,7 @@ void CGExternal::DelChangeAttributes()
 }
 
 
-//rebuild the buttering objects at right or left and change the attributes
+//rebuild the battering objects at right or left and change the attributes
 //delete mode...
 //**** this routine called from delete routine of synthview file ******
 void CGExternal::DelRebuildButtering()
@@ -840,7 +846,7 @@ void CGExternal::DelRebuildButtering()
 
     CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
 
-	//check if there are buttering ...
+	//check if there are battering ...
 	the_next = ext->next_id ;  //get the selected object next number
     the_prev = ext->prior_id ;  //get the selected object previous number
     if ((the_next!=0) || (the_prev!=0))
@@ -940,7 +946,7 @@ void CGExternal::DelRebuildButtering()
 
 
 
-//******* Extented Delete mode .. change attributes (break buttering) *********
+//******* Extented Delete mode .. change attributes (break battering) *********
 void CGExternal::ExtDelChangeAttributes()
 {
     CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); //get selected object
@@ -967,8 +973,8 @@ void CGExternal::ExtDelChangeAttributes()
 }
 
 
-//rebuild the buttering objects at right or left and change the attributes
-//delete object and break the buttering in 2 butterings
+//rebuild the battering objects at right or left and change the attributes
+//delete object and break the battering in 2 butterings
 //extent delete mode...
 //**** this routine called from delete routine of synthview file ******
 void CGExternal::ExtDelRebuildButtering()
@@ -977,7 +983,7 @@ void CGExternal::ExtDelRebuildButtering()
 
     CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);  //get selected object
 
-	//check if there are buttering ...
+	//check if there are battering ...
 	the_next = ext->next_id ;  //get the selected object next number
     the_prev = ext->prior_id ;  //get the selected object previous number
     if ((the_next!=0) || (the_prev!=0))
@@ -992,7 +998,7 @@ void CGExternal::ExtDelRebuildButtering()
 }
 
 
-//Ungroup the selected object buttering
+//Ungroup the selected object battering
 void CGExternal::UnGroupObjects()
 {
 	int my_next, my_prev , meter;
@@ -1001,7 +1007,7 @@ void CGExternal::UnGroupObjects()
 	my_next = ext->next_id ;  //get the selected object next number
 	my_prev = ext->prior_id ;  //get the selected object previous number
 
-	//first ungroup right objects of buttering
+	//first ungroup right objects of battering
 	meter=0;
     while (my_next!=0)
 	{
@@ -1043,6 +1049,273 @@ void CGExternal::UnGroupObjects()
 }
 
 
+//************** replace object  **************/
+void CGExternal::ReplaceObject(SoSeparator *obj_sep)
+{
+	int mynext,myprior,mycarrier ;
+    SbVec3f Transaxis , Rotaxis ;
+    float Rotangle ;
+
+/*   
+	//rebuild battering (if there are battering) replace mode
+	RepRebuildButtering();
+*/
+	//get selected-old object translation and rotation
+	SoSeparator *selected = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ; //get selected object node
+	SoTranslation *t = (SoTranslation *)selected->getChild(1) ; 
+	SoRotation *r = (SoRotation *)selected->getChild(2) ;    	
+	Transaxis = t->translation.getValue(); //get selected object translation values   
+    r->rotation.getValue(Rotaxis , Rotangle); //get selected object rotation values
+
+    //save selected-old object attributes
+	CGExternal *the_old = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);//old
+	mynext = the_old->next_id ;
+	myprior = the_old->prior_id ;
+	mycarrier = the_old->carrier_id ;
+
+    //delete the replaced-selected object
+	sview->OnDelete();
+
+	if ((mynext!=0) || (myprior!=0)) //more than one object battering
+    {
+      switch (theApp.ObjDirection)
+	  {
+  	    case 1 : { //right
+			       if (myprior!=0)
+                   {
+					   //select previous object
+                      SoSeparator *p = ((CGExternal*)sdoc->Obj[myprior])->sep ;
+	                  sview->GetSelectionNode()->deselectAll();
+	                  sview->GetSelectionNode()->select(p->getChild(4)) ; //get "geometry" node
+                      //set selector to prior object
+                      sdoc->obj_selector = myprior ;
+
+					  //Attach the object
+					  //...
+					  //AfxMessageBox("");
+					  AttachObject(obj_sep);
+                   }
+				   else
+                   if (mynext!=0)
+                   {
+                      //select next object
+                      SoSeparator *n = ((CGExternal*)sdoc->Obj[mynext])->sep ;
+	                  sview->GetSelectionNode()->deselectAll();
+	                  sview->GetSelectionNode()->select(n->getChild(4)) ; //get "geometry" node
+                      //set selector to next object
+                      sdoc->obj_selector = mynext ;
+
+					  //Attach the object
+					  //...
+					  //AfxMessageBox("");
+					  theApp.ObjDirection=2; //switch the direction
+					  AttachObject(obj_sep);
+					  theApp.ObjDirection=1; //..and set the previous direction 
+                   }
+	  	           break;
+				 }
+        case 2 : { //left ... same as above but opposite...
+			       if (mynext!=0)
+                   {
+                      //select next object
+                      SoSeparator *n = ((CGExternal*)sdoc->Obj[mynext])->sep ;
+	                  sview->GetSelectionNode()->deselectAll();
+	                  sview->GetSelectionNode()->select(n->getChild(4)) ; //get "geometry" node
+                      //set selector to next object
+                      sdoc->obj_selector = mynext ;
+
+					  //Attach the object
+					  //...
+					  //AfxMessageBox("");
+					  AttachObject(obj_sep);
+                   }
+				   else
+                   if (myprior!=0)
+                   {
+                      //select previous object
+                      SoSeparator *p = ((CGExternal*)sdoc->Obj[myprior])->sep ;
+	                  sview->GetSelectionNode()->deselectAll();
+	                  sview->GetSelectionNode()->select(p->getChild(4)) ; //get "geometry" node
+                      //set selector to prior object
+                      sdoc->obj_selector = myprior ;
+
+					  //Attach the object
+					  //...
+					  //AfxMessageBox("");
+					  theApp.ObjDirection=1; //switch the direction
+					  AttachObject(obj_sep);
+					  theApp.ObjDirection=2; //..and set the previous direction
+                   }
+		           break;
+				 }
+	  }
+	}
+	else //only one object
+    {
+	   //set new object translation & rotation 
+       SoDrawStyle	*ds = (SoDrawStyle *)obj_sep->getChild(0) ;
+	   SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
+	   SoRotation *rot	= (SoRotation *)sep->getChild(2) ;
+       //appear new object
+	   ds->style = SoDrawStyle::FILLED ;
+	   trans->translation	= Transaxis ; //put selected object translation values to the new object
+	   rot->rotation.setValue(Rotaxis ,Rotangle) ; //put selected object rotation values to the new object
+
+	   sdoc->new_object = FALSE ;  //δεν χρειάζεται να κάνουμε click για να εμφανιστει το αντικείμενο
+    }
+
+	//save new object attributes (get it from saved old-selected-replaced object)
+	CGExternal *the_new = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]); //new
+	the_new->next_id = mynext ;
+	the_new->prior_id = myprior ;
+	the_new->carrier_id = mycarrier ;
+	the_new->SaveProperties();
+
+    //select the new object..
+	sview->GetSelectionNode()->deselectAll();
+	sview->GetSelectionNode()->select(obj_sep->getChild(4)) ; //get "geometry" node
+	sdoc->obj_selector = sdoc->ObjCount-1 ;
+	//.. and set battering on..
+	sdoc->BATTERING = true;
+
+	sdoc->SetModifiedFlag() ;
+	sdoc->UpdateAllViews(NULL);   
+}
+
+
+//rebuild the battering objects at right and left or change the attributes
+//replace mode ....
+void CGExternal::RepRebuildButtering()
+{
+	CLib0 lib ;
+    int my_next, my_prev, meter;
+	SbVec3f OldValues , NewValues , 
+		    Selected_dist_values , 
+			New_dist_values ;
+
+	//get objects old and new 
+	CGExternal *the_new = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]); //new
+	CGExternal *the_old = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);//old  
+
+    //change new object attributes (get it from old-selected-replaced object)
+	the_new->next_id = the_old->next_id ;
+	the_new->prior_id = the_old->prior_id ;
+	the_new->carrier_id = the_old->carrier_id ;
+	the_new->SaveProperties();
+
+
+	//***** i need the distance of new object so..
+    CalculateObjectDistance(the_new);
+    New_dist_values = destdianisma ; //hold the new object dianisma
+
+	//***** i need the distance of selected object so..
+    CalculateObjectDistance(the_old);
+    Selected_dist_values = destdianisma ; //hold the selected object dianisma 
+
+	AfxMessageBox(lib.inttostr(Selected_dist_values[0] - New_dist_values[0]));
+
+	meter=0; //zero meter
+	switch (theApp.ObjDirection)
+    {
+	  case 1 : { //right
+
+                 my_next	= the_new->next_id ;  //get the selected object next number
+
+	             while (my_next!=0)
+				 {
+                    CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+	                SoSeparator *nextsep = ((CGExternal*)sdoc->Obj[my_next])->sep ; //get next object node
+                    SoTranslation *trn = (SoTranslation *)nextsep->getChild(1) ;  //get translation node
+	                OldValues = trn->translation.getValue(); //get next object translation values
+
+	                //new translation
+                    NewValues[0] = OldValues[0] - (Selected_dist_values[0] - New_dist_values[0]) ;
+                    NewValues[1] = OldValues[1] - (Selected_dist_values[1] - New_dist_values[1]) ;
+                    NewValues[2] = OldValues[2] - (Selected_dist_values[2] - New_dist_values[2]) ;
+
+                    //trn->translation = NewValues ; //put new (computed ) translation values to next object
+
+	                //get next object
+	                my_next = nxt->next_id ;
+	                meter+=1; 
+				 }
+				 break;
+			   }
+      case 2 : { //left
+
+                 my_prev = the_new->prior_id ;  //get the selected object prior number
+
+	             while (my_prev!=0)
+				 {
+                    CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+	                SoSeparator *prevsep = ((CGExternal*)sdoc->Obj[my_prev])->sep ; //get previous object node
+                    SoTranslation *t = (SoTranslation *)prevsep->getChild(1) ;  //get translation node
+	                OldValues = t->translation.getValue(); //get next object translation values
+
+                    //new translation
+                    NewValues[0] = OldValues[0] - (Selected_dist_values[0] - New_dist_values[0]) ;
+                    NewValues[1] = OldValues[1] - (Selected_dist_values[1] - New_dist_values[1]) ;
+                    NewValues[2] = OldValues[2] - (Selected_dist_values[2] - New_dist_values[2]) ;
+
+                    t->translation = NewValues ; //put new (computed ) translation values to previous object
+
+					//get next object
+	                my_prev = prv->prior_id ;
+	                meter+=1;
+				 }
+				 break;
+               }
+	}
+
+	//CLib0 lib;
+	AfxMessageBox(lib.inttostr(meter));
+}
+
+
+//paste ...
+void CGExternal::PasteObject()
+{
+	    CLib0 lib;
+
+	    CGExternal *ob = ((CGExternal *)sdoc->Copy_Obj[1]);
+
+		//ob = new CGExternal ;
+		sdoc->Obj[sdoc->ObjCount] = ob ; 
+		sdoc->ObjCount++ ;
+		ob->sep = sdoc->copysep ;
+		//sep		= ob->sep ;
+
+        ob->offset = sdoc->ob_offset ; sdoc->ob_offset++ ;
+		ob->name   = "GExternal" + lib.inttostr(sdoc->ObjCount-1); //+ "/" + mycode ;
+		ob->code   = code ;
+		ob->descr  = descr ;
+
+		ob->SaveProperties() ; 
+    
+	    sdoc->root->addChild(sdoc->copysep) ;
+
+		AttachObject(sdoc->copysep);
+
+}
+
+//delete ...
+void CGExternal::DeleteObject()
+{
+        CLib0 lib; 
+
+        //delete object from inventor...
+		SoSeparator *myroot = sdoc->root;
+		SoSeparator *del_external;
+        SbName name = "GExternal"+lib.inttostr(sdoc->obj_selector) ; 
+		del_external = (SoSeparator *)SoNode::getByName(name);
+		myroot->removeChild(del_external);
+
+		//deselect ...
+	    sview->GetSelectionNode()->deselectAll();
+
+		//delete object from Object array
+	    sdoc->Obj[sdoc->obj_selector]=NULL;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // GExternalProp dialog

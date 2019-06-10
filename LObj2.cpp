@@ -223,8 +223,12 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
     glib.DefinePolygon000 ( pleyres, len, angle, 10, xx, yy, zz ) ;
 
     SoSeparator *sep ;
+	SoSeparator *group ;
 	CGExternal *ob ;
 	
+	group = new SoSeparator ;
+	group->setName("Geometry");
+
 	// CREATE THE GObject ...
 	if (add)
 	{
@@ -247,6 +251,11 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	}
 	sep->addChild ( trans ) ;
 	sep->addChild ( rot ) ;
+
+	//init pick style
+	SoPickStyle *ps = new SoPickStyle;
+	sep->addChild(ps) ;
+    ps->style.setValue(SoPickStyle::SHAPE) ;
 
 	// setup material for kassoma
 	SoMaterial  *mat_kas = new SoMaterial;
@@ -288,7 +297,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	if (kato_kal == 0) 
 	{
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
-		sep->addChild( b );
+		group->addChild( b );
 
 		left_base_point[0] = xx[0] ;
 		left_base_point[1] = yy[0] ;
@@ -304,7 +313,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 		for ( i = 0 ; i < pleyres ; i++ )
 			yy[i] = yy[i] + height0*10 ;
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
-		sep->addChild( b );
+		group->addChild( b );
 
 		left_top_point[0] = xx[0] ;
 		left_top_point[1] = yy[0] ;
@@ -328,7 +337,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 			for ( i = 0 ; i < pleyres ; i++ )
 				yy[i] = yy[i] + zh ;
 			b = glib.CreatePrisma ( mat_kas, NULL, 0, 10, pleyres, xx, yy, zz ) ;
-			sep->addChild( b );
+			group->addChild( b );
 			for ( i = 0 ; i < pleyres ; i++ )
 				yy[i] = yy[i] - zh ;
 		}
@@ -359,7 +368,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 				b = glib.CreateFrame0 ( mat_kas, NULL, 0, 0, 15, height0*10, 
 										xx[i], yy[i], zz[i],
 										xx[0], yy[0], zz[0] ) ;
-			sep->addChild( b );			
+			group->addChild( b );			
 		}
 	}
 
@@ -422,7 +431,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 						b = glib.CreateFrame0 ( mat, txt, 2, 0, objdepth[i][j][k][l]*10, objheight[i][j][k][l]*10, 
 												x0+v1x+h1x, y0+v1y+h1y, z0+v1z+h1z,
 												x0+v2x+h2x, y0+v2y+h2y, z0+v2z+h2z ) ;
-						sep->addChild( b );			
+						group->addChild( b );			
 					}
                     hh = hh + objheight[i][j][k][l]*10 ;
 				}
@@ -431,6 +440,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
             zh = zh + zheight[i][j]*10 ;
 		}
     }
+    sep->addChild( group ) ; //add "geometry" group
 
 	// CREATE THE GObject ...
 	if (add)

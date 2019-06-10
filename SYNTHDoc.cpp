@@ -51,6 +51,8 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	ON_COMMAND(ID_EDIT_CUT, OnDelete)
 	ON_COMMAND(ID_EXTENTED_CUT, OnExtDelete)
 	ON_COMMAND(ID_UNGROUP, OnUnGroup)
+	ON_COMMAND(ID_REPLACE, OnReplaceObj)
+	ON_UPDATE_COMMAND_UI(ID_REPLACE, OnUpdateReplaceObj)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -76,8 +78,9 @@ CSYNTHDoc::CSYNTHDoc()
 
   obj_value = 0 ;         
   obj_selector = -1 ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
-  BUTTERING = false ; 
-
+  BATTERING = false ;
+  REPLACE = false ;
+  copy_external = false ;
 }
 
 CSYNTHDoc::~CSYNTHDoc()
@@ -269,6 +272,7 @@ void CSYNTHDoc::OnDelete()
 	{
       sview->OnDelete(); //call delete of view
 	  SetModifiedFlag();
+	  UpdateAllViews(NULL); 
 	}
 
 }
@@ -283,6 +287,7 @@ void CSYNTHDoc::OnExtDelete()
 	{
       sview->OnExtDelete(); //call extented delete of view
 	  SetModifiedFlag();
+	  UpdateAllViews(NULL); 
 	}
 
 }
@@ -403,11 +408,11 @@ void CSYNTHDoc::OnProperties()
 	if (Obj[SelId]->IsKindOf(RUNTIME_CLASS(CGExternal)))
 		res = ((CGExternal*)Obj[SelId])->EditProperties(this,root) ;
 
-//	if (res == IDOK) 
-//	{
+	if (res == IDOK) 
+	{
 		SetModifiedFlag();
-		UpdateAllViews(NULL);   
-//	} 	
+		//UpdateAllViews(NULL);   
+	} 	
 }
 
 void CSYNTHDoc::OnUpdateProperties(CCmdUI* pCmdUI) 
@@ -750,9 +755,45 @@ void CSYNTHDoc::OnSelectObj()
 	
 }
 
+
 void CSYNTHDoc::OnUpdateSelectObj(CCmdUI* pCmdUI)
 {
 //  CSelect Object is only valid if a scene has created
+    if ( root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE ); 
+}
+
+
+/*============================ ReplaceObj ==========================*/
+
+void CSYNTHDoc::OnReplaceObj() 
+{
+    //check selection
+	if (Obj[obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+    {
+      //enable the replace
+	  REPLACE = true ;
+	  //disable the battering ...
+	  BATTERING = false ;
+
+	  // Ανοίγει το παράθυρο επιλογής αντικειμένου
+	  CSelectObj *dlg = new CSelectObj ;
+   
+	  if (dlg->DoModal() == IDOK)   
+	  {
+        //disable the replace
+		REPLACE = false ;
+	  } 
+    }
+	else
+	  AfxMessageBox("Invalid selection. Access denied.");	  
+}
+
+void CSYNTHDoc::OnUpdateReplaceObj(CCmdUI* pCmdUI)
+{
+//  replace Object is only valid if a scene has created
     if ( root != NULL )
         pCmdUI->Enable( TRUE );	
     else

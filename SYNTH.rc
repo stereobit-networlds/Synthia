@@ -534,6 +534,7 @@ BEGIN
         MENUITEM "Διαγραφή - Αποσύνδεση . . .", ID_EXTENTED_CUT
         MENUITEM "Αντιγραφή",                   ID_EDIT_COPY
         MENUITEM "Επικόληση\tCtrl+V",           ID_EDIT_PASTE
+        MENUITEM "Αντικατάσταση ",              ID_REPLACE
         MENUITEM SEPARATOR
         MENUITEM "Αποσύνδεση αντικειμένων . . .", ID_UNGROUP
         MENUITEM SEPARATOR
