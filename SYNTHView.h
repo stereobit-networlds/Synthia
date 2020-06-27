@@ -33,8 +33,22 @@ protected: // create from serialization only
 public:
 	CSYNTHDoc* GetDocument();
 
+	SoSeparator *sep_buffer;  //aux node for copy/paste 
+
     SoSelection *GetSelectionNode()
         { return m_pSelectionNode; }
+
+	SoPath *lightpath;
+
+    // Colors
+	float m_ClearColorRed;
+	float m_ClearColorGreen;
+	float m_ClearColorBlue;
+
+	//options
+	int headlight_option ;
+	int decoration_option ;
+	int drawStyle_option ;
 
 	BOOL IsDocLoaded();
 	BOOL IsSelected();
@@ -87,6 +101,9 @@ public:
 	void OnDelete();
 	void OnExtDelete();
 	void OnUnGroup();
+	bool StartScene();
+    void DrawBox(float x1,float y1,float z1,
+			     float x2,float y2,float z2);
 
 protected:
 // IVF_EXAMPLE_BEGIN
@@ -102,18 +119,12 @@ protected:
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CSYNTHView)
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
-// BEGIN_IVWGEN
 	afx_msg void OnDestroy();
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-
 	afx_msg void OnViewPicedit();
 	afx_msg void OnUpdateViewPicedit(CCmdUI* pCmdUI);
-	//afx_msg void OnDelete(); must be public (look above)
-	//afx_msg void OnExtDelete(); must be public (look above)
 	afx_msg void OnEditCut();
 	afx_msg void OnUpdateEditCut(CCmdUI* pCmdUI);
 	afx_msg void OnExtentedCut();
@@ -124,9 +135,47 @@ protected:
 	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
 	afx_msg void OnViewViewmodesSelectionmode();
 	afx_msg void OnViewViewmodesViewingmode();
-    //afx_msg void OnUnGroup(); must be public (look above)
 	afx_msg void OnUpdateUnGroup(CCmdUI* pCmdUI);
-// END_IVWGEN
+	afx_msg void OnHidebase();
+	afx_msg void OnUpdateHidebase(CCmdUI* pCmdUI);
+	afx_msg void OnHidewalls();
+	afx_msg void OnUpdateHidewalls(CCmdUI* pCmdUI);
+	afx_msg void OnHideobjs();
+	afx_msg void OnUpdateHideobjs(CCmdUI* pCmdUI);
+	afx_msg void OnHideselection();
+	afx_msg void OnUpdateHideselection(CCmdUI* pCmdUI);
+	afx_msg void OnShowall();
+	afx_msg void OnUpdateShowall(CCmdUI* pCmdUI);
+	afx_msg void OnChbackcolor();
+	afx_msg void OnUpdateChbackcolor(CCmdUI* pCmdUI);
+	afx_msg void OnHomeposition();
+	afx_msg void OnUpdateHomeposition(CCmdUI* pCmdUI);
+	afx_msg void OnSethomeposition();
+	afx_msg void OnUpdateSethomeposition(CCmdUI* pCmdUI);
+	afx_msg void OnHeadlight();
+	afx_msg void OnUpdateHeadlight(CCmdUI* pCmdUI);
+	afx_msg void OnInvdecoration();
+	afx_msg void OnUpdateInvdecoration(CCmdUI* pCmdUI);
+	afx_msg void OnDrawAsIs();
+	afx_msg void OnUpdateDrawAsIs(CCmdUI* pCmdUI);
+	afx_msg void OnDrawHiddenLine();
+	afx_msg void OnUpdateDrawHiddenLine(CCmdUI* pCmdUI);
+	afx_msg void OnDrawNoTexture();
+	afx_msg void OnUpdateDrawNoTexture(CCmdUI* pCmdUI);
+	afx_msg void OnDrawLowComp();
+	afx_msg void OnUpdateDrawLowComp(CCmdUI* pCmdUI);
+	afx_msg void OnDrawLine();
+	afx_msg void OnUpdateDrawLine(CCmdUI* pCmdUI);
+	afx_msg void OnDrawPoint();
+	afx_msg void OnUpdateDrawPoint(CCmdUI* pCmdUI);
+	afx_msg void OnDrawBbox();
+	afx_msg void OnUpdateDrawBbox(CCmdUI* pCmdUI);
+	afx_msg void OnViewing();
+	afx_msg void OnUpdateViewing(CCmdUI* pCmdUI);
+	afx_msg void OnDirlight();
+	afx_msg void OnUpdateDirlight(CCmdUI* pCmdUI);
+	afx_msg void OnMaterialedit();
+	afx_msg void OnUpdateMaterialedit(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

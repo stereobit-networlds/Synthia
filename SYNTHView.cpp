@@ -7,8 +7,8 @@
 #include "SYNTHDoc.h"
 #include "SYNTHView.h"
 #include "GExternal.h"
+#include "RoomWall.h"
 #include "Lib0.h"
-//#include "DeleteObj.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,6 +30,9 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/Win/SoWinClipboard.h>    
 #include <Inventor/SoLists.h>             
 
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/win/SoWinDirectionalLightEditor.h>
+#include <Inventor/win/SoWinMaterialEditor.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // CSYNTHView
@@ -38,30 +41,62 @@ IMPLEMENT_DYNCREATE(CSYNTHView, CView)
 
 BEGIN_MESSAGE_MAP(CSYNTHView, CView)
 	//{{AFX_MSG_MAP(CSYNTHView)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
-// BEGIN_IVWGEN
-	ON_WM_CREATE()
 	ON_WM_DESTROY()
+	ON_WM_CREATE()
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_COMMAND(ID_VIEW_PICEDIT, OnViewPicedit)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PICEDIT, OnUpdateViewPicedit)
-	//ON_COMMAND(ID_EDIT_CUT, OnDelete)  this command called from OnDelete of doc
-	//ON_COMMAND(ID_EDIT_CUT, OnEditCut) redirect this command to "OnDelete"
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateEditCut)
-	//ON_COMMAND(ID_EDIT_CUT, OnExtDelete)  this command called from OnExtDelete of doc
-	//ON_COMMAND(ID_EXTENTED_CUT, OnExtentedCut) redirect this command to "OnExtDelete" 
 	ON_UPDATE_COMMAND_UI(ID_EXTENTED_CUT, OnUpdateExtentedCut)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateEditCopy)
 	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
-	ON_COMMAND(ID_VIEW_VIEWINGMODE, OnViewViewmodesViewingmode)
 	ON_COMMAND(ID_VIEW_SELECTIONMODE, OnViewViewmodesSelectionmode)
-	ON_COMMAND(ID_UNGROUP, OnUnGroup)
+	ON_COMMAND(ID_VIEW_VIEWINGMODE, OnViewViewmodesViewingmode)
 	ON_UPDATE_COMMAND_UI(ID_UNGROUP, OnUpdateUnGroup)
-// END_IVWGEN
+	ON_COMMAND(ID_HIDEBASE, OnHidebase)
+	ON_UPDATE_COMMAND_UI(ID_HIDEBASE, OnUpdateHidebase)
+	ON_COMMAND(ID_HIDEWALLS, OnHidewalls)
+	ON_UPDATE_COMMAND_UI(ID_HIDEWALLS, OnUpdateHidewalls)
+	ON_COMMAND(ID_HIDEOBJS, OnHideobjs)
+	ON_UPDATE_COMMAND_UI(ID_HIDEOBJS, OnUpdateHideobjs)
+	ON_COMMAND(ID_HIDESELECTION, OnHideselection)
+	ON_UPDATE_COMMAND_UI(ID_HIDESELECTION, OnUpdateHideselection)
+	ON_COMMAND(ID_SHOWALL, OnShowall)
+	ON_UPDATE_COMMAND_UI(ID_SHOWALL, OnUpdateShowall)
+	ON_COMMAND(ID_CHBACKCOLOR, OnChbackcolor)
+	ON_UPDATE_COMMAND_UI(ID_CHBACKCOLOR, OnUpdateChbackcolor)
+	ON_COMMAND(ID_HOMEPOSITION, OnHomeposition)
+	ON_UPDATE_COMMAND_UI(ID_HOMEPOSITION, OnUpdateHomeposition)
+	ON_COMMAND(ID_SETHOMEPOSITION, OnSethomeposition)
+	ON_UPDATE_COMMAND_UI(ID_SETHOMEPOSITION, OnUpdateSethomeposition)
+	ON_COMMAND(ID_HEADLIGHT, OnHeadlight)
+	ON_UPDATE_COMMAND_UI(ID_HEADLIGHT, OnUpdateHeadlight)
+	ON_COMMAND(ID_INVDECORATION, OnInvdecoration)
+	ON_UPDATE_COMMAND_UI(ID_INVDECORATION, OnUpdateInvdecoration)
+	ON_COMMAND(ID_DRAW_AS_IS, OnDrawAsIs)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_AS_IS, OnUpdateDrawAsIs)
+	ON_COMMAND(ID_DRAW_HIDDEN_LINE, OnDrawHiddenLine)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_HIDDEN_LINE, OnUpdateDrawHiddenLine)
+	ON_COMMAND(ID_DRAW_NO_TEXTURE, OnDrawNoTexture)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_NO_TEXTURE, OnUpdateDrawNoTexture)
+	ON_COMMAND(ID_DRAW_LOW_COMP, OnDrawLowComp)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_LOW_COMP, OnUpdateDrawLowComp)
+	ON_COMMAND(ID_DRAW_LINE, OnDrawLine)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_LINE, OnUpdateDrawLine)
+	ON_COMMAND(ID_DRAW_POINT, OnDrawPoint)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_POINT, OnUpdateDrawPoint)
+	ON_COMMAND(ID_DRAW_BBOX, OnDrawBbox)
+	ON_UPDATE_COMMAND_UI(ID_DRAW_BBOX, OnUpdateDrawBbox)
+	ON_COMMAND(ID_VIEWING, OnViewing)
+	ON_UPDATE_COMMAND_UI(ID_VIEWING, OnUpdateViewing)
+	ON_COMMAND(ID_DIRLIGHT, OnDirlight)
+	ON_UPDATE_COMMAND_UI(ID_DIRLIGHT, OnUpdateDirlight)
+	ON_COMMAND(ID_UNGROUP, OnUnGroup)
+	ON_COMMAND(ID_MATERIALEDIT, OnMaterialedit)
+	ON_UPDATE_COMMAND_UI(ID_MATERIALEDIT, OnUpdateMaterialedit)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CView::OnFilePrint)
@@ -76,10 +111,14 @@ CSYNTHView::CSYNTHView()
 	// TODO: add construction code here
 // IVF_EXAMPLE_BEGIN
     m_pSelectionNode = NULL;    // Initialize new member variable
-
     m_nEnableSelection = TRUE;  // Set existing member variable
+    m_pClipboard = NULL;    // windows clipboard
 
-    m_pClipboard = NULL;    //SelectB
+	sep_buffer = NULL;      //separator buffer
+
+	headlight_option  = 0; //OFF
+	decoration_option = 1; //ON
+	drawStyle_option  = 3; //NO TEXTURE
 
 // IVF_EXAMPLE_END
    
@@ -113,6 +152,7 @@ BOOL CSYNTHView::PreCreateWindow(CREATESTRUCT& cs)
 void CSYNTHView::OnDraw(CDC* pDC)
 {
 	CSYNTHDoc* pDoc = GetDocument();
+	CSYNTHDoc* sdoc = GetDocument(); //add by me  <----------------------- !!!!!
 	ASSERT_VALID(pDoc);
 }
 
@@ -127,6 +167,10 @@ void CSYNTHView::OnDraw(CDC* pDC)
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/nodes/SoEventCallback.h>
 
+//my light editor
+SoWinDirectionalLightEditor *myLEditor ;
+//my material editor
+SoWinMaterialEditor *myMEditor ;
 
 SbBool isTransformable(SoNode *myNode) ;
 SoPath *createTransformPath(SoPath *inputPath) ;
@@ -156,23 +200,18 @@ void CSYNTHView::OnInitialUpdate()
     IvfOnInitialUpdate(this) ;
 
 
-// IVF_EXAMPLE_BEGIN
-    if (m_pSelectionNode == NULL) { //---/
+    if (m_pSelectionNode == NULL) { 
         // Create the SoSelection node that will be root of scene graph
         m_pSelectionNode = new SoSelection;
         m_pSelectionNode->ref();
 
+//  	m_nEnableSelection = TRUE; has defined already in construction
 
-// IVF EXAMPLE_End
-
-
-//	m_nEnableSelection = TRUE; has defined already in construction
-
-//	SoSelection *pSelectionNode = IvfGetSelectionNode();
-	m_pSelectionNode->policy = SoSelection::SHIFT ;
-	//m_pSelectionNode->addSelectionCallback(selectionCallback, NULL);
-	//m_pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
-    m_pSelectionNode->setPickFilterCallback(pickFilterCB);
+//	    SoSelection *pSelectionNode = IvfGetSelectionNode();
+	    m_pSelectionNode->policy = SoSelection::SHIFT ;
+//	    m_pSelectionNode->addSelectionCallback(selectionCallback, NULL);
+//      m_pSelectionNode->addDeselectionCallback(deselectionCallback, NULL);
+        m_pSelectionNode->setPickFilterCallback(pickFilterCB);
 
 /*
 	myHandleBox = new SoHandleBoxManip;
@@ -182,45 +221,49 @@ void CSYNTHView::OnInitialUpdate()
 	myTransformBox = new SoTransformBoxManip;
 	myTransformBox->ref();
 */
-	sdoc = GetDocument() ;
-	sview = this ;
+	   sdoc = GetDocument() ;
+	   sview = this ;
 
-	SoMouseButtonEvent  myMouseEvent;
+	   SoMouseButtonEvent  myMouseEvent;
 
-	// Add an event callback to catch mouse button presses.
-	// The callback is set up later on.
-	SoEventCallback *EventCB = new SoEventCallback;
-	m_pSelectionNode->addChild(EventCB);
+	   // Add an event callback to catch mouse button presses.
+       // The callback is set up later on.
+	   SoEventCallback *EventCB = new SoEventCallback;
+	   m_pSelectionNode->addChild(EventCB);
 
-	// Set up the event callback. We want to pass the root of the
-	// entire scene graph (including the camera) as the userData,
-	// so we get the scene manager's version of the scene graph
-	// root.
-	EventCB->addEventCallback ( SoMouseButtonEvent::getClassTypeId(),
-								MousePressCB,
-								m_pViewer->getSceneManager()->getSceneGraph());
+	   // Set up the event callback. We want to pass the root of the
+	   // entire scene graph (including the camera) as the userData,
+	   // so we get the scene manager's version of the scene graph
+	   // root.
+	   EventCB->addEventCallback ( SoMouseButtonEvent::getClassTypeId(),
+							       MousePressCB,
+								   m_pViewer->getSceneManager()->getSceneGraph());
+      
+	   // set the document's selected object
+	   GetDocument()->SetSelectedObj(m_pSelectionNode) ;
 
-	// set the document's selected object
-	GetDocument()->SetSelectedObj(m_pSelectionNode) ;
-
-	// Set our selection node as the scene graph root node
-    m_pViewer->setSceneGraph( m_pSelectionNode );
+	   // Set our selection node as the scene graph root node
+       m_pViewer->setSceneGraph( m_pSelectionNode );
 
 
 
-    // Use a bounding box to highlight selected objects
-    m_pViewer->setGLRenderAction( new SoBoxHighlightRenderAction() );
+       // Use a bounding box to highlight selected objects
+       m_pViewer->setGLRenderAction( new SoBoxHighlightRenderAction() );
 
-    // Tell viewer to automatically redraw when selection changes
-    // (so the highlight will be drawn in the right place)
-    m_pViewer->redrawOnSelectionChange( m_pSelectionNode ) ;
+       // Tell viewer to automatically redraw when selection changes
+       // (so the highlight will be drawn in the right place)
+       m_pViewer->redrawOnSelectionChange( m_pSelectionNode ) ;
 
-	} //---/
+	} 
 
 	// Create an instance of the clipboard and associate with our window
-    if (m_pClipboard == NULL) {
+    if (m_pClipboard == NULL) 
+	{
         m_pClipboard = new SoWinClipboard( GetSafeHwnd() );
     }
+
+	//if wizard enabled ... make scene automatically
+	if (sdoc->Wizard) sdoc->CreateBasicScene();
     
 }
 
@@ -278,6 +321,12 @@ void CSYNTHView::OnDestroy()
 {
 	CView::OnDestroy();
 	IvfOnDestroy();
+
+/*	if (myLEditor->isAttached()) 
+	{
+		if (myLEditor->isVisible()) myLEditor->hide(); //hide first
+		myLEditor->detach(); //<<<------ kill directional light
+	}*/
 }
 // END_IVWGEN
 
@@ -330,6 +379,7 @@ BOOL CSYNTHView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 void CSYNTHView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
 {
 	CSYNTHDoc* pDoc = GetDocument();
+	CSYNTHDoc* sdoc = GetDocument(); //add by me  <----------------------- !!!!!
 			  //  need the document pointer
 
         // TODO: Add your specialized code here and/or call the base class
@@ -407,17 +457,24 @@ void CSYNTHView::OnEditCopy()
     if (pPathList->getLength() > 0)
         m_pClipboard->copy( (SoPathList*)pPathList, eventTime );
 */
+
+
 	//**************** my routine
 	//if the object is GExternal type...
     if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
     {
-	  // Copy the object to my copy buffer array
-	  sdoc->Copy_Obj[1] = sdoc->Obj[sdoc->obj_selector];
-	  // copy the node to my copy buffer node
-      sdoc->copysep = ((CGExternal *)sdoc->Obj[sdoc->obj_selector])->sep;
-      //πρεπει να αντιγραφεται απο τον inventor...
+      CGExternal *myext;
 
-	  sdoc->copy_external = true ;
+	  myext->CopyObject(sdoc->obj_selector);
+	  sdoc->copy_mode = true ;
+    }
+	else //if it is RoomWall type...
+	if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CRoomWall)))
+    {
+	  CRoomWall *mywall;
+
+	  mywall->CopyObject(sdoc->obj_selector);
+	  sdoc->copy_mode = true ;
     }
 	else
       AfxMessageBox("Invalid selection. Access denied.");
@@ -565,24 +622,25 @@ void CSYNTHView::OnEditPaste()
 //    Time eventTime = time(NULL);
 //	m_pClipboard->paste( eventTime, CSYNTHView::OnPasteCB, this );
 
-/*
-    LObj2 obj2;
 
-	sdoc->new_object = TRUE ;
-	obj2.CreateObject( TRUE, sdoc->root, eid_id, rs_eidh0, rs_mrec ) ;
+    sdoc->SaveUndo(); //save scene for undo...
 
-    Η ιδεα είναι εφοσον στο oncopy εχουμε σωσει το array index και τα eid_id κλπ.
-	σ'αυτο το σημειο κανουμε createobject οπως στο select
+	CGObject *object = ((CGObject*)sdoc->Obj[sdoc->LastCopy]);
 
-    Αυτο σημαινει οτι ο υπαρχον κωδικας του copy paste ( μεσω winClipboard )
-	δεν χρειαζεται
-*/
-
-	CGExternal *ext ;
-
-    ext->PasteObject();
-
-	sdoc->copy_external = false ; //end of copy/paste
+	if (object->IsKindOf(RUNTIME_CLASS(CGExternal)))
+    {
+	  CGExternal *ext ;
+      ext->PasteObject(); 
+	}
+	else
+	if (object->IsKindOf(RUNTIME_CLASS(CRoomWall)))
+    {
+      CRoomWall *wll ;
+      wll->PasteObject(); 
+    } 
+	else 
+		AfxMessageBox("Invalid data. Paste ignored..");
+	//sdoc->copy_mode = false ; //end of copy/paste
 }
 
 void CSYNTHView::OnUpdateEditPaste(CCmdUI* pCmdUI) 
@@ -591,7 +649,7 @@ void CSYNTHView::OnUpdateEditPaste(CCmdUI* pCmdUI)
     // Paste is only valid if there is something in the clipboard
     //if (IsClipboardFormatAvailable(CF_TEXT))
 
-    if (sdoc->copy_external==true)
+    if (sdoc->copy_mode==true)
         pCmdUI->Enable( TRUE );	
     else
         pCmdUI->Enable( FALSE );
@@ -641,32 +699,30 @@ void CSYNTHView::OnViewViewmodesViewingmode()
 /**************************/
 void CSYNTHView::OnDelete()
 {
-	CLib0 lib;
-    CGExternal  *external_obj ;
+	//CLib0 lib;
 
 	if (sdoc->obj_selector>0) //delete only walls, roombase ,externals
     {
-	  //if the object is GExternal type...
-      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
-      {
-        /* //make object invisible and unpickable
-	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;		
-		 //set draw style
-	     SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
-         ds->style = SoDrawStyle::INVISIBLE  ;
-		 //set pick style
-	     SoPickStyle *ps = (SoPickStyle *)sep->getChild(3) ;
-         ps->style.setValue(SoPickStyle::UNPICKABLE) ;
-		 */
-		 //δεν είναι απαραιτητα τα παραπάνω...   
+	  sdoc->SaveUndo(); //save scene for undo...
 
-         //rebuild the battering -before- delete the selected object
-         external_obj->DelRebuildButtering(); 
+      CGObject *obj = (CGObject*)sdoc->Obj[sdoc->obj_selector]; 
+	  //if the object is GExternal type...
+      if (obj->IsKindOf(RUNTIME_CLASS(CGExternal)))
+      {
+         CGExternal  *ext_obj = (CGExternal*)obj;
 
 		 //delete object from inventor...
-		 external_obj->DeleteObject();
+		 ext_obj->DelObject(sdoc->obj_selector,0);
 	  }
-      //OnEditCut(); //call OnEditCut (ετοιμη ρουτινα) delete the selected object  (κολλαει μετά στην εισαγωγη object)
+	  else
+      //if the object is RoomWall type...
+      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CRoomWall)))
+      {
+         CRoomWall *Wall_obj = (CRoomWall*)obj;
+
+		 //delete object from inventor...
+		 Wall_obj->DeleteObject(sdoc->obj_selector);
+	  }
       else  AfxMessageBox("Invalid selection. Access denied."); 
 	}
 	else AfxMessageBox("Access denied."); 
@@ -674,31 +730,19 @@ void CSYNTHView::OnDelete()
 
 void CSYNTHView::OnExtDelete()
 {
-	CLib0 lib;
-    CGExternal  *external_obj ;
-
 	if (sdoc->obj_selector>0) //delete only walls, roombase ,externals
     {
-	  //if the object is GExternal type...
-      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
-      {
-         /*
-         //make object invisible and unpickable
-	     SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->obj_selector])->sep ;	
-		 //set draw style
-	     SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
-         ds->style = SoDrawStyle::INVISIBLE  ;
-		 //set pick style
-	     SoPickStyle *ps = (SoPickStyle *)sep->getChild(3) ;
-         ps->style.setValue(SoPickStyle::UNPICKABLE) ;
-		 */
-		 //δεν είναι απαραιτητα τα παραπάνω... 
+	  sdoc->SaveUndo(); //save scene for undo...
 
-         //rebuild the battering -before- delete the selected object
-         external_obj->ExtDelRebuildButtering();
+	  CGObject *obj = (CGObject*)sdoc->Obj[sdoc->obj_selector]; 
+
+	  //if the object is GExternal type...
+      if (obj->IsKindOf(RUNTIME_CLASS(CGExternal)))
+      {
+	     CGExternal  *ext_obj = (CGExternal*)obj;
 		 
          //delete object from inventor...
-		 external_obj->DeleteObject();
+		 ext_obj->DelObject(sdoc->obj_selector,1);
       }
       else //OnExtentedCut(); 
            AfxMessageBox("Invalid selection. Access denied."); 
@@ -709,15 +753,17 @@ void CSYNTHView::OnExtDelete()
 
 void CSYNTHView::OnUnGroup()
 {
-	CGExternal  *external_obj ;
-
 	if (sdoc->obj_selector>0) //ungroup only externals
     {
+	  CGObject *obj = (CGObject*)sdoc->Obj[sdoc->obj_selector];
 	  //if the object is GExternal type...
-      if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+      if (obj->IsKindOf(RUNTIME_CLASS(CGExternal)))
       {
+		 CGExternal  *ext = (CGExternal*)obj;
+         sdoc->SaveUndo(); //save scene for undo...
+
          //do the job...
-		 external_obj->UnGroupObjects();
+		 ext->UnGroupObjects();
       }
       else AfxMessageBox("Invalid selection. Access denied."); 
 	}
@@ -729,15 +775,67 @@ void CSYNTHView::OnUpdateUnGroup(CCmdUI* pCmdUI)
 {
     ASSERT( m_pSelectionNode != NULL );
     if (m_pSelectionNode->getNumSelected() > 0)
-   // {
-    //if the object is GExternal type...
-    //if (sdoc->Obj[sdoc->obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
         pCmdUI->Enable( TRUE );	
     else
         pCmdUI->Enable( FALSE );
-   //}
 }
-//***********************************
+//***********************************  FIRST BUILD OF SCENE
+
+bool CSYNTHView::StartScene()
+{
+	    int meter ;
+        
+        CSYNTHDoc* sdoc = GetDocument();
+		sview = this;
+
+        //make the root....
+		if (sdoc->root!=NULL) 
+        { 
+    		//deselect ...
+	        GetSelectionNode()->deselectAll();
+         
+			//root->removeAllChildren(); //οχι ολα γιατι σβηνει και το mouse callback =child 0
+             
+			SoSeparator *myRoot;
+			myRoot = (SoSeparator *)SoNode::getByName("World_Space");
+			int rootchilds =myRoot->getNumChildren()-1;
+
+			//AfxMessageBox(lib.inttostr(rootchilds));
+
+            //meter<2 διοτι δεν θελω να σβησω το callback και το directionalLight
+			for (meter=rootchilds ; meter>2 ; meter--)
+            {
+				SoSeparator *mys = (SoSeparator *)myRoot->getChild(meter);
+				myRoot->removeChild(meter);
+            }
+			
+            return true;
+        }
+		else
+        {
+		  //material editor 
+          myMEditor = new SoWinMaterialEditor
+   		  (NULL,"Material Editor",TRUE);
+
+		  // light editor 
+          myLEditor = new SoWinDirectionalLightEditor
+   		  (NULL,"Light Editor",TRUE);
+
+		  sdoc->root = new SoSeparator ;
+		  sdoc->root->ref() ;
+		  sdoc->root->setName("World_Space");
+ 
+		  //add light
+ 		  SoDirectionalLight *myLight = new SoDirectionalLight;
+          sdoc->root->addChild(myLight);
+          //attach light
+		  /*SoPath **/lightpath = new SoPath(myLight);
+          myLEditor->attach(lightpath);
+          //myLEditor->show();
+
+		  return  false;
+        }
+}
 
 /*======================= selectionCallback =============*/
 
@@ -985,15 +1083,16 @@ SbBool writePickedPath ( SoNode *root, const SbViewportRegion &viewport,
 }
 
 //********************* GetPickObjectID *********************
-//Η ρουτινα αυτη  βρίσκει το id του clicked object. 
+//Η ρουτινα αυτη  βρίσκει το id του clicked object και κανει attach τον Matterial Editor. 
 //επιστρεφει το ονομα ως τυπου αντικειμένου και το νουμερο του ονοματος ως object counter
 void GetPickObjectID(SoPath *path)
 {
 	CLib0 lib;
-	int id ;
+	int my_id ;
 
-	id = -1; //initializate id=selector with invalid number
+	my_id = -1; //initializate my_id=selector with invalid number
 	sdoc->BATTERING = false ; //init battering  
+	SoNode *myNode; //init node for search material (attach editor)
 
 	int length = path->getLength(); //get length
 	if (length > 2)
@@ -1010,17 +1109,25 @@ void GetPickObjectID(SoPath *path)
 		  char *mynum ;
 
 		  mynum = strpbrk(name,digits) ; //get the number from name
-          id = lib.strtoint(mynum);
+          my_id = lib.strtoint(mynum);
+
+		  //get material node
+		  myNode = parent->getChild(4);
       }
-	  if (strncmp(name,"RoomBase",8)==0)
+
+	  if (strncmp(name,"RoomBase",8)==0) 
       {
 		  //get the wall number
           char *digits = "0123456789";
 		  char *mynum ;
 
 		  mynum = strpbrk(name,digits) ; //get the number from name
-          id = lib.strtoint(mynum);
+          my_id = lib.strtoint(mynum);
+
+		  //get material node
+		  myNode = parent->getChild(4);
       }
+
 	  if (strncmp(name,"RoomWall",8)==0)
       {
 		  //get the wall number
@@ -1028,8 +1135,12 @@ void GetPickObjectID(SoPath *path)
 		  char *mynum ;
 
 		  mynum = strpbrk(name,digits) ; //get the number from name
-          id = lib.strtoint(mynum);
+          my_id = lib.strtoint(mynum);
+
+		  //get material node
+		  myNode = parent->getChild(4);
       }
+
 	  if (strcmp(name,"")==0)
       {
 		 // must be external
@@ -1043,9 +1154,12 @@ void GetPickObjectID(SoPath *path)
 		     char *mynum ;
 			 
 		     mynum = strpbrk(name,digits) ; //get the object number from name 
-             id = lib.strtoint(mynum);     // convert to int
+             my_id = lib.strtoint(mynum);     // convert to int
 
 			 sdoc->BATTERING = true;
+
+			 //get material node (ofparent !!!)
+		     myNode = ofparent->getChild(4);
 		 }
 		 else
          {
@@ -1053,17 +1167,28 @@ void GetPickObjectID(SoPath *path)
          }
       }
 
-      sdoc->obj_selector = id ;
-	  if (id!=-1) //αυτο σημαινει οτι το object ειναι εγκυρο
-      {
-        //do something....
-        //sdoc->obj_selector = id ;
-		sdoc->obj_type = name ;
-		//AfxMessageBox(lib.inttostr(sdoc->obj_selector)+" "+sdoc->obj_type);
+
+      sdoc->obj_selector = my_id ; //set selector
+
+	  if (my_id!=-1) //αυτο σημαινει οτι το object ειναι εγκυρο
+      { 
+	    CGObject *obj = (CGObject*)sdoc->Obj[my_id];
+
+		sdoc->obj_type = obj->id ; //get the object type
+
+	    obj->ShowRefPoints(150.0); //<<<------------- show points
+
+		//attach material editor
+		if (myNode->isOfType(SoMaterial::getClassTypeId())) //if it is material node
+		{
+		   SoMaterial *mat = (SoMaterial*)myNode;
+		   myMEditor->attach(mat);
+		}
       }
 	  else
       {
-		  AfxMessageBox("Invalid Object");
+		  sdoc->obj_type = _NONE_;
+	  	  AfxMessageBox("Invalid Object");
       }
 	}
     else
@@ -1076,7 +1201,6 @@ void GetPickObjectID(SoPath *path)
 
 void MousePressCB(void *userData, SoEventCallback *eventCB)
 {
-	CLib0 lib;
 	SoSeparator *root = (SoSeparator *) userData;
 	const SoEvent *event = eventCB->getEvent();
 
@@ -1088,43 +1212,56 @@ void MousePressCB(void *userData, SoEventCallback *eventCB)
 		eventCB->setHandled();
 	}
 
+	/*CLib0 lib;
+    AfxMessageBox("click point "+lib.floattostr(picked_point[0])+" "+
+		          lib.floattostr(picked_point[1])+" "+
+				  lib.floattostr(picked_point[2]));  */
+
 	if ( sdoc->new_object ) 
 	{
-		SoSeparator *sep = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1])->sep ;
-		
-		SoDrawStyle	*ds = (SoDrawStyle *)sep->getChild(0) ;
-		SoTranslation *trans = (SoTranslation *)sep->getChild(1) ;
-		SoRotation *rot	= (SoRotation *)sep->getChild(2) ;
-
-		ds->style = SoDrawStyle::FILLED ;
-		trans->translation	= picked_point ;
-
-		SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),picked_normal) ;
-		rot->rotation.setValue(*sbrot) ;
-
-		//set carrier
-		CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]) ;
-	    ext->carrier_id = sdoc->obj_selector ;
-	    ext->SaveProperties();
-        //AfxMessageBox(lib.inttostr( ext->carrier_id ) );
-
-		sdoc->new_object = FALSE ; 
-		
-		//select it..
-		sview->GetSelectionNode()->deselectAll();
-		sview->GetSelectionNode()->select(sep->getChild(4)) ; //get "geometry" node
-		sdoc->obj_selector = sdoc->ObjCount-1 ;
-		//.. and set battering on..
-		sdoc->BATTERING = true;
-
+		if (sdoc->new_object ==_EXTERNAL_)
+        {
+          CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->ObjCount-1]) ; //get last input
+		  ext->AddNewObject(picked_point, picked_normal);
+        }
+		else
+        if (sdoc->new_object ==_ROOMWALL_)
+        {
+          CRoomWall *wll; //get nothing ...walls build in
+		  wll->AddNewObject(picked_point, picked_normal);
+        }
+		else
+			AfxMessageBox("Access denied : Unknown Object");
 
 		sdoc->SetModifiedFlag() ;
-		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)
-		
+		sdoc->UpdateAllViews(NULL);   // !!! οχι ολα γιατι "τρέμει" η σύνθεση (βελτιωση)		
 	}
 }
 
+/************************  OPENGL ???? ************************/
+void CSYNTHView::DrawBox(float x1,float y1,float z1,
+			             float x2,float y2,float z2)
+{
+   float s[10][3];
 
+   s[0][0] = x1;  s[0][1] = y1;  s[0][2] = z1;
+   s[1][0] = x2;  s[1][1] = y2;  s[1][2] = z2;
+ /*  s[2][0] = x3;  s[2][1] = y3;  s[2][2] = z3;
+   s[3][0] = x4;  s[3][1] = y4;  s[3][2] = z4;
+*/
+   glColor3f(0.0, 7.0, 0.0);
+
+   glBegin(GL_LINES);
+
+   glVertex3fv(s[0]);
+   glVertex3fv(s[1]);
+ /*  glVertex3fv(s[2]);
+   glVertex3fv(s[3]);
+   glVertex3fv(s[4]);
+   glVertex3fv(s[5]);
+*/
+   glEnd();
+}
 
 ///////////////////////////////////////////////////////////////////////
 // Overrides of IVF member functions
@@ -1189,3 +1326,417 @@ void CSYNTHView::IvfReleaseSceneGraph()
 
 
 
+/************************  SCENE HIDE/SHOW ************************/
+void CSYNTHView::OnHidebase() 
+{
+	// TODO: Add your command handler code here
+	CGObject *worldobj = (CGObject*)sdoc->Obj[0];
+	worldobj->MakeObjInvisible();
+	CGObject *baseobj = (CGObject*)sdoc->Obj[1];
+	baseobj->MakeObjInvisible();
+}
+
+void CSYNTHView::OnUpdateHidebase(CCmdUI* pCmdUI) 
+{
+	//  hide base if a scene has created
+    if ( sdoc->root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE ); 
+}
+
+void CSYNTHView::OnHidewalls() 
+{
+	// TODO: Add your command handler code here
+    int i;
+	for (i=0; i<sdoc->ObjCount ; i++)
+	{
+       if (sdoc->Obj[i]->IsKindOf(RUNTIME_CLASS(CRoomWall)))
+       {
+		   //WARNING : check for NULL pointers
+	       if (sdoc->Obj[i]!=NULL)
+		   {
+		     CRoomWall *wall = (CRoomWall*)sdoc->Obj[i];
+		     wall->MakeObjInvisible();
+		   }
+	   }
+	}	
+}
+
+void CSYNTHView::OnUpdateHidewalls(CCmdUI* pCmdUI) 
+{
+	//  hide walls if a scene has created
+    if ( sdoc->root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE ); 	
+}
+
+void CSYNTHView::OnHideobjs() 
+{
+	// TODO: Add your command handler code here
+	int i;
+	for (i=0; i<sdoc->ObjCount ; i++)
+	{
+       if (sdoc->Obj[i]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+       {
+		   //WARNING : check for NULL pointers
+	       if (sdoc->Obj[i]!=NULL)
+		   {
+		     CGExternal *ext = (CGExternal*)sdoc->Obj[i];
+		     ext->MakeObjInvisible();
+		   }
+	   }
+	}
+}
+
+void CSYNTHView::OnUpdateHideobjs(CCmdUI* pCmdUI) 
+{
+    //  hide other objects (externals) if a scene has created
+    if ( sdoc->root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE ); 
+}
+
+void CSYNTHView::OnHideselection() 
+{
+	// TODO: Add your command handler code here
+	CGObject *obj = (CGObject*)sdoc->Obj[sdoc->obj_selector];
+
+	obj->MakeObjInvisible();
+}
+
+void CSYNTHView::OnUpdateHideselection(CCmdUI* pCmdUI) 
+{
+	// hide is only valid if at least one object is selected
+    ASSERT( m_pSelectionNode != NULL );
+    if (m_pSelectionNode->getNumSelected() > 0)
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );	
+}
+
+void CSYNTHView::OnShowall() 
+{
+	// TODO: Add your command handler code here
+	int i;
+	for (i=0; i<sdoc->ObjCount ; i++)
+	{
+	   //WARNING : check for NULL pointers
+	   if (sdoc->Obj[i]!=NULL)
+	   {
+         CGObject *obj = (CGObject*)sdoc->Obj[i];
+	     obj->MakeObjVisible();
+	   }
+	} 
+}
+
+void CSYNTHView::OnUpdateShowall(CCmdUI* pCmdUI) 
+{
+	//  show all objects if a scene has created
+    if ( sdoc->root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE ); 
+}
+
+
+/************************  VIEWER PROPERTIES ************************/
+void CSYNTHView::OnChbackcolor() 
+{
+	// TODO: Add your command handler code here
+   COLORREF m_OptionColorGlBack;
+   //CSYNTHApp *pApp = (CSYNTHApp *)AfxGetApp();
+   CColorDialog dlg(m_OptionColorGlBack);
+   if(dlg.DoModal()==IDOK)
+   {
+	   //get RGB
+       m_ClearColorRed   = (float)GetRValue(m_OptionColorGlBack) / 255.0f;
+	   m_ClearColorGreen = (float)GetGValue(m_OptionColorGlBack) / 255.0f;
+	   m_ClearColorBlue  = (float)GetBValue(m_OptionColorGlBack) / 255.0f;
+
+   	   m_pViewer->setBackgroundColor(SbColor(m_ClearColorRed,
+		                                     m_ClearColorGreen,
+											 m_ClearColorBlue));
+		   //0.8,0.8,0.8));
+   }
+}
+
+void CSYNTHView::OnUpdateChbackcolor(CCmdUI* pCmdUI) 
+{
+	//  change background colorshow if a scene has created
+    if ( sdoc->root != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+}
+
+
+void CSYNTHView::OnHomeposition() 
+{
+	// TODO: Add your command handler code here
+	m_pViewer->resetToHomePosition();
+}
+
+void CSYNTHView::OnUpdateHomeposition(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if ( m_pViewer != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+}
+
+void CSYNTHView::OnSethomeposition() 
+{
+	// TODO: Add your command handler code here
+	m_pViewer->saveHomePosition();
+}
+
+void CSYNTHView::OnUpdateSethomeposition(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if ( m_pViewer != NULL )
+        pCmdUI->Enable( TRUE );	
+    else
+        pCmdUI->Enable( FALSE );
+}
+
+void CSYNTHView::OnHeadlight() 
+{
+	// TODO: Add your command handler code here
+	if (headlight_option) headlight_option = 0;
+	                 else headlight_option = 1;
+
+	m_pViewer->setHeadlight(headlight_option);
+}
+
+void CSYNTHView::OnUpdateHeadlight(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (headlight_option)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnInvdecoration() 
+{
+	// TODO: Add your command handler code here
+	if (decoration_option) decoration_option = 0;
+	                  else decoration_option = 1;
+
+	m_pViewer->setDecoration(decoration_option);
+}
+
+void CSYNTHView::OnUpdateInvdecoration(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (decoration_option)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawAsIs() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 1;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_AS_IS);
+}
+
+void CSYNTHView::OnUpdateDrawAsIs(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==1)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawHiddenLine() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 2;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_HIDDEN_LINE);
+}
+
+void CSYNTHView::OnUpdateDrawHiddenLine(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==2)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawNoTexture() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 3;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_NO_TEXTURE);
+}
+
+void CSYNTHView::OnUpdateDrawNoTexture(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==3)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawLowComp() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 4;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_LOW_COMPLEXITY);
+}
+
+void CSYNTHView::OnUpdateDrawLowComp(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==4)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawLine() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 5;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_LINE);
+}
+
+void CSYNTHView::OnUpdateDrawLine(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==5)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawPoint() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 6;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_POINT);
+}
+
+void CSYNTHView::OnUpdateDrawPoint(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==6)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHView::OnDrawBbox() 
+{
+	// TODO: Add your command handler code here
+	drawStyle_option = 7;
+	m_pViewer->setDrawStyle(SoWinViewer::INTERACTIVE,
+		                    SoWinViewer::VIEW_BBOX);
+}
+
+void CSYNTHView::OnUpdateDrawBbox(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (drawStyle_option==7)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+/***********************  ΚΑΤΑΣΤΑΣΗ ΕΠΙΛΟΓΗΣ/ΕΞΕΤΑΣΗΣ  **********************/
+void CSYNTHView::OnViewing() 
+{
+    if (m_pViewer->isViewing())
+		m_pViewer->setViewing(0);
+	else
+		m_pViewer->setViewing(1);
+}
+
+void CSYNTHView::OnUpdateViewing(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	ASSERT(m_pViewer);
+	if (m_pViewer!=NULL)
+	{
+	  pCmdUI->Enable( TRUE );
+
+	  if (m_pViewer->isViewing())	
+	  	pCmdUI->SetCheck(TRUE);
+      else
+	 	pCmdUI->SetCheck(FALSE);
+	}
+	else
+		pCmdUI->Enable( FALSE );
+}
+
+/****************** DIRECTIONAL LIGHT WINDOW ********************/
+void CSYNTHView::OnDirlight() 
+{
+	// TODO: Add your command handler code here
+	if (myLEditor->isAttached())
+	{
+	  if (myLEditor->isVisible()) myLEditor->hide();
+	                         else myLEditor->show();
+	}
+	else
+		AfxMessageBox("No Light resource available");
+}
+
+void CSYNTHView::OnUpdateDirlight(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (myLEditor->isAttached())
+	{
+	  pCmdUI->Enable( TRUE );
+
+	  if (myLEditor->isVisible())	
+	  	pCmdUI->SetCheck(TRUE);
+      else
+		pCmdUI->SetCheck(FALSE);
+	}
+	else
+		pCmdUI->Enable( FALSE );
+}
+/****************** MATERIAL WINDOW ********************/
+void CSYNTHView::OnMaterialedit() 
+{
+	// TODO: Add your command handler code here
+	if (myMEditor->isAttached())
+	{
+	  if (myMEditor->isVisible()) myMEditor->hide();
+	                         else myMEditor->show();
+	}
+	else
+		AfxMessageBox("No material resource available");
+}
+
+void CSYNTHView::OnUpdateMaterialedit(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (myMEditor->isAttached())
+	{
+	  pCmdUI->Enable( TRUE );
+
+	  if (myMEditor->isVisible())	
+	  	pCmdUI->SetCheck(TRUE);
+      else
+		pCmdUI->SetCheck(FALSE);
+	}
+	else
+		pCmdUI->Enable( FALSE );
+}

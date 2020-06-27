@@ -12,6 +12,7 @@
 #include "lib0.h"
 
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -26,10 +27,10 @@ BEGIN_MESSAGE_MAP(CSYNTHApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
 	ON_COMMAND(ID_FILE_INFO, OnFileViewInfo)
 	ON_UPDATE_COMMAND_UI(ID_FILE_INFO, OnUpdateFileViewInfo)
+	ON_COMMAND(ID_SHOWREFPOINTS, OnShowrefpoints)
+	ON_UPDATE_COMMAND_UI(ID_SHOWREFPOINTS, OnUpdateShowrefpoints)
 	//}}AFX_MSG_MAP
 
 	// Standard print setup command
@@ -138,7 +139,7 @@ BOOL CSYNTHApp::InitInstance()
 			//  need to intercept FileNew so we can
 			//  call our own OnFileNew directly
 	   {
-	   OnFileNew();
+	   //OnFileNew();  //<<<<<<<<<<<<<-----------------  new at begin.......
 	   if (!m_pMainWnd) return(FALSE);
 	   m_nCmdShow = SW_SHOWNORMAL;
 	   }
@@ -155,6 +156,8 @@ BOOL CSYNTHApp::InitInstance()
 
     //init direction ...left,right...
 	ObjDirection = 1;
+	//init ref points rendering
+	ShowRefPoints = 0;
 
 	// OPEN DATABASE / DATASETS
 	// open the database 
@@ -217,7 +220,7 @@ BOOL CSYNTHApp::InitInstance()
 		AfxMessageBox(e->m_pErrorInfo->m_strDescription);
 		e->Delete();
 	}
-	
+
 	return TRUE;
 }
 
@@ -304,15 +307,15 @@ void CSYNTHApp::OnAppAbout()
 /////////////////////////////////////////////////////////////////////////////
 // CSYNTHApp commands
 
-static char *def_ext[] = {NULL, ".iv", ".wrl"};
-#define NUM_EXT_VALS	3
+static char *def_ext[] = {NULL,".sn3", ".iv", ".wrl"};
+#define NUM_EXT_VALS	4
 
 // BEGIN_IVWGEN
 void CSYNTHApp::OnFileOpen() 
 {
 
 	const char szFilter[] =
-	"Inventor Files (*.iv)\0*.iv\0Vrml Files (*.wrl)\0*.wrl\0";
+	"Synthesis Files (*.sn3)\0*.sn3\0Inventor Files (*.iv)\0*.iv\0Vrml Files (*.wrl)\0*.wrl\0";
 
 	const char szTitle[] = "Open File";
 	CSYNTHDoc *pDoc ;
@@ -347,8 +350,6 @@ void CSYNTHApp::OnFileOpen()
 		pDoc->OpenSYNTHFile();
 	}
 }
-
-
 
 
 int CSYNTHApp::ExitInstance() 
@@ -401,16 +402,14 @@ void CSYNTHApp::OnFileNew()
 POSITION pos = GetFirstDocTemplatePosition();
 CDocTemplate* pTemplate = GetNextDocTemplate(pos);
 pTemplate->OpenDocumentFile(NULL);
+
 }
 // END_IVWGEN
 
 //******************************************************** my routines
 void CSYNTHApp::OnRight()
 {
-  //CLib0 lib;
-
   ObjDirection = 1;
-  //AfxMessageBox(lib.inttostr(ObjDirection));
 }
 
 void CSYNTHApp::OnUpdateRight(CCmdUI* pCmdUI) 
@@ -426,10 +425,7 @@ void CSYNTHApp::OnUpdateRight(CCmdUI* pCmdUI)
 
 void CSYNTHApp::OnLeft()
 {
-  //CLib0 lib;
-
   ObjDirection = 2;
-  //AfxMessageBox(lib.inttostr(ObjDirection));
 }
 
 void CSYNTHApp::OnUpdateLeft(CCmdUI* pCmdUI) 
@@ -443,3 +439,19 @@ void CSYNTHApp::OnUpdateLeft(CCmdUI* pCmdUI)
 		pCmdUI->SetCheck(FALSE);
 }
 
+
+void CSYNTHApp::OnShowrefpoints() 
+{
+	// TODO: Add your command handler code here
+	if (ShowRefPoints) ShowRefPoints = 0;
+	              else ShowRefPoints = 1;
+}
+
+void CSYNTHApp::OnUpdateShowrefpoints(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+    if (ShowRefPoints)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);	
+}

@@ -172,6 +172,7 @@ char newName[2048];
         return; // Not a supported file
     }
 
+	//pDoc = (CSYNTHDoc *)OpenDocumentFile(newName);
     pDoc->OpenSYNTHFile(); //add by me
 
 	CFrameWnd::OnDropFiles(hDropInfo);

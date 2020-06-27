@@ -1,15 +1,72 @@
 --------------------Configuration: SYNTH - Win32 Debug--------------------
-Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_37\SYNTH\SYNTH.DSP", with item "GExternal.cpp"
+Begining build with project "D:\DevStudio\CKOSMOS\CKOSMOS_102\SYNTH\SYNTH.DSP", at root.
 Active configuration is Win32 (x86) Application (based on Win32 (x86) Application)
 
+Project's tools are:
+			"32-bit C/C++ Compiler for 80x86" with flags "/nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c "
+			"OLE Type Library Maker" with flags "/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 "
+			"Win32 Resource Compiler" with flags "/l 0x408 /fo"Debug/SYNTH.res" /d "_DEBUG" /d "_AFXDLL" "
+			"Browser Database Maker" with flags "/nologo /o"Debug/SYNTH.bsc" "
+			"COFF Linker for 80x86" with flags "/nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept "
+			"Custom Build" with flags ""
+			"<Component 0xa>" with flags ""
 
-Creating temp file "C:\WINDOWS\TEMP\RSP4265.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
-"D:\DevStudio\CKOSMOS\CKOSMOS_37\SYNTH\GExternal.cpp"
+Creating temp file "C:\WINDOWS\TEMP\RSP2F1.TMP" with contents </nologo /MDd /W3 /Gm /GX /Zi /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/SYNTH.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\DevStudio\CKOSMOS\CKOSMOS_102\SYNTH\GObject.cpp"
 >
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP4265.TMP" 
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP2F1.TMP" 
+Creating temp file "C:\WINDOWS\TEMP\RSP02F2.TMP" with contents </nologo /subsystem:windows /incremental:yes /pdb:"Debug/SYNTH.pdb" /debug /machine:I386 /out:"Debug/SYNTH.exe" /pdbtype:sept 
+.\Debug\ChildFrm.obj
+.\Debug\DeleteObj.obj
+.\Debug\dummy.obj
+.\Debug\GExternal.obj
+.\Debug\glib0.obj
+.\Debug\GObject.obj
+.\Debug\IvfListView.obj
+.\Debug\IvfTreeView.obj
+.\Debug\lib0.obj
+.\Debug\LObj2.obj
+.\Debug\MainFrm.obj
+.\Debug\RoomBase.obj
+.\Debug\RoomWall.obj
+.\Debug\SelectObj.obj
+.\Debug\StdAfx.obj
+.\Debug\SYNTH.obj
+.\Debug\SYNTHDoc.obj
+.\Debug\SYNTHView.obj
+.\Debug\Wizz0.obj
+.\Debug\Wizz1.obj
+.\Debug\WorldBase.obj
+.\Debug\SYNTH.res>
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP02F2.TMP" 
 Compiling...
-GExternal.cpp
+GObject.cpp
+Linking...
+Creating temp file "C:\WINDOWS\TEMP\RSP1062.TMP" with contents </nologo /o"Debug/SYNTH.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\ChildFrm.sbr
+.\Debug\DeleteObj.sbr
+.\Debug\dummy.sbr
+.\Debug\GExternal.sbr
+.\Debug\glib0.sbr
+.\Debug\GObject.sbr
+.\Debug\IvfListView.sbr
+.\Debug\IvfTreeView.sbr
+.\Debug\lib0.sbr
+.\Debug\LObj2.sbr
+.\Debug\MainFrm.sbr
+.\Debug\RoomBase.sbr
+.\Debug\RoomWall.sbr
+.\Debug\SelectObj.sbr
+.\Debug\SYNTH.sbr
+.\Debug\SYNTHDoc.sbr
+.\Debug\SYNTHView.sbr
+.\Debug\Wizz0.sbr
+.\Debug\Wizz1.sbr
+.\Debug\WorldBase.sbr>
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSP1062.TMP" 
+Creating browse info file...
 
 
 
-GExternal.obj - 0 error(s), 0 warning(s)
+SYNTH.exe - 0 error(s), 0 warning(s)

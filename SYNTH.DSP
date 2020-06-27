@@ -223,6 +223,10 @@ SOURCE=.\Wizz0.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Wizz1.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\WorldBase.cpp
 # End Source File
 # End Group
@@ -308,6 +312,10 @@ SOURCE=.\SYNTHView.h
 # Begin Source File
 
 SOURCE=.\wizz0.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Wizz1.h
 # End Source File
 # Begin Source File
 

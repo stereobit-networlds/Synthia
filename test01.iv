@@ -41,31 +41,31 @@ DEF WorldBase0 Separator {
 	  }	  . height
 	}
 	Text2 {
-	  string "паукидгс яажагк" =
+	  string "ALEXIOU" =
 	  DEF c_name GlobalField {
 		type "SFString"
-		c_name "паукидгс яажагк"
+		c_name "ALEXIOU"
 	  }	  . c_name
 	}
 	Text2 {
-	  string "" =
+	  string "XXXX" =
 	  DEF c_address GlobalField {
 		type "SFString"
-		c_address ""
+		c_address "XXXX"
 	  }	  . c_address
 	}
 	Text2 {
-	  string "" =
+	  string "XXX" =
 	  DEF c_city GlobalField {
 		type "SFString"
-		c_city ""
+		c_city "XXX"
 	  }	  . c_city
 	}
 	Text2 {
-	  string "" =
+	  string "XX" =
 	  DEF c_tel GlobalField {
 		type "SFString"
-		c_tel ""
+		c_tel "XX"
 	  }	  . c_tel
 	}  }}
 DEF RoomBase1 Separator {
@@ -82,10 +82,12 @@ DEF RoomBase1 Separator {
   Coordinate3 {
 	point [ -2500 105 2500,
 	    2500 105 2500,
-	    2500 105 2500 ]
+	    2500 105 -2500,
+	    -2500 105 -2500,
+	    -2500 105 -2500 ]
   }
   FaceSet {
-	numVertices 3
+	numVertices 5
   }
   DEF Attributes Separator {
 
@@ -103,10 +105,10 @@ DEF RoomBase1 Separator {
 	  }	  . rb_height
 	}
 	Text2 {
-	  string "3" =
+	  string "5" =
 	  DEF KoryfCount GlobalField {
 		type "SFLong"
-		KoryfCount 3
+		KoryfCount 5
 	  }	  . KoryfCount
 	}
 	Text2 {
@@ -166,11 +168,53 @@ DEF RoomBase1 Separator {
 	  }	  . rb_Koryfsy2
 	}
 	Text2 {
-	  string "2500" =
+	  string "-2500" =
 	  DEF rb_Koryfsz2 GlobalField {
 		type "SFFloat"
-		rb_Koryfsz2 2500
+		rb_Koryfsz2 -2500
 	  }	  . rb_Koryfsz2
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsx3 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx3 -2500
+	  }	  . rb_Koryfsx3
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy3 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy3 100
+	  }	  . rb_Koryfsy3
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsz3 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz3 -2500
+	  }	  . rb_Koryfsz3
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsx4 GlobalField {
+		type "SFFloat"
+		rb_Koryfsx4 -2500
+	  }	  . rb_Koryfsx4
+	}
+	Text2 {
+	  string "100" =
+	  DEF rb_Koryfsy4 GlobalField {
+		type "SFFloat"
+		rb_Koryfsy4 100
+	  }	  . rb_Koryfsy4
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF rb_Koryfsz4 GlobalField {
+		type "SFFloat"
+		rb_Koryfsz4 -2500
+	  }	  . rb_Koryfsz4
 	}
 	Text2 {
 	  string "" =
@@ -180,26 +224,26 @@ DEF RoomBase1 Separator {
 	  }	  . rb_plakaki
 	}
 	Text2 {
-	  string "0" =
+	  string "1000" =
 	  DEF rb_plakaki1 GlobalField {
 		type "SFFloat"
-		rb_plakaki1 0
+		rb_plakaki1 1000
 	  }	  . rb_plakaki1
 	}
 	Text2 {
-	  string "0" =
+	  string "2000" =
 	  DEF rb_plakaki2 GlobalField {
 		type "SFFloat"
-		rb_plakaki2 0
+		rb_plakaki2 2000
 	  }	  . rb_plakaki2
 	}  }}
 DEF RoomWall2 Separator {
 
   Normal {
-	vector [ 0 0 1,
-	    1 0 0,
+	vector [ 1 0 0,
 	    0 0 -1,
 	    -1 0 0,
+	    0 0 1,
 	    0 1 0 ]
   }
   NormalBinding {
@@ -213,25 +257,25 @@ DEF RoomWall2 Separator {
   }
   Coordinate3 {
 	point [ -2500 100 2500,
-	    2500 100 2500,
-	    2500 3100 2500,
+	    -2500 100 -2500,
+	    -2500 3100 -2500,
 	    -2500 3100 2500,
-	    2500 100 2500,
-	    2500 100 2497,
-	    2500 3100 2497,
-	    2500 3100 2500,
-	    2500 100 2497,
-	    -2500 100 2497,
-	    -2500 3100 2497,
-	    2500 3100 2497,
-	    -2500 100 2497,
+	    -2500 100 -2500,
+	    -2503 100 -2500,
+	    -2503 3100 -2500,
+	    -2500 3100 -2500,
+	    -2503 100 -2500,
+	    -2503 100 2500,
+	    -2503 3100 2500,
+	    -2503 3100 -2500,
+	    -2503 100 2500,
 	    -2500 100 2500,
 	    -2500 3100 2500,
-	    -2500 3100 2497,
+	    -2503 3100 2500,
 	    -2500 3100 2500,
-	    2500 3100 2500,
-	    2500 3100 2497,
-	    -2500 3100 2497 ]
+	    -2500 3100 -2500,
+	    -2503 3100 -2500,
+	    -2503 3100 2500 ]
   }
   FaceSet {
 	numVertices [ 4, 4, 4, 4, 4 ]
@@ -280,10 +324,10 @@ DEF RoomWall2 Separator {
 	  }	  . Koryfsz00
 	}
 	Text2 {
-	  string "2500" =
+	  string "-2500" =
 	  DEF Koryfsx10 GlobalField {
 		type "SFFloat"
-		Koryfsx10 2500
+		Koryfsx10 -2500
 	  }	  . Koryfsx10
 	}
 	Text2 {
@@ -294,11 +338,53 @@ DEF RoomWall2 Separator {
 	  }	  . Koryfsy10
 	}
 	Text2 {
-	  string "2500" =
+	  string "-2500" =
 	  DEF Koryfsz10 GlobalField {
 		type "SFFloat"
-		Koryfsz10 2500
+		Koryfsz10 -2500
 	  }	  . Koryfsz10
+	}
+	Text2 {
+	  string "-2503" =
+	  DEF Koryfsx20 GlobalField {
+		type "SFFloat"
+		Koryfsx20 -2503
+	  }	  . Koryfsx20
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy20 GlobalField {
+		type "SFFloat"
+		Koryfsy20 100
+	  }	  . Koryfsy20
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF Koryfsz20 GlobalField {
+		type "SFFloat"
+		Koryfsz20 -2500
+	  }	  . Koryfsz20
+	}
+	Text2 {
+	  string "-2503" =
+	  DEF Koryfsx30 GlobalField {
+		type "SFFloat"
+		Koryfsx30 -2503
+	  }	  . Koryfsx30
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy30 GlobalField {
+		type "SFFloat"
+		Koryfsy30 100
+	  }	  . Koryfsy30
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsz30 GlobalField {
+		type "SFFloat"
+		Koryfsz30 2500
+	  }	  . Koryfsz30
 	}
 	Text2 {
 	  string "" =
@@ -308,17 +394,17 @@ DEF RoomWall2 Separator {
 	  }	  . rw_plakaki0
 	}
 	Text2 {
-	  string "0" =
+	  string "123123" =
 	  DEF rw_plakaki10 GlobalField {
 		type "SFFloat"
-		rw_plakaki10 0
+		rw_plakaki10 123123
 	  }	  . rw_plakaki10
 	}
 	Text2 {
-	  string "0" =
+	  string "98" =
 	  DEF rw_plakaki20 GlobalField {
 		type "SFFloat"
-		rw_plakaki20 0
+		rw_plakaki20 98
 	  }	  . rw_plakaki20
 	}  }}
 DEF RoomWall3 Separator {
@@ -429,6 +515,48 @@ DEF RoomWall3 Separator {
 	  }	  . Koryfsz11
 	}
 	Text2 {
+	  string "-2500" =
+	  DEF Koryfsx21 GlobalField {
+		type "SFFloat"
+		Koryfsx21 -2500
+	  }	  . Koryfsx21
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy21 GlobalField {
+		type "SFFloat"
+		Koryfsy21 100
+	  }	  . Koryfsy21
+	}
+	Text2 {
+	  string "2503" =
+	  DEF Koryfsz21 GlobalField {
+		type "SFFloat"
+		Koryfsz21 2503
+	  }	  . Koryfsz21
+	}
+	Text2 {
+	  string "2500" =
+	  DEF Koryfsx31 GlobalField {
+		type "SFFloat"
+		Koryfsx31 2500
+	  }	  . Koryfsx31
+	}
+	Text2 {
+	  string "100" =
+	  DEF Koryfsy31 GlobalField {
+		type "SFFloat"
+		Koryfsy31 100
+	  }	  . Koryfsy31
+	}
+	Text2 {
+	  string "2503" =
+	  DEF Koryfsz31 GlobalField {
+		type "SFFloat"
+		Koryfsz31 2503
+	  }	  . Koryfsz31
+	}
+	Text2 {
 	  string "" =
 	  DEF rw_plakaki1 GlobalField {
 		type "SFString"
@@ -436,17 +564,17 @@ DEF RoomWall3 Separator {
 	  }	  . rw_plakaki1
 	}
 	Text2 {
-	  string "0" =
+	  string "123456" =
 	  DEF rw_plakaki11 GlobalField {
 		type "SFFloat"
-		rw_plakaki11 0
+		rw_plakaki11 123456
 	  }	  . rw_plakaki11
 	}
 	Text2 {
-	  string "0" =
+	  string "123" =
 	  DEF rw_plakaki21 GlobalField {
 		type "SFFloat"
-		rw_plakaki21 0
+		rw_plakaki21 123
 	  }	  . rw_plakaki21
 	}  }}
 DEF GExternal4 Separator {
@@ -455,10 +583,10 @@ DEF GExternal4 Separator {
 	style FILLED
   }
   Translation {
-	translation -334.746 1587.1 2497
+	translation -2500 1846.07 643.471
   }
   Rotation {
-	rotation 0 1 0  3.14159
+	rotation 0 1 0  1.5708
   }
   PickStyle {
 	style SHAPE
@@ -480,9 +608,9 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 0 0,
-			  0 0 600,
-			  1200 0 600,
-			  1200 0 0.000183105 ]
+			  0 0 380,
+			  1050 0 380,
+			  1050 0 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -497,8 +625,8 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 0 0,
-			  0 0 600,
-			  0 15 600,
+			  0 0 380,
+			  0 15 380,
 			  0 15 0 ]
 		}
 		FaceSet {
@@ -513,10 +641,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 0 600,
-			  1200 0 600,
-			  1200 15 600,
-			  0 15 600 ]
+		  point [ 0 0 380,
+			  1050 0 380,
+			  1050 15 380,
+			  0 15 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -530,10 +658,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 600,
-			  1200 0 0.000183105,
-			  1200 15 0.000183105,
-			  1200 15 600 ]
+		  point [ 1050 0 380,
+			  1050 0 0.00012207,
+			  1050 15 0.00012207,
+			  1050 15 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -541,16 +669,16 @@ DEF GExternal4 Separator {
 	  Separator {
 
 		Normal {
-		  vector 1.52588e-007 0 -1
+		  vector 1.16257e-007 0 -1
 		}
 		NormalBinding {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 0.000183105,
+		  point [ 1050 0 0.00012207,
 			  0 0 0,
 			  0 15 0,
-			  1200 15 0.000183105 ]
+			  1050 15 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -565,9 +693,9 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 15 0,
-			  0 15 600,
-			  1200 15 600,
-			  1200 15 0.000183105 ]
+			  0 15 380,
+			  1050 15 380,
+			  1050 15 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -585,9 +713,9 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 860 0,
-			  0 860 600,
-			  1200 860 600,
-			  1200 860 0.000183105 ]
+			  0 860 380,
+			  1050 860 380,
+			  1050 860 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -602,8 +730,8 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 860 0,
-			  0 860 600,
-			  0 875 600,
+			  0 860 380,
+			  0 875 380,
 			  0 875 0 ]
 		}
 		FaceSet {
@@ -618,10 +746,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 860 600,
-			  1200 860 600,
-			  1200 875 600,
-			  0 875 600 ]
+		  point [ 0 860 380,
+			  1050 860 380,
+			  1050 875 380,
+			  0 875 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -635,10 +763,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 860 600,
-			  1200 860 0.000183105,
-			  1200 875 0.000183105,
-			  1200 875 600 ]
+		  point [ 1050 860 380,
+			  1050 860 0.00012207,
+			  1050 875 0.00012207,
+			  1050 875 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -646,16 +774,16 @@ DEF GExternal4 Separator {
 	  Separator {
 
 		Normal {
-		  vector 1.52588e-007 0 -1
+		  vector 1.16257e-007 0 -1
 		}
 		NormalBinding {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 860 0.000183105,
+		  point [ 1050 860 0.00012207,
 			  0 860 0,
 			  0 875 0,
-			  1200 875 0.000183105 ]
+			  1050 875 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -670,9 +798,9 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 875 0,
-			  0 875 600,
-			  1200 875 600,
-			  1200 875 0.000183105 ]
+			  0 875 380,
+			  1050 875 380,
+			  1050 875 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -690,9 +818,9 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 120 0,
-			  0 120 600,
-			  1200 120 600,
-			  1200 120 0.000183105 ]
+			  0 120 380,
+			  1050 120 380,
+			  1050 120 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -707,8 +835,8 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 120 0,
-			  0 120 600,
-			  0 130 600,
+			  0 120 380,
+			  0 130 380,
 			  0 130 0 ]
 		}
 		FaceSet {
@@ -723,10 +851,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 120 600,
-			  1200 120 600,
-			  1200 130 600,
-			  0 130 600 ]
+		  point [ 0 120 380,
+			  1050 120 380,
+			  1050 130 380,
+			  0 130 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -740,10 +868,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 120 600,
-			  1200 120 0.000183105,
-			  1200 130 0.000183105,
-			  1200 130 600 ]
+		  point [ 1050 120 380,
+			  1050 120 0.00012207,
+			  1050 130 0.00012207,
+			  1050 130 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -751,16 +879,16 @@ DEF GExternal4 Separator {
 	  Separator {
 
 		Normal {
-		  vector 1.52588e-007 0 -1
+		  vector 1.16257e-007 0 -1
 		}
 		NormalBinding {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 120 0.000183105,
+		  point [ 1050 120 0.00012207,
 			  0 120 0,
 			  0 130 0,
-			  1200 130 0.000183105 ]
+			  1050 130 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -775,9 +903,9 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 130 0,
-			  0 130 600,
-			  1200 130 600,
-			  1200 130 0.000183105 ]
+			  0 130 380,
+			  1050 130 380,
+			  1050 130 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -795,8 +923,8 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 0 0,
-			  0 0 600,
-			  15 0 600,
+			  0 0 380,
+			  15 0 380,
 			  15 0 0 ]
 		}
 		FaceSet {
@@ -812,8 +940,8 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 0 0,
-			  0 0 600,
-			  0 860 600,
+			  0 0 380,
+			  0 860 380,
 			  0 860 0 ]
 		}
 		FaceSet {
@@ -828,10 +956,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 0 600,
-			  15 0 600,
-			  15 860 600,
-			  0 860 600 ]
+		  point [ 0 0 380,
+			  15 0 380,
+			  15 860 380,
+			  0 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -845,10 +973,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 15 0 600,
+		  point [ 15 0 380,
 			  15 0 0,
 			  15 860 0,
-			  15 860 600 ]
+			  15 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -880,8 +1008,8 @@ DEF GExternal4 Separator {
 		}
 		Coordinate3 {
 		  point [ 0 860 0,
-			  0 860 600,
-			  15 860 600,
+			  0 860 380,
+			  15 860 380,
 			  15 860 0 ]
 		}
 		FaceSet {
@@ -899,10 +1027,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 600,
-			  1200 0 0.000183105,
-			  1185 0 0.000183105,
-			  1185 0 600 ]
+		  point [ 1050 0 380,
+			  1050 0 0.00012207,
+			  1035 0 0.00012207,
+			  1035 0 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -916,10 +1044,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 600,
-			  1200 0 0.000183105,
-			  1200 860 0.000183105,
-			  1200 860 600 ]
+		  point [ 1050 0 380,
+			  1050 0 0.00012207,
+			  1050 860 0.00012207,
+			  1050 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -933,10 +1061,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 0.000183105,
-			  1185 0 0.000183105,
-			  1185 860 0.000183105,
-			  1200 860 0.000183105 ]
+		  point [ 1050 0 0.00012207,
+			  1035 0 0.00012207,
+			  1035 860 0.00012207,
+			  1050 860 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -950,10 +1078,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1185 0 0.000183105,
-			  1185 0 600,
-			  1185 860 600,
-			  1185 860 0.000183105 ]
+		  point [ 1035 0 0.00012207,
+			  1035 0 380,
+			  1035 860 380,
+			  1035 860 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -967,10 +1095,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1185 0 600,
-			  1200 0 600,
-			  1200 860 600,
-			  1185 860 600 ]
+		  point [ 1035 0 380,
+			  1050 0 380,
+			  1050 860 380,
+			  1035 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -984,10 +1112,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 860 600,
-			  1200 860 0.000183105,
-			  1185 860 0.000183105,
-			  1185 860 600 ]
+		  point [ 1050 860 380,
+			  1050 860 0.00012207,
+			  1035 860 0.00012207,
+			  1035 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1004,10 +1132,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 0.000183105,
+		  point [ 1050 0 0.00012207,
 			  0 0 0,
-			  -2.28882e-006 0 15,
-			  1200 0 15.0002 ]
+			  -1.74386e-006 0 15,
+			  1050 0 15.0001 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1015,16 +1143,16 @@ DEF GExternal4 Separator {
 	  Separator {
 
 		Normal {
-		  vector 1.52588e-007 0 -1
+		  vector 1.16257e-007 0 -1
 		}
 		NormalBinding {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 0.000183105,
+		  point [ 1050 0 0.00012207,
 			  0 0 0,
 			  0 860 0,
-			  1200 860 0.000183105 ]
+			  1050 860 0.00012207 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1032,15 +1160,15 @@ DEF GExternal4 Separator {
 	  Separator {
 
 		Normal {
-		  vector -1 0 -1.52588e-007
+		  vector -1 0 -1.16257e-007
 		}
 		NormalBinding {
 		  value PER_FACE
 		}
 		Coordinate3 {
 		  point [ 0 0 0,
-			  -2.28882e-006 0 15,
-			  -2.28882e-006 860 15,
+			  -1.74386e-006 0 15,
+			  -1.74386e-006 860 15,
 			  0 860 0 ]
 		}
 		FaceSet {
@@ -1049,16 +1177,16 @@ DEF GExternal4 Separator {
 	  Separator {
 
 		Normal {
-		  vector -1.52588e-007 0 1
+		  vector -1.16257e-007 0 1
 		}
 		NormalBinding {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ -2.28882e-006 0 15,
-			  1200 0 15.0002,
-			  1200 860 15.0002,
-			  -2.28882e-006 860 15 ]
+		  point [ -1.74386e-006 0 15,
+			  1050 0 15.0001,
+			  1050 860 15.0001,
+			  -1.74386e-006 860 15 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1072,10 +1200,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 15.0002,
-			  1200 0 0.000183105,
-			  1200 860 0.000183105,
-			  1200 860 15.0002 ]
+		  point [ 1050 0 15.0001,
+			  1050 0 0.00012207,
+			  1050 860 0.00012207,
+			  1050 860 15.0001 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1089,10 +1217,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 860 0.000183105,
+		  point [ 1050 860 0.00012207,
 			  0 860 0,
-			  -2.28882e-006 860 15,
-			  1200 860 15.0002 ]
+			  -1.74386e-006 860 15,
+			  1050 860 15.0001 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1111,10 +1239,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 0 600,
-			  1200 0 600,
-			  1200 0 590,
-			  0 0 590 ]
+		  point [ 0 0 380,
+			  1050 0 380,
+			  1050 0 370,
+			  0 0 370 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1128,10 +1256,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 0 600,
-			  1200 0 600,
-			  1200 120 600,
-			  0 120 600 ]
+		  point [ 0 0 380,
+			  1050 0 380,
+			  1050 120 380,
+			  0 120 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1145,10 +1273,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 600,
-			  1200 0 590,
-			  1200 120 590,
-			  1200 120 600 ]
+		  point [ 1050 0 380,
+			  1050 0 370,
+			  1050 120 370,
+			  1050 120 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1162,10 +1290,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 0 590,
-			  0 0 590,
-			  0 120 590,
-			  1200 120 590 ]
+		  point [ 1050 0 370,
+			  0 0 370,
+			  0 120 370,
+			  1050 120 370 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1179,10 +1307,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 0 590,
-			  0 0 600,
-			  0 120 600,
-			  0 120 590 ]
+		  point [ 0 0 370,
+			  0 0 380,
+			  0 120 380,
+			  0 120 370 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1196,10 +1324,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 120 600,
-			  1200 120 600,
-			  1200 120 590,
-			  0 120 590 ]
+		  point [ 0 120 380,
+			  1050 120 380,
+			  1050 120 370,
+			  0 120 370 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1216,10 +1344,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 120 600,
-			  600 120 600,
-			  600 120 580,
-			  0 120 580 ]
+		  point [ 0 120 380,
+			  450 120 380,
+			  450 120 360,
+			  0 120 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1233,10 +1361,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 120 600,
-			  600 120 600,
-			  600 860 600,
-			  0 860 600 ]
+		  point [ 0 120 380,
+			  450 120 380,
+			  450 860 380,
+			  0 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1250,10 +1378,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 600 120 600,
-			  600 120 580,
-			  600 860 580,
-			  600 860 600 ]
+		  point [ 450 120 380,
+			  450 120 360,
+			  450 860 360,
+			  450 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1267,10 +1395,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 600 120 580,
-			  0 120 580,
-			  0 860 580,
-			  600 860 580 ]
+		  point [ 450 120 360,
+			  0 120 360,
+			  0 860 360,
+			  450 860 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1284,10 +1412,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 120 580,
-			  0 120 600,
-			  0 860 600,
-			  0 860 580 ]
+		  point [ 0 120 360,
+			  0 120 380,
+			  0 860 380,
+			  0 860 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1301,10 +1429,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 0 860 600,
-			  600 860 600,
-			  600 860 580,
-			  0 860 580 ]
+		  point [ 0 860 380,
+			  450 860 380,
+			  450 860 360,
+			  0 860 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1321,10 +1449,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 600 120 600,
-			  1200 120 600,
-			  1200 120 580,
-			  600 120 580 ]
+		  point [ 450 120 380,
+			  1050 120 380,
+			  1050 120 360,
+			  450 120 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1338,10 +1466,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 600 120 600,
-			  1200 120 600,
-			  1200 860 600,
-			  600 860 600 ]
+		  point [ 450 120 380,
+			  1050 120 380,
+			  1050 860 380,
+			  450 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1355,10 +1483,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 120 600,
-			  1200 120 580,
-			  1200 860 580,
-			  1200 860 600 ]
+		  point [ 1050 120 380,
+			  1050 120 360,
+			  1050 860 360,
+			  1050 860 380 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1372,10 +1500,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 1200 120 580,
-			  600 120 580,
-			  600 860 580,
-			  1200 860 580 ]
+		  point [ 1050 120 360,
+			  450 120 360,
+			  450 860 360,
+			  1050 860 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1389,10 +1517,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 600 120 580,
-			  600 120 600,
-			  600 860 600,
-			  600 860 580 ]
+		  point [ 450 120 360,
+			  450 120 380,
+			  450 860 380,
+			  450 860 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1406,10 +1534,10 @@ DEF GExternal4 Separator {
 		  value PER_FACE
 		}
 		Coordinate3 {
-		  point [ 600 860 600,
-			  1200 860 600,
-			  1200 860 580,
-			  600 860 580 ]
+		  point [ 450 860 380,
+			  1050 860 380,
+			  1050 860 360,
+			  450 860 360 ]
 		}
 		FaceSet {
 		  numVertices 4
@@ -1423,10 +1551,10 @@ DEF GExternal4 Separator {
 	  style UNPICKABLE
 	}
 	Text2 {
-	  string "S-BA1203                                          " =
+	  string "S-BA1050                                          " =
 	  DEF ob_code0 GlobalField {
 		type "SFString"
-		ob_code0 "S-BA1203                                          "
+		ob_code0 "S-BA1050                                          "
 	  }	  . ob_code0
 	}
 	Text2 {
@@ -1528,11 +1656,74 @@ DEF GExternal4 Separator {
 	  }	  . carrier0
 	}
 	Text2 {
-	  string "-842150451" =
-	  DEF topoth0 GlobalField {
+	  string "0" =
+	  DEF outlook0 GlobalField {
 		type "SFLong"
-		topoth0 -842150451
-	  }	  . topoth0
+		outlook0 0
+	  }	  . outlook0
+	}
+	Text2 {
+	  string "1" =
+	  DEF normal00 GlobalField {
+		type "SFLong"
+		normal00 1
+	  }	  . normal00
+	}
+	Text2 {
+	  string "0" =
+	  DEF normal10 GlobalField {
+		type "SFLong"
+		normal10 0
+	  }	  . normal10
+	}
+	Text2 {
+	  string "0" =
+	  DEF normal20 GlobalField {
+		type "SFLong"
+		normal20 0
+	  }	  . normal20
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF RefPointX00 GlobalField {
+		type "SFLong"
+		RefPointX00 -2500
+	  }	  . RefPointX00
+	}
+	Text2 {
+	  string "100" =
+	  DEF RefPointY00 GlobalField {
+		type "SFLong"
+		RefPointY00 100
+	  }	  . RefPointY00
+	}
+	Text2 {
+	  string "2500" =
+	  DEF RefPointZ00 GlobalField {
+		type "SFLong"
+		RefPointZ00 2500
+	  }	  . RefPointZ00
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF RefPointX10 GlobalField {
+		type "SFLong"
+		RefPointX10 -2500
+	  }	  . RefPointX10
+	}
+	Text2 {
+	  string "100" =
+	  DEF RefPointY10 GlobalField {
+		type "SFLong"
+		RefPointY10 100
+	  }	  . RefPointY10
+	}
+	Text2 {
+	  string "-2500" =
+	  DEF RefPointZ10 GlobalField {
+		type "SFLong"
+		RefPointZ10 -2500
+	  }	  . RefPointZ10
 	}
 	Text2 {
 	  string "-4.31602e+008" =
@@ -1563,10 +1754,10 @@ DEF GExternal4 Separator {
 	  }	  . lbp20
 	}
 	Text2 {
-	  string "1200" =
+	  string "1050" =
 	  DEF rbp00 GlobalField {
 		type "SFFloat"
-		rbp00 1200
+		rbp00 1050
 	  }	  . rbp00
 	}
 	Text2 {
@@ -1577,10 +1768,10 @@ DEF GExternal4 Separator {
 	  }	  . rbp10
 	}
 	Text2 {
-	  string "0.000183105" =
+	  string "0.00012207" =
 	  DEF rbp20 GlobalField {
 		type "SFFloat"
-		rbp20 0.000183105
+		rbp20 0.00012207
 	  }	  . rbp20
 	}
 	Text2 {
@@ -1605,10 +1796,10 @@ DEF GExternal4 Separator {
 	  }	  . ltp20
 	}
 	Text2 {
-	  string "1200" =
+	  string "1050" =
 	  DEF rtp00 GlobalField {
 		type "SFFloat"
-		rtp00 1200
+		rtp00 1050
 	  }	  . rtp00
 	}
 	Text2 {
@@ -1619,9 +1810,9 @@ DEF GExternal4 Separator {
 	  }	  . rtp10
 	}
 	Text2 {
-	  string "0.000183105" =
+	  string "0.00012207" =
 	  DEF rtp20 GlobalField {
 		type "SFFloat"
-		rtp20 0.000183105
+		rtp20 0.00012207
 	  }	  . rtp20
 	}  }}

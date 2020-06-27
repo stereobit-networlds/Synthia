@@ -16,6 +16,7 @@ class CWizz0 : public CDialog
 public:
 	CWizz0(CWnd* pParent = NULL);   // standard constructor
 
+
 // Dialog Data
 	//{{AFX_DATA(CWizz0)
 	enum { IDD = SYNTH_WIZZ0 };

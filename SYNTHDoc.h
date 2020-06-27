@@ -7,6 +7,7 @@
 
 #include "GLib0.h"
 #include "WorldBase.h"
+#include "GExternal.h"
 
 #include <Inventor/SbLinear.h>
 
@@ -27,25 +28,33 @@ public:
 public:
 
 	SoSeparator *root ;		// the scene root
-	SoSeparator *copysep ;  // my copy buffer
 	CObject *Obj[100] ;		// then various RoomBase, WorldBase, ...
-	CObject *Copy_Obj[1];   // my copy command array buffer
 	int ObjCount ;			// number of Objs
 	int SelId ;				// selected Obj[SelId]
-	BOOL	new_object ;	// true if a new objcect is added
+	int	new_object ;	    // true if a new objcect is added
 	int ob_offset ;			// counter for the GExternal objects
 
-	int obj_value ;         // my selection coded number (-2,-1,0..) for world base and walls
 	int obj_selector ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
-	CString obj_type ;      // object type character string
+	int obj_type ;          // object type 
 
 	bool BATTERING ;
 	bool REPLACE ;
-    bool copy_external ;    //boolean for copy/paste
+    bool copy_mode ;        //boolean for copy/paste
+	CGExternal *external_buffer ; //my data buffer for copy/paste
+
+	int LastCopy ;          // last copied object number buffer
+	bool UndoParam ;        // undo parameter
+
+    float l[20] ,a[20] ;    //array for basic scene construction
+	int t[20];
+
+	bool Wizard ;           //wizard action basic scene building
 
 	void SetSelectedObj ( SoSelection *sel ) ;
 	void InventorToObjects() ;
 	void OpenSYNTHFile() ;
+	bool OnNewWizzard() ;
+	void CreateBasicScene() ;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -55,6 +64,7 @@ public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual void Serialize(CArchive& ar);
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
+	virtual void SaveUndo();
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -69,12 +79,14 @@ public:
 
 protected:
     virtual void IvfSceneGraphChanged(); //IvfTreeView hack
+	void Init() ;
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CSYNTHDoc)
 	afx_msg void OnFileImport();
 	afx_msg void OnUpdateFileImport(CCmdUI *pCmdUI);
+	afx_msg void OnViewpoints();
 	afx_msg void OnUpdateViewpoints(CCmdUI *pCmdUI);
 	afx_msg void OnFileSaveAs();
 	afx_msg void OnFileReload();
@@ -90,6 +102,12 @@ protected:
 	afx_msg void OnUnGroup();
 	afx_msg void OnReplaceObj();
 	afx_msg void OnUpdateReplaceObj(CCmdUI* pCmdUI);
+	afx_msg void OnUndo();
+	afx_msg void OnUpdateUndo(CCmdUI* pCmdUI);
+	afx_msg void OnAddwall();
+	afx_msg void OnUpdateAddwall(CCmdUI* pCmdUI);
+	afx_msg void OnJump();
+	afx_msg void OnUpdateJump(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -12,6 +12,31 @@ HID_OBJECT_LEFT                         0x18039
 HID_OBJECT_RIGHT                        0x1803B
 HID_BUTTON32828                         0x1803C
 HID_BUTTON32829                         0x1803D
+HID_EXTENTED_CUT                        0x1803E
+HID_UNGROUP                             0x1803F
+HID_REPLACE                             0x18040
+HID_HIDEBASE                            0x18043
+HID_HIDEWALLS                           0x18044
+HID_HIDEOBJS                            0x18045
+HID_HIDESELECTION                       0x18046
+HID_SHOWALL                             0x18047
+HID_REFPOINTS                           0x18048
+HID_SHOWREFPOINTS                       0x18049
+HID_CHBACKCOLOR                         0x1804A
+HID_HOMEPOSITION                        0x1804B
+HID_SETHOMEPOSITION                     0x1804C
+HID_HEADLIGHT                           0x1804D
+HID_INVDECORATION                       0x1804E
+HID_DRAW_AS_IS                          0x1804F
+HID_DRAW_HIDDEN_LINE                    0x18051
+HID_DRAW_NO_TEXTURE                     0x18052
+HID_DRAW_LOW_COMP                       0x18053
+HID_DRAW_LINE                           0x18054
+HID_DRAW_POINT                          0x18055
+HID_DRAW_BBOX                           0x18056
+HID_VIEWING                             0x18057
+HID_DIRLIGHT                            0x18058
+HID_MATERIALEDIT                        0x18059
  
 // Prompts (IDP_*) 
  

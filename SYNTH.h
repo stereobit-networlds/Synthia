@@ -29,7 +29,7 @@ public:
 	CDaoRecordset	*rs_eidh0, *rs_omad, *rs_mrec ;
 
 	int ObjDirection ;  //variable for left,right...
-
+	int ShowRefPoints ; //αφαιρει - προσθέτει τα ref points
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -54,8 +54,8 @@ public:
 	afx_msg void OnFileOpen();
 	afx_msg void OnFileViewInfo();
 	afx_msg void OnUpdateFileViewInfo(CCmdUI *pCmdUI);
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
+	afx_msg void OnShowrefpoints();
+	afx_msg void OnUpdateShowrefpoints(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

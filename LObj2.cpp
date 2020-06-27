@@ -233,7 +233,9 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	if (add)
 	{
 		ob = new CGExternal ;
-		sdoc->Obj[sdoc->ObjCount] = ob ; sdoc->ObjCount++ ;
+
+		sdoc->Obj[sdoc->ObjCount] = ob ; 
+		sdoc->ObjCount++ ;
 		ob->sep = new SoSeparator ;
 		sep		= ob->sep ;
 	}
@@ -256,6 +258,12 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	SoPickStyle *ps = new SoPickStyle;
 	sep->addChild(ps) ;
     ps->style.setValue(SoPickStyle::SHAPE) ;
+
+	// setup total material for whole object //<<<<<<<----------add by me
+	SoMaterial  *mat_total = new SoMaterial;
+	//mat_total->diffuseColor.setValue( k_red, k_green, k_blue ); 
+    sep->addChild(mat_total) ;
+
 
 	// setup material for kassoma
 	SoMaterial  *mat_kas = new SoMaterial;
@@ -290,14 +298,28 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
     // battery variables
     float left_base_point[3], right_base_point[3],
           left_top_point[3], right_top_point[3] ;
+	float xmin,xmax,ymin,ymax,zmin,zmax;  //min..max
 
 	SoNode *b ;
 
+	xmin = xmax = ymin = ymax = zmin = zmax = 0; //zero min..max
 	// setup base
 	if (kato_kal == 0) 
 	{
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
 		group->addChild( b );
+
+		for (i=0; i<pleyres; i++)
+		{
+		  //find base edges (box)...
+		  if (xmax < xx[i]) xmax = xx[i] ;
+          ymax = (height0*10) ;
+	      if (zmax < zz[i]) zmax = zz[i] ;
+		  if (xmin > xx[i]) xmin = xx[i] ;
+          ymin = 0 ;
+		  if (zmin > zz[i]) zmin = zz[i] ;
+        }
+
 
 		left_base_point[0] = xx[0] ;
 		left_base_point[1] = yy[0] ;
@@ -311,7 +333,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	if (pano_kal == 0)
 	{
 		for ( i = 0 ; i < pleyres ; i++ )
-			yy[i] = yy[i] + height0*10 ;
+			yy[i] = yy[i] + height0*10 ; ///<<<<<-------- height0 = ypsos
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
 		group->addChild( b );
 
@@ -440,14 +462,18 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
             zh = zh + zheight[i][j]*10 ;
 		}
     }
+
     sep->addChild( group ) ; //add "geometry" group
 
 	// CREATE THE GObject ...
 	if (add)
 	{
-        CString& mycode = code.SpanExcluding(_T(" ")); //βγάζω τα κενά απο το τέλος του string 
+        //CString& mycode = code.SpanExcluding(_T(" ")); //βγάζω τα κενά απο το τέλος του string 
 
-		ob->offset = sdoc->ob_offset ; sdoc->ob_offset++ ;
+		sdoc->ob_offset++ ;  //external object counter;
+
+		ob->offset = sdoc->ObjCount-1; 
+		ob->id     = _EXTERNAL_ ;
 		ob->name   = "GExternal" + lib.inttostr(sdoc->ObjCount-1); //+ "/" + mycode ;
 		ob->code   = code ;
 		ob->descr  = descr ;
@@ -462,6 +488,15 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 			ob->left_top_point[i]	= left_top_point[i] ;
 			ob->right_top_point[i]	= right_top_point[i] ;
 		}
+
+		//transfer min..max to object's min..max
+		ob->xmin = xmin ;
+		ob->ymin = ymin ;
+		ob->zmin = zmin ;
+
+		ob->xmax = xmax ;
+		ob->ymax = ymax ;
+		ob->zmax = zmax ;
 
 		ob->ObjectToInventor(root) ;
 	}

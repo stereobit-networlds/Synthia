@@ -11,6 +11,7 @@
 #include "IvfTreeView.h"
 
 #include "Wizz0.h"
+#include "Wizz1.h"
 #include "lib0.h"
 #include "RoomBase.h"
 #include "RoomWall.h"
@@ -29,6 +30,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+
 /////////////////////////////////////////////////////////////////////////////
 // CSYNTHDoc
 
@@ -38,6 +40,7 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	//{{AFX_MSG_MAP(CSYNTHDoc)
 	ON_COMMAND(ID_FILE_IMPORT, OnFileImport)
 	ON_UPDATE_COMMAND_UI(ID_FILE_IMPORT, OnUpdateFileImport)
+	ON_COMMAND(IDM_VIEWPOINTS, OnViewpoints)
 	ON_UPDATE_COMMAND_UI(IDM_VIEWPOINTS, OnUpdateViewpoints)
 	ON_COMMAND(ID_FILE_SAVE_AS, OnFileSaveAs)
 	ON_COMMAND(ID_FILE_RELOAD, OnFileReload)
@@ -53,6 +56,12 @@ BEGIN_MESSAGE_MAP(CSYNTHDoc, CDocument)
 	ON_COMMAND(ID_UNGROUP, OnUnGroup)
 	ON_COMMAND(ID_REPLACE, OnReplaceObj)
 	ON_UPDATE_COMMAND_UI(ID_REPLACE, OnUpdateReplaceObj)
+	ON_COMMAND(ID_EDIT_UNDO, OnUndo)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_UNDO, OnUpdateUndo)
+	ON_COMMAND(SYNTH_ADDWALL, OnAddwall)
+	ON_UPDATE_COMMAND_UI(SYNTH_ADDWALL, OnUpdateAddwall)
+	ON_COMMAND(SYNTH_JUMP, OnJump)
+	ON_UPDATE_COMMAND_UI(SYNTH_JUMP, OnUpdateJump)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -69,18 +78,19 @@ CSYNTHDoc::CSYNTHDoc()
 	m_eOpenType = IVFDOC_OPEN_NORMAL;
 // END_IVWGEN
 
-  new_object = FALSE ;
+  new_object = _NONE_ ;
   root = NULL;
 
   //init counters
   ObjCount  = 0; //general object counter
   ob_offset = 0; //external object counter
-
-  obj_value = 0 ;         
+        
   obj_selector = -1 ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
   BATTERING = false ;
   REPLACE = false ;
-  copy_external = false ;
+  copy_mode = false ; 
+  UndoParam = false ;
+  Wizard = false ;
 }
 
 CSYNTHDoc::~CSYNTHDoc()
@@ -90,17 +100,22 @@ CSYNTHDoc::~CSYNTHDoc()
 
 BOOL CSYNTHDoc::OnNewDocument()
 {
-	if (!CDocument::OnNewDocument())
-		return FALSE;
+	if (OnNewWizzard()==true)
+    {
+	  if (!CDocument::OnNewDocument())
+	     return FALSE;
 
-	// TODO: add reinitialization code here
-	// (SDI documents will reuse this document)
+	  // TODO: add reinitialization code here
+	  // (SDI documents will reuse this document)
 	 
-// BEGIN_IVWGEN
-	IvfOnNewDocument();
-// END_IVWGEN
- 
-	return TRUE;
+      // BEGIN_IVWGEN
+         IvfOnNewDocument();
+      // END_IVWGEN
+
+      return TRUE;
+    }
+	else
+      return FALSE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -154,7 +169,6 @@ void CSYNTHDoc::OnFileImport()
 	theApp.OnFileOpen();
 }
 
-
 void CSYNTHDoc::OnUpdateFileImport(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable(m_pSceneRoot != NULL);
@@ -165,6 +179,14 @@ BOOL CSYNTHDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return(IvfOnOpenDocumentMessage(lpszPathName));
 }
 
+//add by me
+void CSYNTHDoc::OnViewpoints() 
+{
+	//IvfResetToHomePosition();
+
+
+}
+
 void CSYNTHDoc::OnUpdateViewpoints(CCmdUI* pCmdUI) 
 {
 	IvfOnUpdateViewpoints(pCmdUI);
@@ -172,7 +194,7 @@ void CSYNTHDoc::OnUpdateViewpoints(CCmdUI* pCmdUI)
 
 static char spv_save_suffix[] = ".iv";
 static char spv_save_filter[] =
-   "Inventor Files (*.iv)\0*.iv\0Vrml Files (*.wrl)\0*.wrl\0BMP Files (*.bmp)\0*.bmp\0";
+   "Synthesis Files (*.sn3)\0*.sn3\0Inventor Files (*.iv)\0*.iv\0Vrml Files (*.wrl)\0*.wrl\0BMP Files (*.bmp)\0*.bmp\0";
 
 void CSYNTHDoc::OnFileSaveAs() 
 {
@@ -196,16 +218,23 @@ void CSYNTHDoc::OnFileSaveAs()
 	{
 		BOOL stat = FALSE;
 
+		UndoParam = false ; //disable undo...
+
 		// Note: Saving may change the file type, e.g. from Inventor to VRML 
 		switch (save_dlg.m_ofn.nFilterIndex)
 		{
-			case 1: 	// .iv file
+			case 1: 	// .sn3 synthesis file
+			IvfSetFileType(IVF_FILETYPE_IV);
+			stat = OnSaveDocument(save_dlg.m_ofn.lpstrFile);
+			break;
+
+			case 2: 	// .iv file
 			IvfSetFileType(IVF_FILETYPE_IV);
 			stat = OnSaveDocument(save_dlg.m_ofn.lpstrFile);
 			break;
 
 			// Set filetype to Inventor in case it was VRML.
-			case 2:	// .wrl file
+			case 3:	// .wrl file
 			if (IvfGetFileType() == IVF_FILETYPE_IV)
 				IvfSetFileType(IVF_FILETYPE_VRML);
 			stat = OnSaveDocument(save_dlg.m_ofn.lpstrFile);
@@ -213,7 +242,7 @@ void CSYNTHDoc::OnFileSaveAs()
 			
 			//  VRML requires new header - need to set the filetype.
             //  Don't change if file was read in as VRML or VRML2.
-			case 3:	// .bmp file
+			case 4:	// .bmp file
 			{
 				CSYNTHView *t_view = (CSYNTHView *)CIvfApp::IvfGetAfxView();
 				stat = t_view->SaveAsBitmap(save_dlg.m_ofn.lpstrFile);
@@ -242,9 +271,13 @@ void CSYNTHDoc::OnFileReload()
 {
 	CIvfApp *pApp = CIvfApp::IvfGetApp();
 
-	IvfDeleteContents();
+	//IvfDeleteContents(); 
+
 	OnOpenDocument(GetPathName());
-	if (pApp->IvfIsMdi()) IvfSceneGraphChanged();
+	if (pApp->IvfIsMdi()) IvfSceneGraphChanged(); 
+
+	InventorToObjects(); //get data...
+
 	//  an mdi app needs to treat the single
 	//  frame as an SDI to reload.
 }
@@ -252,6 +285,7 @@ void CSYNTHDoc::OnFileReload()
 void CSYNTHDoc::OnUpdateFileReload(CCmdUI* pCmdUI) 
 {
 	pCmdUI->Enable(m_pSceneRoot != NULL);
+	//pCmdUI->Enable(sview->GetSelectionNode != NULL);
 }
 
 
@@ -260,6 +294,66 @@ void CSYNTHDoc::IvfSetupUrlFetchCallback(void)
 {
 	CIvfDocument::IvfSetupUrlFetchCallback();
 }
+
+//for undo purpose *********************
+void CSYNTHDoc::SaveUndo()
+{
+	//first way ... write to disk
+	BOOL stat = FALSE;
+
+	IvfSetFileType(IVF_FILETYPE_IV);
+	stat = OnSaveDocument("Synth_.iv");
+
+	//second way write to memory...
+	//....
+
+	UndoParam = true;
+}
+
+void CSYNTHDoc::OnUndo() 
+{
+	CIvfApp *pApp = CIvfApp::IvfGetApp();
+
+	if ( new_object )  //αυτο σημαινει οτι αν προκειται να κανουμε click για νεο αντικειμενο ακυρωνεται
+    {
+		if (Obj[ObjCount-1]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+        {
+		  CGExternal  *external_obj ;
+
+		  //delete object from inventor...ειναι το τελευταιο και αορατο
+		  external_obj->DeleteObject(ObjCount-1);
+
+		  new_object = _NONE_;
+
+		  UpdateAllViews(NULL);
+        }
+		else
+        if (Obj[ObjCount-1]->IsKindOf(RUNTIME_CLASS(CRoomWall)))
+        {
+          new_object = _NONE_; //just undo new object
+        }
+    }
+	else //αλλιως φερε το αντιγραφο
+    {
+	  IvfDeleteContents();
+	  OnOpenDocument("Synth_.iv");
+	  if (pApp->IvfIsMdi()) IvfSceneGraphChanged();
+
+	  InventorToObjects(); //get data...
+    }
+
+	UndoParam = false; //if undo disable it...
+
+    SetModifiedFlag();
+}
+
+void CSYNTHDoc::OnUpdateUndo(CCmdUI* pCmdUI) 
+{
+	pCmdUI->Enable(UndoParam);
+}
+
+//**************************************
+
 
 //***** τις καλω απο το doc διοτι πρεπει να κανω το ModifiedFlag On
 /******** delete the selected object ************/
@@ -311,6 +405,9 @@ void CSYNTHDoc::OnUnGroup()
 #include <Inventor/nodes/SoCamera.h>
 #include <Inventor/nodes/SoLight.h>
 #include <Inventor/nodekits/SoWrapperKit.h>
+#include <Inventor/nodes/SoDirectionalLight.h>
+#include <Inventor/win/SoWinDirectionalLightEditor.h>
+#include <Inventor/win/SoWinMaterialEditor.h>
 
 
 void CSYNTHDoc::OnNewSphere() 
@@ -331,12 +428,12 @@ void CSYNTHDoc::OnNewSphere()
 //		selectionRoot->addChild(m_pSceneRoot) ;
 //	}
 /* this is Ok
-	SoSeparator *mroot = new SoSeparator;
+	SoSeparator *root = new SoSeparator;
 	SoSphere *mySphere = new SoSphere ;
-	mroot->addChild(mySphere) ;
-	IvfSetSceneGraph(mroot) ;		
+	root->addChild(mySphere) ;
+	IvfSetSceneGraph(root) ;		
 */
-   
+/**************** open file and light editor *********
 	// Open the data file
    SoInput in;   
    char *datafile = "test02.iv";
@@ -364,11 +461,50 @@ void CSYNTHDoc::OnNewSphere()
    }
 
    root = sep;
+
+   // Build the material editor in its own window
+   SoWinDirectionalLightEditor *myLEditor = new SoWinDirectionalLightEditor
+   		(NULL,"Light Editor",TRUE);
+
+   // Build the material editor in its own window
+   SoWinMaterialEditor *myEditor = new SoWinMaterialEditor
+   		(NULL,"Material Editor",FALSE);
+
+   SoDirectionalLight *myLight = new SoDirectionalLight;
+   root->addChild(myLight);
+   SoMaterial *mymaterial = new SoMaterial;
+   root->addChild(mymaterial);
+
    IvfSetSceneGraph( root );
+
    InventorToObjects();
 
+   myEditor->attach(mymaterial);
+   myEditor->show();
+
+   SoPath *lightpath = new SoPath(myLight);
+   myLEditor->attach(lightpath);
+   myLEditor->show();
+
+  // sview->DrawBox(0.0,550.0,1000.0,
+  //                1000.0,3000.0,1000.0);
+
    //SetModifiedFlag();
-   UpdateAllViews(NULL);
+   //UpdateAllViews(NULL);
+********************************************/
+
+
+   COLORREF m_OptionColorGlBack;
+   CSYNTHApp *pApp = (CSYNTHApp *)AfxGetApp();
+   CColorDialog dlg(m_OptionColorGlBack);
+   if(dlg.DoModal()==IDOK)
+   {
+	   //get RGB
+       /*pView->m_ClearColorRed   = (float)GetRValue(pApp->m_OptionColorGlBack) / 255.0f;
+	   pView->m_ClearColorGreen = (float)GetGValue(pApp->m_OptionColorGlBack) / 255.0f;
+	   pView->m_ClearColorBlue  = (float)GetBValue(pApp->m_OptionColorGlBack) / 255.0f;
+*/
+   }
 }
 
 
@@ -426,6 +562,117 @@ void CSYNTHDoc::OnUpdateProperties(CCmdUI* pCmdUI)
 }
 
 
+void CSYNTHDoc::Init()
+{ 
+		int meter ;
+
+        //begin....
+		//make the object array
+		for (meter=0 ; meter <= 100 ; meter++)
+			         Obj[meter]=NULL;
+		//init counters
+        ObjCount  = 0; //general object counter
+        ob_offset = 0; //external object counter
+        
+        obj_selector = -1 ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
+        BATTERING = false ;
+        REPLACE = false ;
+        copy_mode = false ; 
+        UndoParam = false ;
+        Wizard = false ;
+		new_object = _NONE_ ;
+}
+
+void CSYNTHDoc::CreateBasicScene()
+{
+	   	CLib0	lib ;
+		bool    rebuild ;
+
+        Init();
+
+
+		root = m_pSceneRoot;
+    	rebuild = sview->StartScene();
+
+
+		//init points
+		picked_point[0] = 0;
+		picked_point[1] = 0;
+		picked_point[2] = 0;
+		picked_normal[0] = 1; picked_normal[1] = 0; picked_normal[2] = 0;
+
+		// setup world base 
+        CWorldBase *world ;
+		world->AddNewObject(picked_point, picked_normal);
+
+		// setup the room base
+        CRoomBase *rbase ;
+		rbase->AddNewObject(picked_point, picked_normal);
+
+		// setup the walls (init for first time) 
+		//get base
+		CRoomBase  *rb = ((CRoomBase *)sdoc->Obj[1]);   
+		//get first base koryfi
+		picked_point[0] = rb->Koryfsx[0];
+		picked_point[1] = rb->Koryfsy[0];
+		picked_point[2] = rb->Koryfsz[0];
+
+		CRoomWall *wll;
+		wll->AddNewObject(picked_point, picked_normal);
+
+
+
+		if (!rebuild) IvfSetSceneGraph( root );
+
+   	    SetModifiedFlag();
+	    UpdateAllViews(NULL);
+}
+
+
+bool CSYNTHDoc::OnNewWizzard()
+{
+	CWizz1 *dlg = new CWizz1 ;
+
+    Wizard = false ;
+   
+	if (dlg->DoModal() == IDOK)   
+	{
+	    //set data to arrays...
+        l[0] = 5000 ;
+		l[1] = 5000 ;
+		l[2] = 5000 ;
+		l[3] = 5000 ;
+		l[4] = 0 ;
+		l[5] = 0 ;
+		l[6] = 0 ;
+		l[7] = 0 ;
+
+		a[0] = 90 ;
+		a[1] = 90 ;
+		a[2] = 90 ;
+		a[3] = 90 ;
+		a[4] = 0 ;
+		a[5] = 0 ;
+		a[6] = 0 ;
+		a[7] = 0 ;
+
+		t[0] = 1 ;
+		t[1] = 1 ;
+		t[2] = 0 ;
+		t[3] = 0 ;
+		t[4] = 0 ;
+		t[5] = 0 ;
+		t[6] = 0 ;
+		t[7] = 0 ;
+       
+		//enable wizzard
+
+		Wizard = true ;
+		
+    }
+	return Wizard;
+}
+
 void CSYNTHDoc::OnKataxkoyzin() 
 {
 	// Ανοίγει το παράθυρο καταχώρησης της κουζίνας
@@ -434,162 +681,37 @@ void CSYNTHDoc::OnKataxkoyzin()
    
 	if (dlg->DoModal() == IDOK)   
 	{
+		// transfer data from the dialog to arrays
+		l[0] = dlg->m_length0 ;
+		l[1] = dlg->m_length1 ;
+		l[2] = dlg->m_length2 ;
+		l[3] = dlg->m_length3 ;
+		l[4] = dlg->m_length4 ;
+		l[5] = dlg->m_length5 ;
+		l[6] = dlg->m_length6 ;
+		l[7] = dlg->m_length7 ;
 
-		// setup ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ
+		a[0] = dlg->m_angle0 ;
+		a[1] = dlg->m_angle1 ;
+		a[2] = dlg->m_angle2 ;
+		a[3] = dlg->m_angle3 ;
+		a[4] = dlg->m_angle4 ;
+		a[5] = dlg->m_angle5 ;
+		a[6] = dlg->m_angle6 ;
+		a[7] = dlg->m_angle7 ;
 
-		float	x, y, z, x0, y0, z0,
-				x00, y00, z00, vx, vy, vz, sx, sy, sz,
-				xmax, xmin, zmax, zmin, len1 ;
-		float	xx[20], yy[20], zz[20] ;
-		float	len[20], angle[20] ;
-		int		toix[20] ;
-		int		pleyres ;
-		CLib0	lib ;
+		t[0] = dlg->m_toix0 ;
+		t[1] = dlg->m_toix1 ;
+		t[2] = dlg->m_toix2 ;
+		t[3] = dlg->m_toix3 ;
+		t[4] = dlg->m_toix4 ;
+		t[5] = dlg->m_toix5 ;
+		t[6] = dlg->m_toix6 ;
+		t[7] = dlg->m_toix7 ;
 
-		// transfer data from the dialog
-		len[0] = dlg->m_length0 ;
-		len[1] = dlg->m_length1 ;
-		len[2] = dlg->m_length2 ;
-		len[3] = dlg->m_length3 ;
-		len[4] = dlg->m_length4 ;
-		len[5] = dlg->m_length5 ;
-		len[6] = dlg->m_length6 ;
-		len[7] = dlg->m_length7 ;
-
-		angle[0] = dlg->m_angle0 ;
-		angle[1] = dlg->m_angle1 ;
-		angle[2] = dlg->m_angle2 ;
-		angle[3] = dlg->m_angle3 ;
-		angle[4] = dlg->m_angle4 ;
-		angle[5] = dlg->m_angle5 ;
-		angle[6] = dlg->m_angle6 ;
-		angle[7] = dlg->m_angle7 ;
-
-		toix[0] = dlg->m_toix0 ;
-		toix[1] = dlg->m_toix1 ;
-		toix[2] = dlg->m_toix2 ;
-		toix[3] = dlg->m_toix3 ;
-		toix[4] = dlg->m_toix4 ;
-		toix[5] = dlg->m_toix5 ;
-		toix[6] = dlg->m_toix6 ;
-		toix[7] = dlg->m_toix7 ;
-
-		// calculate pleyres
-		for ( int i = 0 ; i <= 7 ; i++ )
-			if (len[i] == 0) break ;
-		pleyres = i + 1 ;
-
-        xmax = xmin = zmax = zmin = 0 ;
-		for ( i = 0 ; i < pleyres ; i++)
-		{
-			if (i == 0)
-			{
-			    x0 = 0 ;
-				y0 = 0 ;
-				z0 = 0 ;
-				x = 0 ;
-				y = 0 ;
-				z = len[i] ;
-			}
-			else 
-			{
-				CGLib0 *glib = new CGLib0 ;
-				glib->GetPolyNormal( x0, y0, z0, x00, y00, z00, x0, y0+1, z0, &vx, &vy, &vz ) ;
-				len1 = int(cos((180-angle[i]) * 3.1415926 /180) * len[i]) ;
-				sx  = (x0-x00) * (len1+len[i-1]) / len[i-1] + x00 ;
-				sy  = (y0-y00) * (len1+len[i-1]) / len[i-1] + y00 ;
-				sz  = (z0-z00) * (len1+len[i-1]) / len[i-1] + z00 ;
-				glib->GetPolyDistandPoint ( vx, vy, vz, sx, sy, sz, sin((180-angle[i])*3.1415926/180)*len[i],
-											&x, &y, &z ) ;
-			}
-
-			x00 = x0 ;
-			y00 = y0 ;
-			z00 = z0 ;
-			x0 = x ;
-			y0 = y ;
-			z0 = z ;
-
-			if (xmax < x) xmax = x ;
-			if (zmax < z) zmax = z ;
-			if (xmin > x) xmin = x ;
-			if (zmin > z) zmin = z ;
-
-			// set room base coordinates
-			xx[i] = x0 ; yy[i] = y0 ; zz[i] = z0 ;
-		} // for i
-
-		if (root!=NULL) root->removeAllChildren();
-		
-		root = new SoSeparator ;
-		root->ref() ;
-		
-
-		// setup world base 
-		CWorldBase *wb = new CWorldBase ;
-		ObjCount = 0 ;
-		SelId	 = 0 ;
-		Obj[ObjCount] = wb ; ObjCount++ ;
-		wb->name    = "WorldBase"+lib.inttostr(ObjCount-1) ; //name + counter
-		wb->width	= xmax-xmin + 2000 ;
-		wb->depth	= zmax-zmin + 2000 ;
-		wb->height	= 100 ;
-		wb->c_name  = "ΠΑΥΛΙΔΗΣ ΡΑΦΑΗΛ" ;
-		wb->ObjectToInventor ( root ) ;
-
-		// setup the room base
-		CRoomBase *rb = new CRoomBase ;
-		Obj[ObjCount] = rb ; ObjCount++ ;
-		rb->name   = "RoomBase"+lib.inttostr(ObjCount-1) ; //name + counter 
-		rb->height = 5 ;
-		rb->KoryfCount = pleyres ;
-		for ( i = 0 ; i < pleyres ; i++ )
-		{
-			rb->Koryfsx[i]	= xx[i] - wb->width/2 + 1000 ;
-			rb->Koryfsy[i]	= wb->height ;
-			rb->Koryfsz[i]	= zz[i] - wb->depth/2 + 1000 ;
-		}
-
-		rb->ObjectToInventor(root) ;
-
-		// setup the walls
-    	CRoomWall *rw[10] ;
-
-		int off = 0 ;
-		for ( i = 0 ; i < pleyres ; i++ )
-		{
-			if (toix[i] == 0) continue ;
-			rw[off] = new CRoomWall ;
-			Obj[ObjCount] = rw[off] ; ObjCount++ ;
-			rw[off]->name   = "RoomWall" + lib.inttostr(ObjCount-1) ; //name + counter
-			rw[off]->offset = off ;
-			rw[off]->depth	= 3 ;
-			rw[off]->height	= 3000 ;
-			rw[off]->Koryfsx[0] = rb->Koryfsx[i] ;
-			rw[off]->Koryfsy[0] = rb->Koryfsy[i] ;
-			rw[off]->Koryfsz[0] = rb->Koryfsz[i] ;
-			if (i > 0)
-			{
-				rw[off]->Koryfsx[1] = rb->Koryfsx[i-1] ;
-				rw[off]->Koryfsy[1] = rb->Koryfsy[i-1] ;
-				rw[off]->Koryfsz[1] = rb->Koryfsz[i-1] ;
-			}
-			else          
-			{
-				rw[off]->Koryfsx[1] = rb->Koryfsx[pleyres-1] ;
-				rw[off]->Koryfsy[1] = rb->Koryfsy[pleyres-1] ;
-				rw[off]->Koryfsz[1] = rb->Koryfsz[pleyres-1] ;
-			}
-			rw[off]->ObjectToInventor ( root ) ;
-			off++ ;
-		}
-
-        
-		IvfSetSceneGraph( root );
-
-   		SetModifiedFlag();
-		UpdateAllViews(NULL);   
-	} 
+        CreateBasicScene();
+	}
+	
 }
 
 /*======================== SetSelectedObj ========================*/
@@ -674,11 +796,11 @@ out : ;
 
 /********************** OpenSYNTHFile ****************************/
 void CSYNTHDoc::OpenSYNTHFile()
-{
- 
+{ 
    IvfSceneGraphChanged();
-   InventorToObjects();
+   InventorToObjects(); 
 
+   OnFileReload(); //κανουμε reload για να βγαλει ο inventor το δευτερο eventcallback που δημιουργειται κατα το φορτωμα
 }
 
 /*===================== InventorToObjects =======================*/
@@ -693,8 +815,7 @@ void CSYNTHDoc::InventorToObjects()
 	char		dummy[10] ;
 	CLib0		lib ;
 
-
-	root = m_pSceneRoot; 
+    root = m_pSceneRoot;
 
 	ObjCount  = 0 ;
 	ob_offset = 0 ;
@@ -736,7 +857,8 @@ void CSYNTHDoc::InventorToObjects()
 			ob->name   = "GExternal" + lib.inttostr(ob->offset) ;
 			ob->InventorToObject((SoSeparator *)root->getChild(i)) ;
 			Obj[ObjCount] = ob ; ObjCount++ ;
-			ob_offset = ob->offset + 1 ;
+			ob_offset++;
+			//AfxMessageBox(lib.inttostr(ob->carrier_id));==0?????????
 		}
 	}
 }
@@ -750,7 +872,7 @@ void CSYNTHDoc::OnSelectObj()
    
 	if (dlg->DoModal() == IDOK)   
 	{
-
+       //τοποθετειται το αντεικιμενο αορατο στην θεση 0,0,0
 	}
 	
 }
@@ -794,11 +916,108 @@ void CSYNTHDoc::OnReplaceObj()
 void CSYNTHDoc::OnUpdateReplaceObj(CCmdUI* pCmdUI)
 {
 //  replace Object is only valid if a scene has created
+	if (( root != NULL ) && (obj_selector>0))
+    {
+		if (Obj[obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+        {
+          pCmdUI->Enable( TRUE );	
+        }
+		else
+          pCmdUI->Enable( FALSE );
+    }
+    else
+        pCmdUI->Enable( FALSE );
+}
+
+
+
+
+void CSYNTHDoc::OnAddwall() 
+{
+	// TODO: Add your command handler code here
+
+	CWizz0 *dlg = new CWizz0 ;
+   
+    SbVec3f test;
+
+	if (dlg->DoModal() == IDOK)   
+	{
+		SaveUndo(); //save scene for undo...
+
+		// transfer data from the dialog to arrays
+		l[0] = dlg->m_length0 ;
+		l[1] = dlg->m_length1 ;
+		l[2] = dlg->m_length2 ;
+		l[3] = dlg->m_length3 ;
+		l[4] = dlg->m_length4 ;
+		l[5] = dlg->m_length5 ;
+		l[6] = dlg->m_length6 ;
+		l[7] = dlg->m_length7 ;
+
+		a[0] = dlg->m_angle0 ;
+		a[1] = dlg->m_angle1 ;
+		a[2] = dlg->m_angle2 ;
+		a[3] = dlg->m_angle3 ;
+		a[4] = dlg->m_angle4 ;
+		a[5] = dlg->m_angle5 ;
+		a[6] = dlg->m_angle6 ;
+		a[7] = dlg->m_angle7 ;
+
+		t[0] = dlg->m_toix0 ;
+		t[1] = dlg->m_toix1 ;
+		t[2] = dlg->m_toix2 ;
+		t[3] = dlg->m_toix3 ;
+		t[4] = dlg->m_toix4 ;
+		t[5] = dlg->m_toix5 ;
+		t[6] = dlg->m_toix6 ;
+		t[7] = dlg->m_toix7 ;
+
+
+		new_object = _ROOMWALL_ ;   
+			
+	}	
+}
+
+void CSYNTHDoc::OnUpdateAddwall(CCmdUI* pCmdUI) 
+{
+
+	//  Add wall only if a scene has created
     if ( root != NULL )
         pCmdUI->Enable( TRUE );	
     else
-        pCmdUI->Enable( FALSE ); 
+        pCmdUI->Enable( FALSE );
+	
 }
+
+void CSYNTHDoc::OnJump() 
+{
+	if (Obj[obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+    {
+      SaveUndo(); //save scene for undo...
+	  new_object = _EXTERNAL_;  	//just say new object = external
+    }
+    else
+      AfxMessageBox("No valid selection.");
+
+	
+}
+
+void CSYNTHDoc::OnUpdateJump(CCmdUI* pCmdUI) 
+{
+    if (( root != NULL ) && (obj_selector>0))
+    {
+		if (Obj[obj_selector]->IsKindOf(RUNTIME_CLASS(CGExternal)))
+        {
+          pCmdUI->Enable( TRUE );	
+        }
+		else
+          pCmdUI->Enable( FALSE );
+    }
+    else
+        pCmdUI->Enable( FALSE );
+	
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // TreeView section overwrite
@@ -831,6 +1050,5 @@ void CSYNTHDoc::IvfSceneGraphChanged()
         }
     }
 }
-
 
 

@@ -304,7 +304,8 @@ void CSelectObj::OnOK()
 		rs_mrec->SetCurrentIndex("_MREC") ;
 		if (rs_mrec->Seek("=",&rs_eidh0->GetFieldValue("_MREC"))) 
 		{
-			sdoc->new_object = TRUE ;
+			sdoc->SaveUndo(); //save scene for undo...
+			sdoc->new_object = _EXTERNAL_ ;
 			obj2.CreateObject( TRUE, sdoc->root, eid_id, rs_eidh0, rs_mrec ) ;
 //			SoSelection *sel = sview->IvfGetSelectionNode() ;
 //			sel->select(sdoc->root->getChild(sdoc->root->getNumChildren()-1)) ;

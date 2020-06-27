@@ -72,22 +72,24 @@ END
 
 IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
 BEGIN
-    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
-    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
-    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
-    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
-    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
-    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
-    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
-    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
-    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
-    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
-    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
-    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
-    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
-    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT
-    VK_F1,          ID_HELP,                VIRTKEY 
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "I",            SYNTH_PROPERTIES,       VIRTKEY, CONTROL, NOINVERT
+    "J",            SYNTH_JUMP,             VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
 END
 
 
@@ -170,6 +172,54 @@ END
 #endif    // APSTUDIO_INVOKED
 
 #endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+SYNTH_EXTRAWALL_PROP DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Θέση Τοίχου . . ."
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,74,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,70,74,50,14
+    EDITTEXT        IDC_LEFT,107,7,72,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_RIGHT,107,30,72,14,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    SYNTH_EXTRAWALL_PROP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.K.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -275,12 +325,14 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Δάπεδο"
 FONT 8, "HellasArial"
 BEGIN
-    EDITTEXT        IDC_PLAKAKI,68,7,112,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PLAKAKI1,187,7,33,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PLAKAKI2,229,7,33,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI,68,31,112,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI1,187,31,33,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PLAKAKI2,229,31,33,13,ES_AUTOHSCROLL
     PUSHBUTTON      "Ακύρωση",IDCANCEL,182,98,50,14
     DEFPUSHBUTTON   "Εφαρμογή",IDOK,237,98,50,14
-    RTEXT           "Πλακάκι",-1,7,11,49,10
+    RTEXT           "Πλακάκι",IDC_STATIC,7,33,49,10
+    EDITTEXT        IDC_HEIGHT,68,13,82,13,ES_AUTOHSCROLL
+    RTEXT           "Υψος",IDC_STATIC,7,15,49,10
 END
 
 SYNTH_SELECT_OBJ DIALOGEX 0, 0, 378, 162
@@ -319,7 +371,7 @@ BEGIN
     RTEXT           "Αντικείμενο",IDC_STATIC,11,118,45,11
 END
 
-SYNTH_ROOMWALL_PROP DIALOG DISCARDABLE  0, 0, 288, 119
+SYNTH_ROOMWALL_PROP DIALOG DISCARDABLE  0, 0, 299, 183
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Τοίχωμα"
 FONT 8, "HellasArial"
@@ -329,36 +381,64 @@ BEGIN
     EDITTEXT        IDC_PLAKAKI,68,32,112,13,ES_AUTOHSCROLL
     EDITTEXT        IDC_PLAKAKI1,187,32,33,13,ES_AUTOHSCROLL
     EDITTEXT        IDC_PLAKAKI2,229,32,33,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "Ακύρωση",IDCANCEL,182,98,50,14
-    DEFPUSHBUTTON   "Εφαρμογή",IDOK,237,98,50,14
-    RTEXT           "Βάθος",-1,7,8,49,10
-    RTEXT           "Υψος",-1,7,21,49,10
-    RTEXT           "Πλακάκι",-1,7,36,49,10
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,182,162,50,14
+    DEFPUSHBUTTON   "Εφαρμογή",IDOK,241,162,50,14
+    RTEXT           "Βάθος",IDC_STATIC,7,8,49,10
+    RTEXT           "Υψος",IDC_STATIC,7,21,49,10
+    RTEXT           "Πλακάκι",IDC_STATIC,7,36,49,10
+    EDITTEXT        IDC_XDIST,67,142,67,13,ES_AUTOHSCROLL | NOT WS_VISIBLE | 
+                    WS_DISABLED
+    EDITTEXT        IDC_YDIST,141,142,68,14,ES_AUTOHSCROLL | NOT WS_VISIBLE | 
+                    WS_DISABLED
+    RTEXT           "Y",IDC_STATIC,139,131,9,10,NOT WS_VISIBLE
+    RTEXT           "X",IDC_STATIC,65,131,10,10,NOT WS_VISIBLE
+    EDITTEXT        IDC_ZDIST,216,142,68,14,ES_AUTOHSCROLL | NOT WS_VISIBLE | 
+                    WS_DISABLED
+    RTEXT           "Z",IDC_STATIC,214,131,9,10,NOT WS_VISIBLE
+    EDITTEXT        IDC_ROT,67,114,68,14,ES_AUTOHSCROLL
+    RTEXT           "Γωνία",IDC_STATIC,29,118,27,10
+    EDITTEXT        IDC_LeftDIST,67,71,67,13,ES_AUTOHSCROLL
+    RTEXT           "Απόστάσεις",IDC_STATIC,17,74,41,9
+    EDITTEXT        IDC_RightDIST,141,71,68,14,ES_AUTOHSCROLL
+    RTEXT           " Δεξιά",IDC_STATIC,133,60,26,10
+    RTEXT           " Αριστερά",IDC_STATIC,63,60,37,10
+    RTEXT           "Μήκος",IDC_STATIC,211,60,26,10
+    EDITTEXT        IDC_OBJLEN,215,71,68,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_UP,68,97,67,13,ES_AUTOHSCROLL
+    RTEXT           "Υψος",IDC_STATIC,31,98,23,10
+    EDITTEXT        IDC_OUTLOOK,215,97,68,14,ES_AUTOHSCROLL
+    LTEXT           "Προβολή",IDC_STATIC,177,100,36,8
 END
 
-SYNTH_GEXTERNAL_PROP DIALOG DISCARDABLE  0, 0, 276, 159
+SYNTH_GEXTERNAL_PROP DIALOG DISCARDABLE  0, 0, 292, 159
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Αντικείμενο"
 FONT 8, "HellasArial"
 BEGIN
-    EDITTEXT        IDC_CODE,67,7,82,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_DESCR,67,20,179,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_YANGLE,67,35,67,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "Ακύρωση",IDCANCEL,182,138,44,14
-    DEFPUSHBUTTON   "Εφαρμογή",IDOK,231,138,44,14
-    RTEXT           "Κωδικός",-1,17,8,38,10
-    RTEXT           "Περιγραφή",-1,17,21,38,10
-    RTEXT           "Στροφή",-1,17,36,38,10
-    EDITTEXT        IDC_TOPOTH,67,49,67,13,ES_AUTOHSCROLL
-    RTEXT           "Τοποθέτηση",-1,7,50,48,10
-    EDITTEXT        IDC_XDIST,67,63,67,13,ES_AUTOHSCROLL
-    RTEXT           "Απόσταση",-1,17,64,38,10
-    EDITTEXT        IDC_YDIST,67,78,67,13,ES_AUTOHSCROLL
-    RTEXT           "Υψος",-1,18,79,38,10
-    EDITTEXT        IDC_LDIST,67,92,67,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_RDIST,67,107,67,13,ES_AUTOHSCROLL
-    RTEXT           "Απ. Αριστερά",-1,7,93,50,10
-    RTEXT           "Απ. Δεξιά",-1,19,107,38,10
+    EDITTEXT        IDC_CODE,67,7,82,13,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_DESCR,67,20,179,13,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_YANGLE,67,114,67,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,192,138,44,14
+    DEFPUSHBUTTON   "Εφαρμογή",IDOK,241,138,44,14
+    RTEXT           "Κωδικός",IDC_STATIC,17,8,38,10
+    RTEXT           "Περιγραφή",IDC_STATIC,17,21,38,10
+    RTEXT           "Στροφή",IDC_STATIC,17,114,38,10
+    EDITTEXT        IDC_XDIST,67,55,67,13,ES_AUTOHSCROLL
+    RTEXT           "Απόστάσεις",IDC_STATIC,7,45,47,9
+    EDITTEXT        IDC_YDIST,67,98,67,13,ES_AUTOHSCROLL
+    RTEXT           "Υψος",IDC_STATIC,30,100,23,10
+    RTEXT           "Συστοιχίας",IDC_STATIC,7,74,50,10
+    EDITTEXT        IDC_LEFT,67,71,67,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_RIGHT,141,71,68,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_X1DIST,141,55,68,14,ES_AUTOHSCROLL
+    RTEXT           " Δεξιά",IDC_STATIC,133,44,26,10
+    RTEXT           " Αριστερά",IDC_STATIC,63,44,37,10
+    RTEXT           "Αντικειμένου",IDC_STATIC,7,60,50,10
+    RTEXT           "Μήκος",IDC_STATIC,211,44,26,10
+    EDITTEXT        IDC_OBJLEN,215,55,68,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_BATLEN,215,72,68,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_OUTLOOK,215,98,68,14,ES_AUTOHSCROLL
+    LTEXT           "Προβολή",IDC_STATIC,177,101,36,8
 END
 
 SYNTH_DELETE_OBJ DIALOG DISCARDABLE  0, 0, 186, 95
@@ -369,6 +449,23 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,123,62,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,14,63,50,14
     CTEXT           "Delete Object ?",IDC_STATIC,54,17,80,14
+END
+
+SYNTH_WIZZ1 DIALOG DISCARDABLE  0, 0, 266, 154
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Iaa Oyieaoc"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,209,111,50,14
+    PUSHBUTTON      "Aeoni",IDCANCEL,209,133,50,14
+    CONTROL         "Radio1",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,47,23,53,
+                    19
+    CONTROL         "Radio2",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,47,46,60,
+                    20
+    CONTROL         "Radio3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,49,71,47,
+                    22
+    CONTROL         "None",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,50,95,47,
+                    22
 END
 
 
@@ -414,8 +511,9 @@ BEGIN
     SYNTH_ROOMWALL_PROP, DIALOG
     BEGIN
         LEFTMARGIN, 7
+        RIGHTMARGIN, 298
         TOPMARGIN, 7
-        BOTTOMMARGIN, 112
+        BOTTOMMARGIN, 176
     END
 
     SYNTH_GEXTERNAL_PROP, DIALOG
@@ -431,6 +529,14 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 88
+    END
+
+    SYNTH_WIZZ1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 259
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -539,14 +645,17 @@ BEGIN
         MENUITEM "Αντιγραφή",                   ID_EDIT_COPY
         MENUITEM "Επικόληση\tCtrl+V",           ID_EDIT_PASTE
         MENUITEM "Αντικατάσταση ",              ID_REPLACE
+        MENUITEM "Μεταφορα αντικειμένου\tCtrl - J", SYNTH_JUMP
         MENUITEM SEPARATOR
         MENUITEM "Αποσύνδεση αντικειμένων . . .", ID_UNGROUP
         MENUITEM SEPARATOR
         MENUITEM "Νέα Σφαίρα",                  SYNTH_NEW_SPHERE
-        MENUITEM "ΙΔΙΟΤΗΤΕΣ",                   SYNTH_PROPERTIES
-        MENUITEM "ΚΑΤΑΧΩΡΗΣΗ ΚΟΥΖΙΝΑΣ",         SYNTH_KATAXKOYZIN
-        MENUITEM "ΕΠΙΛΟΓΗ ΑΝΤΙΚΕΙΜΕΝΩΝ",        SYNTH_SELECT
-        POPUP "ΣΤΟΙΧΗΣΗ ΑΝΤΙΚΕΙΜΕΝΟΥ ΑΠΟ . . ."
+        MENUITEM "Νεα σύνθεση",                 SYNTH_KATAXKOYZIN
+        MENUITEM "Εισαγωγή τοίχων",             SYNTH_ADDWALL
+        MENUITEM "Εισαγωγή αντικειμένων ",      SYNTH_SELECT
+        MENUITEM "Ιδιότητες\tCtrl - I",         SYNTH_PROPERTIES
+        MENUITEM SEPARATOR
+        POPUP "Κατέυθυνση σύνθεσης . . ."
         BEGIN
             MENUITEM "Δεξιά",                       ID_OBJECT_RIGHT
             MENUITEM "Αριστερά",                    ID_OBJECT_LEFT
@@ -557,11 +666,22 @@ BEGIN
         MENUITEM "Μπάρα Εργαλείων",             ID_VIEW_TOOLBAR
         MENUITEM "Μπάρα Μηνυμάτων",             ID_VIEW_STATUS_BAR
         MENUITEM SEPARATOR
-        MENUITEM "Εμφάνιση",                    ID_VIEW_PICEDIT
+        MENUITEM "Εμφάνιση Μυνημάτων",          ID_VIEW_PICEDIT
         MENUITEM SEPARATOR
+        MENUITEM "Απόκρυψη επιλογής",           ID_HIDESELECTION
+        MENUITEM "Απόκρυψη βάσης",              ID_HIDEBASE
+        MENUITEM "Απόκρυψη τειχίων",            ID_HIDEWALLS
+        MENUITEM "Απόκρυψη αντικειμένων",       ID_HIDEOBJS
+        MENUITEM SEPARATOR
+        MENUITEM "Εμφάνιση όλων",               ID_SHOWALL
+        MENUITEM SEPARATOR
+        MENUITEM "Σημεία αναφοράς",             ID_SHOWREFPOINTS
     END
     POPUP "Παράθυρα"
     BEGIN
+        MENUITEM "Φωτισμού",                    ID_DIRLIGHT
+        MENUITEM "Υλικού",                      ID_MATERIALEDIT
+        MENUITEM SEPARATOR
         MENUITEM "Νέο Παράθυρο",                ID_WINDOW_NEW
         MENUITEM "Διατεταγμένα",                ID_WINDOW_CASCADE
         MENUITEM "&Tile",                       ID_WINDOW_TILE_HORZ
@@ -570,6 +690,26 @@ BEGIN
     POPUP "Οπτική"
     BEGIN
         MENUITEM "PLACEHOLDER",                 IDM_VIEWPOINTS
+    END
+    POPUP "Σκηνικό"
+    BEGIN
+        MENUITEM "Σώσε οπτική θέση . . .",      ID_SETHOMEPOSITION
+        MENUITEM "Επαναφορά οπτικής",           ID_HOMEPOSITION
+        MENUITEM SEPARATOR
+        MENUITEM "Χρώμα σκηνής",                ID_CHBACKCOLOR
+        MENUITEM "Βασικός φωτισμός",            ID_HEADLIGHT
+        MENUITEM "Inventor Tools",              ID_INVDECORATION
+        POPUP "Υφος σχεδίασης"
+        BEGIN
+            MENUITEM "Οπως είναι . . .",            ID_DRAW_AS_IS
+            MENUITEM "Κρυφές γραμμές",              ID_DRAW_HIDDEN_LINE
+            MENUITEM "Χωρίς υφή",                   ID_DRAW_NO_TEXTURE
+            MENUITEM "Χαμηλή πολυπλοκή",            ID_DRAW_LOW_COMP
+            MENUITEM "Γραμμές",                     ID_DRAW_LINE
+            MENUITEM "Σημεία",                      ID_DRAW_POINT
+            MENUITEM "Εγκιβωτισμός",                ID_DRAW_BBOX
+        END
+        MENUITEM "Εξέταση σκηνής",              ID_VIEWING
     END
     POPUP "Βοήθεια"
     BEGIN

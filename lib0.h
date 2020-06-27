@@ -46,7 +46,8 @@ public:
 	void	setSoSFIntProp	( SoSeparator *sep, SbName pname, int val ) ; 
 	int		getSoSFIntProp  ( SbName pname ) ; 
 	void	setSoSFStringProp ( SoSeparator *sep, SbName pname, CString val ) ; 
-	CString	getSoSFStringProp ( SbName pname ) ; 
+	CString	getSoSFStringProp ( SbName pname ) ;
+	
 };
 
 /////////////////////////////////////////////////////////////////////////////

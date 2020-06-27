@@ -24,20 +24,36 @@ public:
 // Attributes
 public:
 	SbString name ;
-	int offset ;
 	float depth ;
 	float height ;
-	float Koryfsx[4], Koryfsy[4], Koryfsz[4] ;
+	float Koryfsx[8], Koryfsy[8], Koryfsz[8] ;
 
 	CString		plakaki ;
 	float		plakaki1, plakaki2 ;
+
+	float xdist, ydist ,zdist ,rot ,left_d , right_d , up_d;
+
+	float corner ;  //η γωνια του τοιχου με τον carrier τοιχο
 
 // Operations
 public:
 	void ObjectToInventor ( SoSeparator *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
-	int EditProperties ( CDocument *d, SoSeparator *root ) ;
+	void GetBox() ;
+	int  EditProperties ( CDocument *d, SoSeparator *root ) ;
+
+	void AddNewObject(SbVec3f p_point, SbVec3f p_normal) ;
+
+	void MoveCarrierObjects(float dx,float dy,float dz) ;
+	void MoveObjectTo(float d1,float d2,float d3) ;
+	void RotateCarrierObjects(float dx,float dy,float dz) ;
+	void RotateObject(float crn) ;
+
+	bool IsAttachedObject(int wallno) ;
+	void DeleteObject(int aanumber) ;
+	void CopyObject(int aanumber) ;
+	void PasteObject() ;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,6 +75,15 @@ public:
 	CString	m_plakaki;
 	float	m_plakaki1;
 	float	m_plakaki2;
+	float	m_xdist;
+	float	m_ydist;
+	float	m_zdist;
+	float	m_rot;
+	float	m_left;
+	float	m_right;
+	float	m_up;
+	float	m_objlength;
+	float	m_outlook;
 	//}}AFX_DATA
 
 

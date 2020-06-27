@@ -15,6 +15,8 @@
 #define SYNTH_GEXTERNAL_PROP            139
 #define SYNTH_DELETE_OBJ                140
 #define IDR_MYTBAR                      141
+#define SYNTH_WIZZ1                     143
+#define SYNTH_EXTRAWALL_PROP            144
 #define IDM_VIEWPOINTS                  997
 #define IDC_VIEWER                      998
 #define IDC_ABOUT_TEXT                  999
@@ -47,23 +49,39 @@
 #define SYNTH_CB_ANTIK                  1022
 #define IDC_YANGLE                      1022
 #define IDC_TOPOTH                      1023
+#define IDC_OUTLOOK                     1023
 #define IDC_XDIST                       1024
 #define IDC_YDIST                       1025
 #define IDC_ANGLE3                      1026
 #define IDC_LDIST                       1026
+#define IDC_ZDIST                       1026
 #define IDC_MHKOS3                      1027
 #define IDC_RDIST                       1027
+#define IDC_ROT                         1027
 #define IDC_TOIXOMA3                    1028
+#define IDC_LeftDIST                    1028
 #define IDC_ANGLE4                      1029
+#define IDC_ROTPARAM                    1029
+#define IDC_UP                          1029
 #define IDC_MHKOS4                      1030
+#define IDC_LEFT                        1030
 #define IDC_TOIXOMA4                    1031
+#define IDC_RIGHT                       1031
 #define IDC_ANGLE5                      1032
+#define IDC_RADIO1                      1032
 #define IDC_MHKOS5                      1033
+#define IDC_RADIO2                      1033
 #define IDC_TOIXOMA5                    1034
+#define IDC_RADIO3                      1034
 #define IDC_ANGLE6                      1035
+#define IDC_X1DIST                      1035
+#define IDC_RADIO4                      1035
 #define IDC_MHKOS6                      1036
 #define IDC_TOIXOMA6                    1037
+#define IDC_OBJLEN                      1037
 #define IDC_ANGLE7                      1038
+#define IDC_BATLEN                      1038
+#define IDC_RightDIST                   1038
 #define IDC_MHKOS7                      1039
 #define IDC_TOIXOMA7                    1040
 #define ID_FILE_INFO                    32771
@@ -83,15 +101,39 @@
 #define ID_EXTENTED_CUT                 32830
 #define ID_UNGROUP                      32831
 #define ID_REPLACE                      32832
+#define SYNTH_ADDWALL                   32833
+#define SYNTH_JUMP                      32834
+#define ID_HIDEBASE                     32835
+#define ID_HIDEWALLS                    32836
+#define ID_HIDEOBJS                     32837
+#define ID_HIDESELECTION                32838
+#define ID_SHOWALL                      32839
+#define ID_REFPOINTS                    32840
+#define ID_SHOWREFPOINTS                32841
+#define ID_CHBACKCOLOR                  32842
+#define ID_HOMEPOSITION                 32843
+#define ID_SETHOMEPOSITION              32844
+#define ID_HEADLIGHT                    32845
+#define ID_INVDECORATION                32846
+#define ID_DRAW_AS_IS                   32847
+#define ID_DRAW_HIDDEN_LINE             32849
+#define ID_DRAW_NO_TEXTURE              32850
+#define ID_DRAW_LOW_COMP                32851
+#define ID_DRAW_LINE                    32852
+#define ID_DRAW_POINT                   32853
+#define ID_DRAW_BBOX                    32854
+#define ID_VIEWING                      32855
+#define ID_DIRLIGHT                     32856
+#define ID_MATERIALEDIT                 32857
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        143
-#define _APS_NEXT_COMMAND_VALUE         32833
-#define _APS_NEXT_CONTROL_VALUE         1029
+#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_COMMAND_VALUE         32858
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

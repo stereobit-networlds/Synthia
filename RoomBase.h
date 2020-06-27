@@ -26,8 +26,11 @@ public:
 public:
 
 	SbString name ;
-	float	height, Koryfsx[10], Koryfsy[10], Koryfsz[10] ;
+	float	height, Koryfsx[20], Koryfsy[20], Koryfsz[20] ;
 	int		KoryfCount ;
+
+	float pointX1,pointY1,pointZ1;  //base reference points
+	float pointX2,pointY2,pointZ2;
 	
 	CString		plakaki ;
 	float		plakaki1, plakaki2 ;
@@ -38,7 +41,11 @@ public:
 	void ObjectToInventor ( SoSeparator *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
+	void GetBox() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
+
+	void MoveCarrierObjects(float high) ;
+	void AddNewObject(SbVec3f p_point, SbVec3f p_normal) ;
 };
 
 #endif // !defined(AFX_ROOMBASE_H__EB9B0081_87B5_11D2_81BC_444553540000__INCLUDED_)
@@ -60,6 +67,7 @@ public:
 	CString	m_plakaki;
 	float	m_plakaki1;
 	float	m_plakaki2;
+	float	m_height;
 	//}}AFX_DATA
 
 

@@ -23,12 +23,16 @@ public:
 
 	SbString name ;
 	float width, height, depth ;
+	int outspace ;
 	SbString c_name, c_address, c_city, c_tel ;
 
 	void ObjectToInventor ( SoSeparator *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
+	void GetBox() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
+
+	void AddNewObject(SbVec3f p_point, SbVec3f p_normal);
 } ;
 
 #endif // !defined(AFX_WORLDBASE_H__A29306EB_848F_11D2_81BC_444553540000__INCLUDED_)

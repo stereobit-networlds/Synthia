@@ -35,7 +35,7 @@ IMPLEMENT_DYNCREATE(CIvfTreeView, CTreeView)
 CIvfTreeView::CIvfTreeView()
 {
     // Initialize member variables
-    m_pRootNode = NULL;
+    m_pRootNode = NULL;        
     m_pSelectionNode = NULL;
 }
 

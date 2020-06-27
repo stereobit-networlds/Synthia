@@ -24,7 +24,6 @@ public:
 // Attributes
 public:
 	SbString name ;
-	int offset ;
 
 	CString eid_id[10] ;
 	CString code, descr ;
@@ -32,9 +31,7 @@ public:
     int pCount ;   // properties count
     CString  pval[10], pname[10] ;
 
-	int next_id, prior_id, carrier_id ;
-
-    int topoth ;   // apo aristera = 0, apo dexia = 1
+	int next_id, prior_id ; //next and previous indexes
 
     float yangle ;
 
@@ -47,38 +44,50 @@ public:
 
     int back_side ;     // the back side syrface offset into the Syrfs[]
 
-	float pointX1,pointY1,pointZ1; //reference points for change translation
-	float pointX2,pointY2,pointZ2;
-    float xdist, ydist ;  //calculated distances
-
+    float xdist, ydist ,x1dist;  //calculated distances
     float Ldist , Rdist ; //object distance from walls (left and right)
+
 
 // Operations
 public:
 	void ObjectToInventor ( SoSeparator *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
+	void GetBox() ;
 	int EditProperties ( CDocument *d, SoSeparator *root ) ;
-	void GetObjRefPoints(CGExternal *ext_obj);
-	void GetDistances(CGExternal *ext_obj) ;
-	void GetWallDistances(CGExternal *ext_obj) ;
-	void SetWallDistances(CGExternal *ext_obj , int RightOrLeft) ;
-	void MoveObjectTo(CGExternal *ext_obj ,float d1,float d2) ;
-	void MovRebuildButtering(CGExternal *ext) ;
-	void CalculateObjectDistance(CGExternal *e_obj) ;
-	void AttachObject(SoSeparator *obj_sep) ;
-	void InsChangeAttributes() ;
-	void InsChangeMiddleAttributes() ;
+
+	void AddNewObject(SbVec3f p_point, SbVec3f p_normal) ;
+
+	SbMatrix GetObjectMatrix() ;
+	SbVec3f GetObjectVectors() ;
+	SbVec3f GetObjectDirection(SbVec3f source) ;
+
+	float GetBatteryLength() ;
+	float GetBatteryLeftDistance() ;
+	float GetBatteryRightDistance() ;
+	float SetBatteryLeftDistance(float val) ;
+	float SetBatteryRightDistance(float val) ;
+
+	void MoveObjectTo(float d1,float d2,float d3) ;
+	void MoveButtering(float x,float y,float z) ;
+	void RotateObject(float angle,int typeof) ;
+
+	void AttachObject() ;
+
 	void InsRebuildButtering() ;
-	void DelChangeAttributes() ;
 	void DelRebuildButtering() ;
-	void ExtDelChangeAttributes() ;
 	void ExtDelRebuildButtering() ;
-	void UnGroupObjects();
-	void ReplaceObject(SoSeparator *obj_sep) ;
+	void DelObject(int aanum,int mode);
+
+	void ReplaceObject() ;
 	void RepRebuildButtering() ;
+	void UnGroupObjects();
+
+	void CopyObject(int aanumber) ;
 	void PasteObject() ;
-	void DeleteObject() ;
+
+	bool IsAttachedObject(int objno) ;
+	void DeleteObject(int aanumber) ;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -101,8 +110,12 @@ public:
 	float	m_xdist;
 	float	m_yangle;
 	float	m_ydist;
-	float   m_ldist;
-	float   m_rdist;
+	float   m_leftdist;
+	float   m_rightdist;
+	float   m_x1dist;
+	float	m_objLen;
+	float	m_batLen;
+	float	m_outlook;
 	//}}AFX_DATA
 
 
@@ -118,7 +131,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(GExternalProp)
-		// NOTE: the ClassWizard will add member functions here
+         // NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
