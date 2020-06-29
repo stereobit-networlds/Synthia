@@ -3,6 +3,7 @@
 // Used by SYNTH.rc
 //
 #define SYNTH_NEXT                      3
+#define IDADV                           3
 #define SYNTH_PRIOR                     4
 #define IDD_ABOUTBOX                    100
 #define SYNTH_SELECT_OBJ                102
@@ -69,13 +70,17 @@
 #define IDC_RIGHT                       1031
 #define IDC_ANGLE5                      1032
 #define IDC_RADIO1                      1032
+#define IDC_SCENE01                     1032
 #define IDC_MHKOS5                      1033
 #define IDC_RADIO2                      1033
+#define IDC_SCENE02                     1033
 #define IDC_TOIXOMA5                    1034
 #define IDC_RADIO3                      1034
+#define IDC_SCENE03                     1034
 #define IDC_ANGLE6                      1035
 #define IDC_X1DIST                      1035
 #define IDC_RADIO4                      1035
+#define IDC_SCENE04                     1035
 #define IDC_MHKOS6                      1036
 #define IDC_TOIXOMA6                    1037
 #define IDC_OBJLEN                      1037
@@ -84,6 +89,7 @@
 #define IDC_RightDIST                   1038
 #define IDC_MHKOS7                      1039
 #define IDC_TOIXOMA7                    1040
+#define IDC_ROTPOINT                    1040
 #define ID_FILE_INFO                    32771
 #define ID_VIEW_PICEDIT                 32795
 #define ID_VIEW_SELECTIONMODE           32806
@@ -93,6 +99,7 @@
 #define SYNTH_NEW_SPHERE                32820
 #define SYNTH_PROPERTIES                32821
 #define SYNTH_KATAXKOYZIN               32822
+#define SYNTH_PROJECT                   32822
 #define SYNTH_SELECT                    32823
 #define ID_OBJECT_LEFT                  32825
 #define ID_OBJECT_RIGHT                 32827
@@ -125,6 +132,17 @@
 #define ID_VIEWING                      32855
 #define ID_DIRLIGHT                     32856
 #define ID_MATERIALEDIT                 32857
+#define ID_OBJSIDE_BACK                 32859
+#define ID_OBJSIDE_LEFT                 32860
+#define ID_OBJSIDE_FRONT                32861
+#define ID_OBJSIDE_RIGHT                32862
+#define ID_OBJSIDE_TOP                  32863
+#define ID_OBJSIDE_BOTTOM               32864
+#define ID_OBJROT_BKLEFT                32866
+#define ID_OBJROT_FRLEFT                32867
+#define ID_OBJROT_BKRIGHT               32868
+#define ID_OBJROT_FRRIGHT               32869
+#define ID_OBJROT_CENTER                32870
 
 // Next default values for new objects
 // 
@@ -132,8 +150,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        147
-#define _APS_NEXT_COMMAND_VALUE         32858
-#define _APS_NEXT_CONTROL_VALUE         1039
+#define _APS_NEXT_COMMAND_VALUE         32871
+#define _APS_NEXT_CONTROL_VALUE         1041
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

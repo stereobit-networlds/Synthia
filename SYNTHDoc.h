@@ -30,14 +30,13 @@ public:
 	SoSeparator *root ;		// the scene root
 	CObject *Obj[100] ;		// then various RoomBase, WorldBase, ...
 	int ObjCount ;			// number of Objs
-	int SelId ;				// selected Obj[SelId]
 	int	new_object ;	    // true if a new objcect is added
 	int ob_offset ;			// counter for the GExternal objects
 
-	int obj_selector ;      // my selection generated number (αντικαθιστα το SelId στην επιλογή )
+	int obj_selector ;      // my selection generated number 
 	int obj_type ;          // object type 
 
-	bool BATTERING ;
+	bool BATTERY ;
 	bool REPLACE ;
     bool copy_mode ;        //boolean for copy/paste
 	CGExternal *external_buffer ; //my data buffer for copy/paste
@@ -45,16 +44,11 @@ public:
 	int LastCopy ;          // last copied object number buffer
 	bool UndoParam ;        // undo parameter
 
-    float l[20] ,a[20] ;    //array for basic scene construction
-	int t[20];
-
 	bool Wizard ;           //wizard action basic scene building
 
-	void SetSelectedObj ( SoSelection *sel ) ;
 	void InventorToObjects() ;
-	void OpenSYNTHFile() ;
+	void OpenSceneFile(int filetype) ;
 	bool OnNewWizzard() ;
-	void CreateBasicScene() ;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -79,7 +73,6 @@ public:
 
 protected:
     virtual void IvfSceneGraphChanged(); //IvfTreeView hack
-	void Init() ;
 
 // Generated message map functions
 protected:
@@ -91,30 +84,11 @@ protected:
 	afx_msg void OnFileSaveAs();
 	afx_msg void OnFileReload();
 	afx_msg void OnUpdateFileReload(CCmdUI *pCmdUI);
-	afx_msg void OnNewSphere();
-	afx_msg void OnProperties();
-	afx_msg void OnUpdateProperties(CCmdUI* pCmdUI);
-	afx_msg void OnKataxkoyzin();
-	afx_msg void OnSelectObj();
-	afx_msg void OnUpdateSelectObj(CCmdUI* pCmdUI);
-	afx_msg void OnDelete();
-	afx_msg void OnExtDelete();
-	afx_msg void OnUnGroup();
-	afx_msg void OnReplaceObj();
-	afx_msg void OnUpdateReplaceObj(CCmdUI* pCmdUI);
-	afx_msg void OnUndo();
-	afx_msg void OnUpdateUndo(CCmdUI* pCmdUI);
-	afx_msg void OnAddwall();
-	afx_msg void OnUpdateAddwall(CCmdUI* pCmdUI);
-	afx_msg void OnJump();
-	afx_msg void OnUpdateJump(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 };
 
-extern CSYNTHDoc	*sdoc ;
-extern SbVec3f		picked_point ;
-extern SbVec3f		picked_normal ;
-
+extern CSYNTHDoc *sdoc ;
+	
 /////////////////////////////////////////////////////////////////////////////

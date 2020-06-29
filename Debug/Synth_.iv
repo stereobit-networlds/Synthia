@@ -1,0 +1,14 @@
+#Inventor V2.1 ascii
+
+
+DirectionalLight {
+}
+Separator {
+
+  Material {
+  }
+  Cylinder {
+  }}
+PickStyle {
+  style UNPICKABLE
+}

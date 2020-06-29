@@ -19,8 +19,7 @@
 #include <Inventor/nodes/SoTexture2.h>
 #include <Inventor/nodes/SoTexture2Transform.h>
 #include <Inventor/nodes/SoTextureCoordinatePlane.h>
-#include <Inventor/nodes/SoTranslation.h>
-#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoTransform.h>
 
 #include "RoomBase.h"
 #include "RoomWall.h"
@@ -141,9 +140,8 @@ void CRoomBase::ObjectToInventor ( SoSeparator *root )
 		first_time = TRUE ;
 	}
 
-	//setup trans & rot
-	SoTranslation	*trans	= new SoTranslation ;
-	SoRotation		*rotat	= new SoRotation ;
+	//setup transform
+	SoTransform	*trans	= new SoTransform ;
 
 	//setup draw style
 	SoDrawStyle *ds = new SoDrawStyle ;
@@ -157,9 +155,8 @@ void CRoomBase::ObjectToInventor ( SoSeparator *root )
 	SoMaterial  *mat = new SoMaterial;
 	mat->diffuseColor.setValue( 1., 1., 1. ); // WHITE
 
-	sep->addChild( ds ) ;
-    sep->addChild( trans );	
-	sep->addChild( rotat );
+	sep->addChild( trans ) ;
+    sep->addChild( ds );	
 	sep->addChild( ps ) ;
 	sep->addChild( mat );
 
@@ -462,7 +459,7 @@ void CRoomBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 		float	nx[20], ny[20], nz[20] ;  //next point array 
 		float   nrx[20],nry[20],nrz[20] ; //normals array 
 		float	vx, vy, vz,len1,len0,Room_Height ;
-		SbVec3f p2_point;
+
 		CLib0 lib ;
 		CGLib0 *glib = new CGLib0 ;
 
@@ -472,32 +469,32 @@ void CRoomBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 		int dd=100;  //<<<<<<<<<<--------------- wall depth
 
 		// transfer data from arrays
-		len[0] = sdoc->l[0] ;
-		len[1] = sdoc->l[1] ;
-		len[2] = sdoc->l[2] ;
-		len[3] = sdoc->l[3] ;
-		len[4] = sdoc->l[4] ;
-		len[5] = sdoc->l[5] ;
-		len[6] = sdoc->l[6] ;
-		len[7] = sdoc->l[7] ;
+		len[0] = theApp.l[0] ;
+		len[1] = theApp.l[1] ;
+		len[2] = theApp.l[2] ;
+		len[3] = theApp.l[3] ;
+		len[4] = theApp.l[4] ;
+		len[5] = theApp.l[5] ;
+		len[6] = theApp.l[6] ;
+		len[7] = theApp.l[7] ;
 
-		angle[0] = sdoc->a[0] ;
-		angle[1] = sdoc->a[1] ;
-		angle[2] = sdoc->a[2] ;
-		angle[3] = sdoc->a[3] ;
-		angle[4] = sdoc->a[4] ;
-		angle[5] = sdoc->a[5] ;
-		angle[6] = sdoc->a[6] ;
-		angle[7] = sdoc->a[7] ;
+		angle[0] = theApp.a[0] ;
+		angle[1] = theApp.a[1] ;
+		angle[2] = theApp.a[2] ;
+		angle[3] = theApp.a[3] ;
+		angle[4] = theApp.a[4] ;
+		angle[5] = theApp.a[5] ;
+		angle[6] = theApp.a[6] ;
+		angle[7] = theApp.a[7] ;
 
-		toix[0] = sdoc->t[0] ;
-		toix[1] = sdoc->t[1] ;
-		toix[2] = sdoc->t[2] ;
-		toix[3] = sdoc->t[3] ;
-		toix[4] = sdoc->t[4] ;
-		toix[5] = sdoc->t[5] ;
-		toix[6] = sdoc->t[6] ;
-		toix[7] = sdoc->t[7] ;
+		toix[0] = theApp.t[0] ;
+		toix[1] = theApp.t[1] ;
+		toix[2] = theApp.t[2] ;
+		toix[3] = theApp.t[3] ;
+		toix[4] = theApp.t[4] ;
+		toix[5] = theApp.t[5] ;
+		toix[6] = theApp.t[6] ;
+		toix[7] = theApp.t[7] ;
 
 		Room_Height = 500;
 
@@ -544,16 +541,16 @@ void CRoomBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 
 				//παιρνω το normal της πλευρας του προηγουμενου τοιχου ...
                 glib->GetPolyNormal ( fx[i-1], fy[i-1], fz[i-1],
-  			               		      nx[i-1], ny[i-1]+100, nz[i-1],						
-					                  nx[i-1], ny[i-1], nz[i-1],
+  			               		      nx[i-1], ny[i-1], nz[i-1],						
+					                  nx[i-1], ny[i-1]+100, nz[i-1],
 					                 &vx, &vy, &vz ) ;
-				nrx[i] = -vx;
-				nry[i] = -vy;
-				nrz[i] = -vz;
+				nrx[i] = vx;
+				nry[i] = vy;
+				nrz[i] = vz;
 			}
 
-			len0 = int(sin((180-angle[i])*3.1415926/180)*len[i]);
-			len1 = int(cos((180-angle[i]) * 3.1415926 /180) * len[i]) ;
+			len0 = int(sin((180-angle[i]) * M_PI/180) * len[i]);
+			len1 = int(cos((180-angle[i]) * M_PI/180) * len[i]) ;
                 
 			//προσθεtουμε την μετατοπιση στον αξονα με 1 normal
 			nx[i] = fx[i] + (nrx[i] * len0);
@@ -576,10 +573,6 @@ void CRoomBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 			
 		} // for i
         
-		rb->carrier_id = 0; //worldbase
-		rb->SetCarrierSide(_TOP_); //top of worldbase
-		rb->object_side = _BOTTOM_; //bottom of roombase
-		rb->outlook = 0;
 
 		rb->KoryfCount = pleyres ;
 		//base points
@@ -594,11 +587,16 @@ void CRoomBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 
 		rb->ObjectToInventor(sdoc->root) ;
 
+		//set attr..
+		rb->carrier_id = 0; //worldbase
+		rb->SetCarrierSide(_TOP_); //top of worldbase
+		rb->SetObjectSide(_BOTTOM_); //bottom of roombase
+		//rb->outlook = 0;
 		//το πρωτο σημείο του εγκιβωτισμου
 		rb->totalx  = rb->ssx[0];
 		rb->totaly  = rb->ssy[0];
 		rb->totalz  = rb->ssz[0];
-		rb->object_refpoint = _DNBKLEFT_;
+		//rb->object_refpoint = _DNBKLEFT_;
 
 		rb->SaveProperties();
 }

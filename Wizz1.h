@@ -16,7 +16,9 @@ class CWizz1 : public CDialog
 public:
 	CWizz1(CWnd* pParent = NULL);   // standard constructor
 
-	void SetArrayData();
+public:
+	float wizlen[20],wizang[20];
+	int   wizw[20];                 //pseudo arrays for auto scene construction
 
 // Dialog Data
 	//{{AFX_DATA(CWizz1)
@@ -37,7 +39,11 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CWizz1)
-		// NOTE: the ClassWizard will add member functions here
+	afx_msg void OnScene01();
+	afx_msg void OnScene02();
+	afx_msg void OnScene03();
+	afx_msg void OnScene04();
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

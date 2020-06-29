@@ -158,7 +158,7 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 char newName[2048];
 	::DragQueryFile(hDropInfo,0,newName,2048);
 
-	CSYNTHDoc *pDoc ;  //add by me (and the headerfile SYNTHdoc.h)
+	//CSYNTHDoc *pDoc ;  //add by me (and the headerfile SYNTHdoc.h)
 
     if(! CIvfDocument::IvfIsInventorFile(newName) )
     {
@@ -173,10 +173,9 @@ char newName[2048];
     }
 
 	//pDoc = (CSYNTHDoc *)OpenDocumentFile(newName);
-    pDoc->OpenSYNTHFile(); //add by me
+    //pDoc->OpenSYNTHFile(); //add by me
 
 	CFrameWnd::OnDropFiles(hDropInfo);
-
 }
 
 

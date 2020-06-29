@@ -189,15 +189,15 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 // Dialog
 //
 
-SYNTH_EXTRAWALL_PROP DIALOG DISCARDABLE  0, 0, 186, 95
+SYNTH_EXTRAWALL_PROP DIALOG DISCARDABLE  0, 0, 330, 188
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Θέση Τοίχου . . ."
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,129,74,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,70,74,50,14
-    EDITTEXT        IDC_LEFT,107,7,72,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_RIGHT,107,30,72,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,273,167,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,70,167,50,14
+    EDITTEXT        IDC_LEFT,251,7,72,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_RIGHT,251,30,72,14,ES_AUTOHSCROLL
 END
 
 
@@ -212,9 +212,9 @@ BEGIN
     SYNTH_EXTRAWALL_PROP, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 323
         TOPMARGIN, 7
-        BOTTOMMARGIN, 88
+        BOTTOMMARGIN, 181
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -410,7 +410,7 @@ BEGIN
     LTEXT           "Προβολή",IDC_STATIC,177,100,36,8
 END
 
-SYNTH_GEXTERNAL_PROP DIALOG DISCARDABLE  0, 0, 292, 159
+SYNTH_GEXTERNAL_PROP DIALOG DISCARDABLE  0, 0, 292, 178
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Αντικείμενο"
 FONT 8, "HellasArial"
@@ -418,8 +418,8 @@ BEGIN
     EDITTEXT        IDC_CODE,67,7,82,13,ES_AUTOHSCROLL | ES_READONLY
     EDITTEXT        IDC_DESCR,67,20,179,13,ES_AUTOHSCROLL | ES_READONLY
     EDITTEXT        IDC_YANGLE,67,114,67,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "Ακύρωση",IDCANCEL,192,138,44,14
-    DEFPUSHBUTTON   "Εφαρμογή",IDOK,241,138,44,14
+    PUSHBUTTON      "Ακύρωση",IDCANCEL,192,157,44,14
+    DEFPUSHBUTTON   "Εφαρμογή",IDOK,241,157,44,14
     RTEXT           "Κωδικός",IDC_STATIC,17,8,38,10
     RTEXT           "Περιγραφή",IDC_STATIC,17,21,38,10
     RTEXT           "Στροφή",IDC_STATIC,17,114,38,10
@@ -439,6 +439,7 @@ BEGIN
     EDITTEXT        IDC_BATLEN,215,72,68,14,ES_AUTOHSCROLL | ES_READONLY
     EDITTEXT        IDC_OUTLOOK,215,98,68,14,ES_AUTOHSCROLL
     LTEXT           "Προβολή",IDC_STATIC,177,101,36,8
+    EDITTEXT        IDC_ROTPOINT,67,131,67,13,ES_AUTOHSCROLL
 END
 
 SYNTH_DELETE_OBJ DIALOG DISCARDABLE  0, 0, 186, 95
@@ -456,16 +457,16 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Iaa Oyieaoc"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,209,111,50,14
+    DEFPUSHBUTTON   "OK",IDOK,209,109,50,14
     PUSHBUTTON      "Aeoni",IDCANCEL,209,133,50,14
-    CONTROL         "Radio1",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,47,23,53,
-                    19
-    CONTROL         "Radio2",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,47,46,60,
-                    20
-    CONTROL         "Radio3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,49,71,47,
-                    22
-    CONTROL         "None",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,50,95,47,
-                    22
+    CONTROL         "Radio1",IDC_SCENE01,"Button",BS_AUTORADIOBUTTON,47,23,
+                    53,19
+    CONTROL         "Radio2",IDC_SCENE02,"Button",BS_AUTORADIOBUTTON,47,46,
+                    60,20
+    CONTROL         "Radio3",IDC_SCENE03,"Button",BS_AUTORADIOBUTTON,49,71,
+                    47,22
+    CONTROL         "Radio4",IDC_SCENE04,"Button",BS_AUTORADIOBUTTON,50,95,
+                    47,22
 END
 
 
@@ -520,7 +521,7 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         TOPMARGIN, 7
-        BOTTOMMARGIN, 152
+        BOTTOMMARGIN, 171
     END
 
     SYNTH_DELETE_OBJ, DIALOG
@@ -649,33 +650,52 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Αποσύνδεση αντικειμένων . . .", ID_UNGROUP
         MENUITEM SEPARATOR
-        MENUITEM "Νέα Σφαίρα",                  SYNTH_NEW_SPHERE
-        MENUITEM "Νεα σύνθεση",                 SYNTH_KATAXKOYZIN
+        MENUITEM "Νεα σύνθεση",                 SYNTH_PROJECT
         MENUITEM "Εισαγωγή τοίχων",             SYNTH_ADDWALL
         MENUITEM "Εισαγωγή αντικειμένων ",      SYNTH_SELECT
         MENUITEM "Ιδιότητες\tCtrl - I",         SYNTH_PROPERTIES
         MENUITEM SEPARATOR
-        POPUP "Κατέυθυνση σύνθεσης . . ."
+        POPUP "Προσανατολισμός σύνθεσης "
         BEGIN
             MENUITEM "Δεξιά",                       ID_OBJECT_RIGHT
             MENUITEM "Αριστερά",                    ID_OBJECT_LEFT
+        END
+        POPUP "Προσανατολισμός αντκειμένου"
+        BEGIN
+            MENUITEM "B",                           ID_OBJSIDE_BACK
+            MENUITEM "L",                           ID_OBJSIDE_LEFT
+            MENUITEM "F",                           ID_OBJSIDE_FRONT
+            MENUITEM "R",                           ID_OBJSIDE_RIGHT
+            MENUITEM "T",                           ID_OBJSIDE_TOP
+            MENUITEM "Bo",                          ID_OBJSIDE_BOTTOM
         END
     END
     POPUP "Εμφάνιση"
     BEGIN
         MENUITEM "Μπάρα Εργαλείων",             ID_VIEW_TOOLBAR
         MENUITEM "Μπάρα Μηνυμάτων",             ID_VIEW_STATUS_BAR
-        MENUITEM SEPARATOR
         MENUITEM "Εμφάνιση Μυνημάτων",          ID_VIEW_PICEDIT
         MENUITEM SEPARATOR
         MENUITEM "Απόκρυψη επιλογής",           ID_HIDESELECTION
         MENUITEM "Απόκρυψη βάσης",              ID_HIDEBASE
         MENUITEM "Απόκρυψη τειχίων",            ID_HIDEWALLS
         MENUITEM "Απόκρυψη αντικειμένων",       ID_HIDEOBJS
-        MENUITEM SEPARATOR
         MENUITEM "Εμφάνιση όλων",               ID_SHOWALL
         MENUITEM SEPARATOR
         MENUITEM "Σημεία αναφοράς",             ID_SHOWREFPOINTS
+        POPUP "Υφος σχεδίασης"
+        BEGIN
+            MENUITEM "Οπως είναι . . .",            ID_DRAW_AS_IS
+            MENUITEM "Κρυφές γραμμές",              ID_DRAW_HIDDEN_LINE
+            MENUITEM "Χωρίς υφή",                   ID_DRAW_NO_TEXTURE
+            MENUITEM "Χαμηλή πολυπλοκή",            ID_DRAW_LOW_COMP
+            MENUITEM "Γραμμές",                     ID_DRAW_LINE
+            MENUITEM "Σημεία",                      ID_DRAW_POINT
+            MENUITEM "Εγκιβωτισμός",                ID_DRAW_BBOX
+        END
+        MENUITEM "Inventor Tools",              ID_INVDECORATION
+        MENUITEM SEPARATOR
+        MENUITEM "Εξέταση σκηνής",              ID_VIEWING
     END
     POPUP "Παράθυρα"
     BEGIN
@@ -698,18 +718,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Χρώμα σκηνής",                ID_CHBACKCOLOR
         MENUITEM "Βασικός φωτισμός",            ID_HEADLIGHT
-        MENUITEM "Inventor Tools",              ID_INVDECORATION
-        POPUP "Υφος σχεδίασης"
-        BEGIN
-            MENUITEM "Οπως είναι . . .",            ID_DRAW_AS_IS
-            MENUITEM "Κρυφές γραμμές",              ID_DRAW_HIDDEN_LINE
-            MENUITEM "Χωρίς υφή",                   ID_DRAW_NO_TEXTURE
-            MENUITEM "Χαμηλή πολυπλοκή",            ID_DRAW_LOW_COMP
-            MENUITEM "Γραμμές",                     ID_DRAW_LINE
-            MENUITEM "Σημεία",                      ID_DRAW_POINT
-            MENUITEM "Εγκιβωτισμός",                ID_DRAW_BBOX
-        END
-        MENUITEM "Εξέταση σκηνής",              ID_VIEWING
     END
     POPUP "Βοήθεια"
     BEGIN

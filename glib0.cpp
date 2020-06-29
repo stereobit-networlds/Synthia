@@ -108,11 +108,11 @@ CGLib0::DefinePolygon000 ( int pleyres, float *len, float *angle, float mult,
          else 
 		 {
             GetPolyNormal( x0, y0, z0, x00, y00, z00, x0, y0+1, z0, &vx, &vy, &vz ) ;
-            len1 = int(cos((180-angle[i]) * 3.14 /180) * len[i]*mult) ;
+            len1 = int(cos((180-angle[i]) * M_PI/180) * len[i]*mult) ;
             sx  = (x0-x00) * (len1+len[i-1]*10) / (len[i-1]*10) + x00 ;
             sy  = (y0-y00) * (len1+len[i-1]*10) / (len[i-1]*10) + y00 ;
             sz  = (z0-z00) * (len1+len[i-1]*10) / (len[i-1]*10) + z00 ;
-            GetPolyDistandPoint ( vx, vy, vz, sx, sy, sz, sin((180-angle[i])*3.14/180)*len[i]*mult,
+            GetPolyDistandPoint ( vx, vy, vz, sx, sy, sz, sin((180-angle[i])*M_PI/180)*len[i]*mult,
                                   &x, &y, &z ) ;
          } ;
 

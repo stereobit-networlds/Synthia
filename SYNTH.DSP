@@ -448,14 +448,6 @@ SOURCE=.\res\Toolbar.bmp
 # End Group
 # Begin Source File
 
-SOURCE=C:\kosmos\Lib\lib0\GLObj1.pas
-# End Source File
-# Begin Source File
-
-SOURCE=C:\kosmos\synth\LObject2.pas
-# End Source File
-# Begin Source File
-
 SOURCE=.\pickray_demo.txt
 # End Source File
 # Begin Source File

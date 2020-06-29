@@ -31,11 +31,10 @@ static char THIS_FILE[] = __FILE__;
 #include <Inventor/nodes/SoTexture2Transform.h>
 #include <Inventor/nodes/SoTextureCoordinatePlane.h>
 #include <Inventor/nodes/SoComplexity.h>
-#include <Inventor/nodes/SoTranslation.h>
-#include <Inventor/nodes/SoRotation.h>
 #include <Inventor/nodes/SoSelection.h>
+#include <Inventor/nodes/SoTransform.h>
 
-#define PI 3.1415926
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -49,7 +48,9 @@ CGExternal::CGExternal()
 
 	next_id = 0;
 	prior_id = 0;
-	totalx = totaly =totalz = 0; //init totals
+	local_rot = 0;
+	global_rot = 0;
+	rotpoint = _BKLEFT_;
 }
 
 CGExternal::~CGExternal()
@@ -64,18 +65,13 @@ void CGExternal::ObjectToInventor ( SoSeparator *root )
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
 
-	//το αντικειμενο εχει τοποθετηθει αορατο στην θεση 0,0,0
-	//δεν χρειαζεται εγκιβωτισμος εδω διοτι τα globals ειναι 0,0,0
-	//κανουμε τον εγκιβωτισμο στην AddNewObject οπου και το object
-	//παιρνει την click θεση του
-	//GetBox();  //<<<<<-------------------------------- εγκιβωτισμος
-
+	GetBox();  //<<<<<-------------------------------- εγκιβωτισμος
 
 	SaveProperties() ;     
 	root->addChild(sep) ;
   
     //check for ...
-	if (sdoc->BATTERING)  //battering ...
+	if (sdoc->BATTERY)  //battering ...
     {
        AttachObject();
     }
@@ -140,7 +136,10 @@ void CGExternal::SaveProperties ()
 
 	lib.setSoSFIntProp ( attr, SbName("next"+soff), next_id ) ;
 	lib.setSoSFIntProp ( attr, SbName("prior"+soff), prior_id ) ;
-	lib.setSoSFFloatProp ( attr, SbName("yangle"+soff), yangle ) ;
+
+	lib.setSoSFIntProp ( attr, SbName("rotpoint"+soff), rotpoint ) ;
+	lib.setSoSFIntProp ( attr, SbName("local_rot"+soff), local_rot ) ;
+	lib.setSoSFIntProp ( attr, SbName("global_rot"+soff), global_rot ) ;
 
 	sep->addChild( attr ) ;
 }
@@ -173,89 +172,150 @@ void CGExternal::InventorToObject ( SoSeparator *root )
 
 	next_id		= lib.getSoSFIntProp(SbName("next"+soff)) ;
 	prior_id	= lib.getSoSFIntProp(SbName("prior"+soff)) ;
-	yangle		= lib.getSoSFFloatProp(SbName("yangle"+soff)) ;
+
+	rotpoint	= lib.getSoSFIntProp(SbName("rotpoint"+soff)) ;
+	local_rot	= lib.getSoSFIntProp(SbName("local_rot"+soff)) ;
+	global_rot	= lib.getSoSFIntProp(SbName("global_rot"+soff)) ;
+}
+
+//με βαση την γωνια και τον αξονα περιστροφης υπολογιζουμε απο ενα 
+//διανυσμα ΑΒ τον νεο σημειο Γ που θα προκυψει...
+void CGExternal::GetBoxPoints(float Ax,float Ay,float Az,float Bx,float By,float Bz,
+							  float fangle,float rotaxisX,float rotaxisY,float rotaxisZ,
+							  float *Cx,float *Cy,float *Cz)
+{
+	float a,d1,d2;
+	float Dx,Dy,Dz;
+	float Fx,Fy,Fz;
+
+	//find distance of AB ...
+	a = sqrt( (pow( (Bx-Ax), 2)) +  
+              (pow( (By-Ay), 2)) +
+		      (pow( (Bz-Az), 2)) );
+
+    d1 = a*cos(fangle*(M_PI/180.0)); //convert to radians
+	d2 = a*sin(fangle*(M_PI/180.0));
+
+    //get D point
+    Dx = Ax + (d1/a) * (Bx - Ax);
+    Dy = Ay + (d1/a) * (By - Ay);
+	Dz = Az + (d1/a) * (Bz - Az);
+
+	GetVectorNormal(Ax,Ay,Az,Bx,By,Bz,rotaxisX,rotaxisY,rotaxisZ,&Fx,&Fy,&Fz);
+
+  /*  CLib0 lib;
+	AfxMessageBox(lib.floattostr(Fx)+" "+
+			      lib.floattostr(Fy)+" "+
+				  lib.floattostr(Fz));*/
+    //finaly ... 
+    *Cx = Dx - (Fx*d2);
+	*Cy = Dy - (Fy*d2);
+	*Cz = Dz - (Fz*d2);
+}
+
+void CGExternal::RotateBox(int rp,float a)
+{
+	int p1;
+   	switch (rp) //the object rotation point (center,backright,...)
+	{
+	  case _BKLEFT_ : p1=0; break; 
+      case _FRLEFT_ : p1=1; break;
+	  case _FRRIGHT_: p1=2; break;
+	  case _BKRIGHT_: p1=3; break;
+	  //case _CENTER_ : mypoint=???   break;
+	}
+
+    for (int i=0;i<4;i++)
+	{
+		if (i!=p1) //skip points on rotation axis
+		{
+		//rotate bottom box points
+        GetBoxPoints(xbox[p1],ybox[p1],zbox[p1],
+				     xbox[i],ybox[i],zbox[i],
+				     /*global_rot*/a,obj_raxisX,obj_raxisY,obj_raxisZ,
+				     &ssx[i],&ssy[i],&ssz[i]);
+		//rotate up box points
+		GetBoxPoints(xbox[p1+4],ybox[p1+4],zbox[p1+4],
+				     xbox[i+4],ybox[i+4],zbox[i+4],
+				     /*global_rot*/a,obj_raxisX,obj_raxisY,obj_raxisZ,
+				     &ssx[i+4],&ssy[i+4],&ssz[i+4]);
+		}
+	}
 }
 
 void CGExternal::GetBox()
 {
-	int simia;
-	SbMatrix mymatrix;
-	SbVec3f source , target;
+    int i;
 
 	// inherited action
 	CGObject::GetBox() ;
 
-	//assign min(xyz),max(xyz) 
 	//στην περιπτωση των externals τα min,max's ειναι τα ακροτατα σημεια
 	//του αντικειμένου στο δικο του συστημα συντεταγμενων...
 	//αρα οταν θελουμε τις global τιμες αρκει να προσθεσω τα totals = object translation
 
 	//****** down
-	ssx[0] = xmin ;//+ totalx;
-    ssy[0] = ymin ;//+ totaly;
-	ssz[0] = zmin ;//+ totalz;
+	ssx[0] = xmin + totalx ;
+    ssy[0] = ymin + totaly ;
+	ssz[0] = zmin + totalz ;
 
-	ssx[1] = xmin ;//+ totalx;
-    ssy[1] = ymin ;//+ totaly;
-	ssz[1] = zmax ;//+ totalz;
+	ssx[1] = xmin + totalx ;
+    ssy[1] = ymin + totaly ;
+	ssz[1] = zmax + totalz ;
 
-	ssx[2] = xmax ;//+ totalx;
-    ssy[2] = ymin ;//+ totaly;
-	ssz[2] = zmax ;//+ totalz;
+	ssx[2] = xmax + totalx ;
+    ssy[2] = ymin + totaly ;
+	ssz[2] = zmax + totalz ;
 
-	ssx[3] = xmax ;//+ totalx;
-    ssy[3] = ymin ;//+ totaly;
-	ssz[3] = zmin ;//+ totalz;
+	ssx[3] = xmax + totalx ;
+    ssy[3] = ymin + totaly ;
+	ssz[3] = zmin + totalz ;
 
 	//****** up
-	ssx[4] = xmin ;//+ totalx;
-    ssy[4] = ymax ;//+ totaly;
-	ssz[4] = zmin ;//+ totalz;
+	ssx[4] = xmin + totalx ;
+    ssy[4] = ymax + totaly ;
+	ssz[4] = zmin + totalz ;
 
-	ssx[5] = xmin ;//+ totalx;
-    ssy[5] = ymax ;//+ totaly;
-	ssz[5] = zmax ;//+ totalz;
+	ssx[5] = xmin + totalx ;
+    ssy[5] = ymax + totaly ;
+	ssz[5] = zmax + totalz ;
 
-	ssx[6] = xmax ;//+ totalx;
-    ssy[6] = ymax ;//+ totaly;
-	ssz[6] = zmax ;//+ totalz;
+	ssx[6] = xmax + totalx ;
+    ssy[6] = ymax + totaly ;
+	ssz[6] = zmax + totalz ;
 
-	ssx[7] = xmax ;//+ totalx;
-    ssy[7] = ymax ;//+ totaly;
-	ssz[7] = zmin ;//+ totalz;
+	ssx[7] = xmax + totalx ;
+    ssy[7] = ymax + totaly ;
+	ssz[7] = zmin + totalz ;
 
-    //SET ROTATION
-	//get matrix
-	mymatrix = GetObjectMatrix();
-
-	for (simia=0 ; simia<8 ; simia++)
-	{
-       source[0] = ssx[simia];
-       source[1] = ssy[simia];
-	   source[2] = ssz[simia];
-
-	   //multiply matrix * simio
-	   mymatrix.multVecMatrix(source , target);
-
-	   ssx[simia] = target[0] + totalx;
-	   ssy[simia] = target[1] + totaly;
-	   ssz[simia] = target[2] + totalz;
+	//save init box translation...
+	for (i=0;i<8;i++)
+	{ 
+	  xbox[i] = ssx[i];
+	  ybox[i] = ssy[i];
+	  zbox[i] = ssz[i];
 	}
 
-/*	for (int s=0;s<8;s++)
-		AfxMessageBox("Globals "+lib.floattostr(ssx[s])+" "+
-		                         lib.floattostr(ssy[s])+" "+
-				                 lib.floattostr(ssz[s]));
-*/
+	//rotate box in it's init rotation...
+	RotateBox(_BKLEFT_,rotangle); //rotate object in the init potition..
+ 
+	//...and save box real translation
+	for (i=0;i<8;i++)
+	{ 
+	  xbox[i] = ssx[i];
+	  ybox[i] = ssy[i];
+	  zbox[i] = ssz[i];
+	}
 }
 
 /*======================= EditProperties ========================*/
 int CGExternal::EditProperties ( CDocument *d, SoSeparator *root ) 
 {
 	CLib0 lib;
-    float comparedistX,comparedistX1,comparedistY ; //compare purpose
-	float compL , compR , compAngle ,compOut ;
-	float x,y,z,r;
+    float comparedistX,comparedistX1; //compare purpose
+	float compL , compR ; //compare purpose
+	float compangle;
+	float x;
 
 	// inherited action
 	CGObject::EditProperties(d,root) ;
@@ -269,38 +329,52 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 				 +lib.inttostr(prior_id)+"\n Outlook "
 				 +lib.inttostr(outlook));
 
-	if ((carrier_side ==_NONE_) || 
+	if ((carrier_side ==_NOWHERE_) || 
 		(object_side == _NOWHERE_))
 	{
        AfxMessageBox("Invalid object data");
 	   return 0 ;
     }
 
+	//reset rotation...
+	//μηδενιζουμε την περιστροφη για να παρουμε τις σωστες τιμες των αποστασεων
+	RotateObjectTo(0); 
+	RotateBox(rotpoint,0);  
+
     //Calculate selected object distances
-    xdist  = GetLeftDistance();
-	x1dist = GetRightDistance();
+    left_d  = GetLeftDistance();
+	right_d = GetRightDistance();
 
 	//Calculate selected object or whole battering wall distances
 	Ldist = GetBatteryLeftDistance();
 	Rdist = GetBatteryRightDistance();
 
 	//get object height
-	ydist = GetDistanceY();
+	up_d = GetDistanceY();
 
 	//Get object rotation
-	yangle = RadiansToMires( GetRotationAngle() );
+	//rotangle = RadiansToMires(GetRotationAngle()); //no need 
+	//get object projection
+	//outlook = GetObjProjection(); //no need
+
+	//restore rotation...
+	//επαναφερουμε την περιστροφη για να μην φαινεται στον χρηστη η αλλαγη
+	//θεσης του αντικειμενου κατα την προβολη των ιδιοτητων
+	RotateObjectTo(local_rot);
+	RotateBox(rotpoint,local_rot);
 
 	GExternalProp *dlg = new GExternalProp ;
 
 	dlg->m_code		= code ;
 	dlg->m_descr	= descr ;
-	dlg->m_yangle	= yangle ; compAngle = yangle ;
-	dlg->m_xdist	= xdist ; comparedistX = xdist; 
-	dlg->m_ydist	= ydist ; comparedistY = ydist;
+	dlg->m_yangle	= local_rot; compangle = local_rot; 
+	dlg->m_xdist	= left_d ; comparedistX = left_d; 
+	dlg->m_ydist	= up_d ; 
 	dlg->m_leftdist = Ldist ; compL = Ldist;
 	dlg->m_rightdist= Rdist ; compR = Rdist;
-	dlg->m_x1dist   = x1dist; comparedistX1 = x1dist;
-	dlg->m_outlook  = outlook ; compOut = outlook ;
+	dlg->m_x1dist   = right_d; comparedistX1 = right_d;
+	dlg->m_outlook  = outlook ; 
+	dlg->m_rotpoint = rotpoint ;
 
     dlg->m_objLen = GetObjectLength(); 
 	dlg->m_batLen = GetBatteryLength(); 
@@ -309,39 +383,39 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 
 	if (res == IDOK)   
 	{
-		sdoc->SaveUndo(); //save scene for undo...
+		sdoc->SaveUndo(); //save scene for undo... 
+
+	    //reset rotation...
+		SetObjectCenter(rotpoint); //use active rotation center
+	    RotateObjectTo(0); 
+		RotateBox(rotpoint,0);  
+
+        ShowRefPoints(150.0); //<<<----------------------- show points
+		AfxMessageBox("a");
+
 
 		code	= dlg->m_code ;
 		descr	= dlg->m_descr ;
-		yangle	= dlg->m_yangle ;
+		local_rot = dlg->m_yangle ;
 		outlook	= dlg->m_outlook ;
-        xdist   = dlg->m_xdist ; 
-		ydist   = dlg->m_ydist ;
+        left_d  = dlg->m_xdist ; 
+		up_d    = dlg->m_ydist ;
         Ldist   = dlg->m_leftdist ;
 		Rdist   = dlg->m_rightdist ;
-		x1dist  = dlg->m_x1dist ;
+		right_d = dlg->m_x1dist ;
+		rotpoint= dlg->m_rotpoint ;  //change rotation point
 
-        x=xdist;
-		y=ydist;
-		z=outlook;
-		r=MiresToRadians(yangle);
+        x=left_d;
 
-		//rotate...
-		if (fabs(yangle - compAngle) > 0.01)
-		{
-			RotateObject(r ,0);
-        }
-
-        
 		// set x object (not buttering) translation
-		if (fabs(xdist - comparedistX) > 0.001)
+		if (fabs(left_d - comparedistX) > 0.001)
 		{
-			x = SetLeftDistance(xdist);
+			x = SetLeftDistance(left_d);
 			goto out;
 		}
-		if (fabs(x1dist - comparedistX1) > 0.001) 
+		if (fabs(right_d - comparedistX1) > 0.001) 
 		{
-		    x = SetRightDistance(x1dist);
+		    x = SetRightDistance(right_d);
 			goto out;
 		}
         // set x object or battering translation 
@@ -357,13 +431,30 @@ int CGExternal::EditProperties ( CDocument *d, SoSeparator *root )
 		}
 
 		
-out: ;  //move...
-        MoveObjectTo(x,y,z) ;
-		MoveButtering(x,y,z);
+out: ;  //object ...
+
+		//move object...
+	    SetObjectCenter(_BKLEFT_); //set the default rotation point (inventor ok!!!)
+        MoveObjectTo(x,up_d) ;
+		ProjectObjectTo(outlook);
+		GetBox();
+
+		ShowRefPoints(150.0); //<<<----------------------- show points
+		AfxMessageBox("b");
+
+		// set rotation
+		SetObjectCenter(rotpoint); //set the new rotation point
+        RotateObjectTo(local_rot);
+	    RotateBox(rotpoint,local_rot);
+
+		//SaveProperties() ;
+
+        //battery...
+		//RotateBattery();
+		//MoveBattery();
+		//ProjectBattery();
 		
 		ShowRefPoints(150.0); //<<<----------------------- show points
-	
-		SaveProperties() ;    
 	}
 
 	return res ;
@@ -371,130 +462,100 @@ out: ;  //move...
 
 
 
+//get a point and the normal direction and return global rotation 
+float CGExternal::GetGlobalObjDirection(SbVec3f point,SbVec3f normal)
+{
+    float result ,bx,by,bz ,out;
+
+    //first get the virtual point
+    bx = point[0] + (1 * normal[0]);
+	by = point[1] + (1 * normal[1]);
+	bz = point[2] + (1 * normal[2]); 
+
+	//init object in world space
+	SoTransform *tr	= (SoTransform *)sep->getChild(0) ;
+	SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),normal); //always on Z axis and object normal 
+	tr->rotation.setValue(*sbrot) ;
+    //...get the diference of vectors (corner)
+	out = RadiansToDegrees(GetRotationAngle());
+
+	if (bx>point[0])
+	{   
+		result = out;
+	}
+	else
+	if (bx<point[0])
+	{
+        result = (360 - out); 
+	}
+	else
+	if (bx==point[0])
+	{
+		if (bz>point[2]) out = 0;
+		            else out = 180;
+		result = out;
+	}
+	return result ;
+}
+
+
 void CGExternal::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 {
 		// inherited action
 	    CGObject::AddNewObject(p_point,p_normal) ;
 
-		object_refpoint = _DNBKLEFT_;
-		//set totals
-		totalx = p_point[0];
-        totaly = p_point[1];
-		totalz = p_point[2];
-
+		CLib0 lib;
+	/*	AfxMessageBox(lib.floattostr(p_point[0])+" "+
+			          lib.floattostr(p_point[1])+" "+
+					  lib.floattostr(p_point[2]));*/
 		//set carrier
 	    carrier_id = sdoc->obj_selector ;
 		//find carrer side
 		FindCarrierSide(p_point[0],p_point[1],p_point[2]); 
-		//object's side
-		object_side = _BACK_; //<<<<------------ = default side
-		//set projection
-		outlook = 0;
 
-		if ((carrier_side ==_NONE_) || 
-		    (object_side == _NOWHERE_))
+		if (carrier_side ==_NOWHERE_) 
 		{
           AfxMessageBox("Invalid object data");	
 		  //delete this object (it is the last and invisible)
 		  DeleteObject(sdoc->ObjCount-1); 
+		  //set object none...
 		  sdoc->new_object = _NONE_ ;
 		}
         else
 		{
-		  //*****INVENTOR rendering
-		  SoSeparator *ext_sep = sep ;
-		  MakeObjVisible();
-		  SetTranslation(p_point);
+		  //set totals
+		  totalx = p_point[0];
+          totaly = p_point[1];
+		  totalz = p_point[2];
+          //set object rotation axis
+          obj_raxisX = 0;
+		  obj_raxisY = 1;
+		  obj_raxisZ = 0;
+		  //get real rotation..
+		  rotangle = GetGlobalObjDirection(p_point,p_normal);
+		  //set local rotation
+		  local_rot = 0;
+          //init object side...
+		  SetObjectSide(theApp.ObjSidePosition);
+          
+		  //*****INVENTOR :
+	      MakeObjVisible();
+		  RotateObjectTo(local_rot);
+	      SetTranslation(SbVec3f(totalx,totaly,totalz));
+		  ProjectObjectTo(outlook); 
 
-	      float n1,n2,n3;
-          GetCarrierNormal(&n1,&n2,&n3);
-		  SoRotation *rot	= (SoRotation *)ext_sep->getChild(2) ;   
-		  SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),SbVec3f(n1,n2,n3));
-		  rot->rotation.setValue(*sbrot) ;
-          //**********
-		  //παιρνουμε τον εγκβωτισμο του μετα το click...
 		  GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
 
-		  //MoveObjectTo(p_point[0],p_point[1],0);//<<<<<--------check it????
-          
 	      SaveProperties();
  
-		  sdoc->new_object = _NONE_ ; 
-		
-		  SelectObject();
+		  sdoc->new_object = _NONE_ ; 		
 		  sdoc->obj_selector = sdoc->ObjCount-1 ;
+		  //set battery on..
+		  sdoc->BATTERY = true;
 
 		  ShowRefPoints(150.0); //<<<----------------------- show points
-
-		  //.. and set battering on..
-		  sdoc->BATTERING = true;
+		  SelectObject();
 		}
-}
-
-
-
-
-//get matrix
-SbMatrix CGExternal::GetObjectMatrix()
-{   
-    SbVec3f Raxis ;
-	float Rangle ;
-	SbMatrix matrix;
-
-	SoSeparator *mysep = sep ;
-
-	SoRotation *ext_r = (SoRotation *)mysep->getChild(2) ;
-	ext_r->rotation.getValue(Raxis , Rangle); 
-
-	SbRotation *sbrot = new SbRotation(Raxis , Rangle); 
-	sbrot->getValue(matrix); 
-
-	return matrix;
-}
-
-
-//get object vectors
-SbVec3f CGExternal::GetObjectVectors()
-{
-	SbVec3f p1 , p2, dianisma ;
-
-	//get left and right base points of selected object
-    //CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);
-    p1[0] = left_base_point[0] ;
-    p1[1] = left_base_point[1] ;
-    p1[2] = left_base_point[2] ;
-
-    p2[0] = right_base_point[0] ;
-    p2[1] = right_base_point[1] ;
-    p2[2] = right_base_point[2] ;
-
-/*	p1[0] = ssx[0] ;//<<<<<---------------------- error ????
-    p1[1] = ssy[0] ;
-    p1[2] = ssz[0] ;
-
-    p2[0] = ssx[3] ;
-    p2[1] = ssy[3] ;
-    p2[2] = ssz[3] ;
-
-*/
-    //get distances
-    dianisma[0] = p2[0] - p1[0];
-    dianisma[1] = p2[1] - p1[1];
-    dianisma[2] = p2[2] - p1[2]; 
-			   
-	return dianisma ;
-}
-
-SbVec3f CGExternal::GetObjectDirection(SbVec3f source)
-{
-	SbMatrix mymatrix;
-	SbVec3f target ;
-
-	//multiply dianisma by matrix 
-	mymatrix = GetObjectMatrix();
-    mymatrix.multVecMatrix(source , target);
-
-	return target ;
 }
 
 
@@ -638,60 +699,36 @@ float CGExternal::SetBatteryLeftDistance(float val)
 }
 
 
-/********************* Move object **************************/
-void CGExternal::MoveObjectTo(float d1,float d2,float d3)
+//move object on carrier surface
+void CGExternal::MoveObjectTo(float d1,float d2)
 {
-    CLib0 lib;
 	float objX,objY,objZ ;
-	float nx,ny,nz;
-	float b; 
-	SbVec3f vector ;
 
-	//get carrier + object ref points
-    GetCarrierSide();
-	GetObjectSide();
-
-	//calculations...
-	b = sqrt( (pow( (pointX2 - pointX1), 2)) +  
-		      (pow( (pointY2 - pointY1), 2)) + 
-			  (pow( (pointZ2 - pointZ1), 2)) );
-
-    //set x y translation
-    objX = ( ( (pointX2 - pointX1) / fabs(b) ) * d1 + pointX1 ) ;
-    objY = ( ( (pointY2 - pointY1) / fabs(b) ) * d1  + d2 + pointY1 ) ;
-	objZ = ( ( (pointZ2 - pointZ1) / fabs(b) ) * d1 + pointZ1 ) ;
-
-	//set projection (z trnaslation) = outlook
-    GetCarrierNormal(&nx, &ny, &nz);
-    objX = objX + (nx * d3);
-	objY = objY + (ny * d3);
-	objZ = objZ + (nz * d3);
+	MoveOnCarrier(d1,d2,&objX,&objY,&objZ);
 
 	//update totals
 	totalx  = objX;
 	totaly  = objY;
 	totalz  = objZ;
-    //update box
-	GetBox();  //<<<<<-------------------------------- εγκιβωτισμος
 
-	SaveProperties();
-
-	//INVENTOR:put new translation
-	vector.setValue(totalx , totaly , totalz);
-	SetTranslation(vector);
+	//INVENTOR:
+	SetTranslation(SbVec3f(totalx , totaly , totalz));
 }
 
 
-//move all the battering objects...
-void CGExternal::MoveButtering(float x,float y,float z)
+//move all the battery objects...
+void CGExternal::MoveBattery()
 {
 	int my_next, my_prev ;
-    float newdest,sumlength,length;
+	float px0,py0,pz0,px1,py1,pz1;
 
-	newdest = GetLeftDistance(); 
-	length = GetObjectLength();
 
-	sumlength = 0;
+    px0 = ssx[_DNBKRIGHT_];  //get selected object right back point
+	py0 = ssy[_DNBKRIGHT_];
+	pz0 = ssz[_DNBKRIGHT_];
+	px1 = ssx[_DNBKLEFT_];  //get selected object left back point
+	py1 = ssy[_DNBKLEFT_];
+	pz1 = ssz[_DNBKLEFT_];
 
 	my_next    = next_id ;  //get the selected object next number
 	my_prev    = prior_id ;  //get the selected object previous number
@@ -701,235 +738,271 @@ void CGExternal::MoveButtering(float x,float y,float z)
 	{
        CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
 
-	   sumlength = sumlength + length;
-       nxt->MoveObjectTo(newdest+sumlength , y , z);
-	   length = nxt->GetObjectLength();
+ 	   nxt->totalx = px0; //set next object left point = selected right point
+	   nxt->totaly = py0;
+	   nxt->totalz = pz0;
+
+	   //INVENTOR:
+	   nxt->SetTranslation(SbVec3f(nxt->totalx,nxt->totaly,nxt->totalz));
+	   nxt->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
+
+	   px0 = nxt->ssx[_DNBKRIGHT_]; //save current back right point
+	   py0 = nxt->ssy[_DNBKRIGHT_]; //for the next obj...
+	   pz0 = nxt->ssz[_DNBKRIGHT_];
 
 	   //get next object
-	   my_next = nxt->next_id ;
+	   my_next = nxt->next_id ; 
 	}
-
-	sumlength = 0;
 
 	//secontary move left objects...
 	while (my_prev!=0)
 	{
        CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
 
-	   sumlength = sumlength + prv->GetObjectLength();
-       prv->MoveObjectTo(newdest-sumlength , y , z);
+	   SbVec3f Length    = prv->GetObjectVector();  //get direction vector
+	   SbVec3f dirLength = Length;//as is...
+
+	   prv->totalx = px1 - dirLength[0]; 
+	   prv->totaly = py1 - dirLength[1];
+	   prv->totalz = pz1 - dirLength[2];
+
+	   //INVENTOR:
+	   prv->SetTranslation(SbVec3f(prv->totalx,prv->totaly,prv->totalz));
+	   prv->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
+
+	   px1 = prv->ssx[_DNBKLEFT_]; //save current back right point
+	   py1 = prv->ssy[_DNBKLEFT_]; //for the next obj...
+	   pz1 = prv->ssz[_DNBKLEFT_];
    
 	   //get prev object
 	   my_prev = prv->prior_id ;
 	}
 }
 
+/********************* rotate object **************************/
+void CGExternal::RotateObjectTo(float ang)
+{
+	//calculate real rotation ...
+	global_rot = rotangle + ang ;
+	if (global_rot>360) global_rot = (global_rot - 360);
 
-//rotate the object(s) (with different ways if buttering)
-void CGExternal::RotateObject(float angle,int typeof)
+    //rotate...
+    SetRotationAngle(DegreesToRadians(global_rot));
+
+}
+
+//rotate all the battery objects...
+void CGExternal::RotateBattery()
 {
 	int my_next, my_prev ;
-	SbVec3f values , Lv , Rv;
-	int meter ;
-	CLib0 lib;
 
-	//case 0 = περιστροφη μονο του επιλεγμενου αντικειμένου
-	//τα υπολοιπα αντικειμενα απλως ακολουθουν την μεταβολη της συστοιχιας
-	SetRotationAngle(angle);
+	my_next    = next_id ;  //get the selected object next number
+	my_prev    = prior_id ;  //get the selected object previous number
 
-    //if battering...
-	switch (typeof)
-    {
-	   case 0 : {
-		          //do nothing 
-		          //εκτελειται η παραπανω εντολη η οποα ειναι κοινη
-		          //για ολες τις περιπτωσεις
-		          break;
-				}
-	   case 1 : {
-		          //τα υπολοιπα αντικειμενα μενουν στην σειρα χωρις 
-		          //να αλλαξει η περιστροφη τους
-	              //MovRebuildButtering();
-	              break;
-				}
-       case 2 : {
-		          //τα υπολοιπα αντικειμενα περιστρεφονται  
-		          //οπως το επιλεγμένο
-	              my_next = next_id ;  //get the selected object next number
-	              my_prev = prior_id ;  //get the selected object previous number
-	              meter=0;
+	//first rotate right objects of battering
+    while (my_next!=0)
+	{
+       CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
 
-                  while (my_next!=0)
-				  {
-                    CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object 
+	   //INVENTOR:
+	   nxt->SetRotationAngle(GetRotationAngle()); //set rotation = selected rotation(set param !!!)
+	   nxt->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
 
-	                //get next object
-	                my_next = nxt->next_id ;
-	                nxt->SetRotationAngle(angle);
-	                meter+=1; 
-				  }
+	   //get next object
+	   my_next = nxt->next_id ; 
+	}
 
-                  meter=0;
-	              while (my_prev!=0)
-				  {
-                    CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
-	   
-	                //get prev object
-	                my_prev = prv->prior_id ;
-	                prv->SetRotationAngle(angle);
-	                meter+=1;
-				  }
-				  break;
-				}
+	//secontary rotate left objects...
+	while (my_prev!=0)
+	{
+       CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
 
-	   default : break;
+	   //INVENTOR:
+	   prv->SetRotationAngle(GetRotationAngle()); //set rotation = selected rotation(set param!!!!)
+	   prv->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
+   
+	   //get prev object
+	   my_prev = prv->prior_id ;
 	}
 }
 
+//set object projection (=outlook)
+void CGExternal::ProjectObjectTo(float projection)
+{
+	float nx,ny,nz;
 
-//************************************************************
+	//set projection ( = outlook )
+    GetCarrierNormal(&nx, &ny, &nz);
 
+    totalx = totalx + (nx * projection);
+	totaly = totaly + (ny * projection);
+	totalz = totalz + (nz * projection);
 
-//************** input object (battering) **************/
+	//INVENTOR:
+	SetTranslation(SbVec3f(totalx , totaly , totalz));
+
+}
+
+//project all the battery objects... (calculate new outlook)
+void CGExternal::ProjectBattery()
+{
+	int my_next, my_prev ;
+
+	my_next    = next_id ;  //get the selected object next number
+	my_prev    = prior_id ;  //get the selected object previous number
+
+	//first calculate outlook for right objects of battering
+    while (my_next!=0)
+	{
+       CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+       
+	   //get new outlook
+	   nxt->outlook = nxt->GetObjProjection();
+
+	   //get next object
+	   my_next = nxt->next_id ; 
+	}
+
+	//secontary calculate for the left objects...
+	while (my_prev!=0)
+	{
+       CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+
+	   prv->outlook = prv->GetObjProjection();
+
+	   //get prev object
+	   my_prev = prv->prior_id ;
+	}
+}
+
+//************** input object (battery) **************/
 void CGExternal::AttachObject()
 {
-	//CLib0 lib;
-	//int my_next, my_prev, meter ;
-    float distance,length,newlength,height;
+	float px,py,pz;
 
-	SoSeparator *obj_sep = sep;  //get new object sep
-	CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); //get selected object
-
-	object_refpoint = ext->object_refpoint;
+	//get selected object
+	CGExternal *ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); 
 
 	//get common data
-	//set carrier
+	object_refpoint = ext->object_refpoint;
 	carrier_id	= ext->carrier_id ; 
-	//set carrier side
 	carrier_side = ext->carrier_side ;
-	//set outlook
-    outlook = ext->outlook;
-	//set object_side
 	object_side = ext->object_side ;
-
-    //****INVENTOR rendering
-	float n1,n2,n3;
-    GetCarrierNormal(&n1,&n2,&n3);
-	MakeObjVisible();
-	//SetTranslation(p_point); επειδη γινεται moveobject παρακατω δεν χρειαζεται...
-	SoRotation *rot	= (SoRotation *)obj_sep->getChild(2) ;   
-	SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),SbVec3f(n1,n2,n3)) ;
-	rot->rotation.setValue(*sbrot) ;
-	//***********************
-    //get box for new object distances calculation
-	GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
-
-	distance  = ext->GetLeftDistance(); //get selected left distance
-	length = ext->GetObjectLength(); //get selected length
-	newlength = GetObjectLength();   //get new length 
-	height = ext->GetHeightDistance();  //get height 
 
 
 	//new object battering ...
 	switch (theApp.ObjDirection)
     {
-	  case 1 : { //right
-		          MoveObjectTo(distance+length,height,outlook); 
+	  case 1 : { //right 
+		          totalx = ext->ssx[_DNBKRIGHT_];
+				  totaly = ext->ssy[_DNBKRIGHT_];
+				  totalz = ext->ssz[_DNBKRIGHT_];
+
+		          //INVENTOR:
+		          MakeObjVisible();
+	              SetTranslation(SbVec3f(totalx,totaly,totalz));
+				  //float nx,ny,nz;
+				  //ext->GetCarrierNormal(&nx,&ny,&nz); //<<<<<<----- ?????
+				  //SbRotation *sbrot = new SbRotation(SbVec3f(0,0,1),SbVec3f(nx,ny,nz));
+	              SetRotationAngle(ext->GetRotationAngle());
+				  GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
 
                   //change new object attributes
+				  outlook = GetObjProjection();//calculate outlook
 		          next_id = ext->next_id ; //the next value of selected object
                   prior_id = sdoc->obj_selector ; //= ο αριθμος του επιλεγμένου object
 	              //change selected object attributes
 	              ext->next_id = sdoc->ObjCount-1 ; //= ο αριθμος του νεου object
 
+				  //rebuild .................
+				  px = ssx[_DNBKRIGHT_];  //get new object right back point
+				  py = ssy[_DNBKRIGHT_];
+				  pz = ssz[_DNBKRIGHT_];
+				  int my_next = next_id ;  //get the new object next number
+				  int meter = 0;
+
+	              while (my_next!=0)
+				  {
+                     CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+
+					 nxt->totalx = px; //set new object right back point as left(total) of next object
+				     nxt->totaly = py;
+				     nxt->totalz = pz;
+
+		             //INVENTOR:
+	                 nxt->SetTranslation(SbVec3f(nxt->totalx,nxt->totaly,nxt->totalz));
+				     nxt->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
+
+					 nxt->outlook = nxt->GetObjProjection();  //calculate outlook
+
+					 px = nxt->ssx[_DNBKRIGHT_]; //save current back right point
+				     py = nxt->ssy[_DNBKRIGHT_]; //for the next obj...
+				     pz = nxt->ssz[_DNBKRIGHT_];
+
+	                 //get next object
+	                 my_next = nxt->next_id ; 
+					 meter+=1;
+				  }
+
+				  if (next_id>0)
+                  {
+				    //save first next attributes
+				    CGExternal *nxt = ((CGExternal*)sdoc->Obj[next_id]);
+				    nxt->prior_id = sdoc->ObjCount-1 ; //= ο αριθμος του νεου object
+	                nxt->SaveProperties();
+                  }
+
 				  break; 
                }
 	          
       case 2 : { //left
-		         MoveObjectTo(distance-newlength,height,outlook);
+		  		 SbVec3f Length    = GetObjectVector();  //get direction vector
+	             SbVec3f dirLength = ext->GetObjectDirection(Length);
+
+		         totalx = ext->ssx[_DNBKLEFT_] - dirLength[0];
+				 totaly = ext->ssy[_DNBKLEFT_] - dirLength[1];
+				 totalz = ext->ssz[_DNBKLEFT_] - dirLength[2];
+
+		         //INVENTOR:
+		         MakeObjVisible();
+	             SetTranslation(SbVec3f(totalx,totaly,totalz));
+	             SetRotationAngle(ext->GetRotationAngle());
+				 GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
 
                  //change new object attributes
+				 outlook = GetObjProjection();  //calculate outlook
 				 next_id = sdoc->obj_selector ; //= ο αριθμος του επιλεγμένου object
 	             prior_id = ext->prior_id ; //the previous val of selected object
 				 //change selected object attributes
 	             ext->prior_id = sdoc->ObjCount-1 ; //= ο αριθμος του νεου object
-
-				 break; 
-               }
-    }
-
-	//rebuild battering (if there are battering) inserting mode
-	InsRebuildButtering();
-
-	SaveProperties();
-	ext->SaveProperties();
-
-	sdoc->new_object = _NONE_;  //δεν χρειάζεται να κάνουμε click για να εμφανιστει το αντικείμενο
-
-	sdoc->obj_selector = sdoc->ObjCount-1 ;
-    SelectObject();
-
-	ShowRefPoints(150.0); //<<<----------------------- show points
-
-	//.. and set battering on..
-	sdoc->BATTERING = true;
- 
-	sdoc->SetModifiedFlag() ;
-	sdoc->UpdateAllViews(NULL);  
-}
-
-
-//rebuild the battering objects at right or left and change the attributes
-//insert mode ....
-void CGExternal::InsRebuildButtering()
-{
-    int my_next, my_prev, meter;
-	float distance,length,height;
-
-	//get selected object
-    //CGExternal *e_ext = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]); 
-
-	length = GetObjectLength();   //get new length 
-
-	meter=0; //zero meter
-	switch (theApp.ObjDirection)
-    {
-	  case 1 : { //right
-
-                 my_next = next_id ;  //get the new object next number
-
-	             while (my_next!=0)
-				 {
-                    CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
-
-                    distance  = nxt->GetLeftDistance(); //get object left distance
-					height = nxt->GetHeightDistance();  //get object height
-                    nxt->MoveObjectTo(distance+length,height,nxt->outlook);
-
-	                //get next object
-	                my_next = nxt->next_id ;
-	                meter+=1; 	
-				 }
-				 if (next_id>0)
-                 {
-				   //save first next attributes
-				   CGExternal *nxt = ((CGExternal*)sdoc->Obj[next_id]);
-				   nxt->prior_id = sdoc->ObjCount-1 ; //= ο αριθμος του νεου object
-	               nxt->SaveProperties();
-                 }
-				 break;
-			   }
-      case 2 : { //left
-
-                 my_prev = prior_id ;  //get the new object prior number
+                 
+				 //rebuild ....................
+				 px = ssx[_DNBKLEFT_];  //get new object left back point
+				 py = ssy[_DNBKLEFT_];
+				 pz = ssz[_DNBKLEFT_];
+				 int my_prev = prior_id ;  //get the new object previous number
+				 int meter = 0;
 
 	             while (my_prev!=0)
 				 {
                     CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
 
-					distance  = prv->GetLeftDistance(); //get object left distance
-					height = prv->GetHeightDistance();  //get object height
-                    prv->MoveObjectTo(distance-length,height,prv->outlook);
+					Length    = prv->GetObjectVector();  //get direction vector
+	                dirLength = Length;//prv->GetObjectDirection(Length);
+
+					prv->totalx = px - dirLength[0]; //set new object right back point as left(total) of next object
+				    prv->totaly = py - dirLength[1];
+				    prv->totalz = pz - dirLength[2];
+
+		            //INVENTOR:
+	                prv->SetTranslation(SbVec3f(prv->totalx,prv->totaly,prv->totalz));
+				    prv->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
+
+				    prv->outlook = prv->GetObjProjection();  //calculate outlook
+
+					px = prv->ssx[_DNBKLEFT_]; //save current back left point
+				    py = prv->ssy[_DNBKLEFT_]; //for the prev obj...
+				    pz = prv->ssz[_DNBKLEFT_];
 
 					//get next object
 	                my_prev = prv->prior_id ;
@@ -942,83 +1015,118 @@ void CGExternal::InsRebuildButtering()
 				   prv->next_id = sdoc->ObjCount-1 ; //= ο αριθμος του νεου object
 	               prv->SaveProperties();
 				 }
-				 break;
+
+				 break; 
                }
-	}
+    }
+	SaveProperties();
+	ext->SaveProperties();
+
+	sdoc->new_object = _NONE_;  //δεν χρειάζεται να κάνουμε click για να εμφανιστει το αντικείμενο
+
+	sdoc->obj_selector = sdoc->ObjCount-1 ;
+    SelectObject();
+	ShowRefPoints(150.0); //<<<----------------------- show points
+
+	//.. and set battery on..
+	sdoc->BATTERY = true;
+	sdoc->SetModifiedFlag() ;
+	sdoc->UpdateAllViews(NULL);  
 }
 
 
 
-
-//rebuild the battering objects at right or left and change the attributes
+//rebuild the battery objects at right or left and change the attributes
 //delete mode ...
-void CGExternal::DelRebuildButtering()
+void CGExternal::DelRebuildButtery()
 {
     int my_next, my_prev, meter;
-	int the_next, the_prev;
-	float distance,length,height;
+	float px,py,pz;
 
 	//check if there are battering ...
-	the_next = next_id ;   //get the selected object next number
-    the_prev = prior_id ;  //get the selected object previous number
+	my_next = next_id ;   //get the selected object next number
+    my_prev = prior_id ;  //get the selected object previous number
 
-    if ((the_next!=0) || (the_prev!=0))
+    if ((my_next!=0) || (my_prev!=0))
     { 
-	  length = GetObjectLength();   //get length
-
 	  meter=0; //zero meter
 	  switch (theApp.ObjDirection)
 	  {
 	    case 1 : { //right
+		          px = ssx[_DNBKLEFT_];  //get selected object left back point
+				  py = ssy[_DNBKLEFT_];
+				  pz = ssz[_DNBKLEFT_];
 
-                   my_next	= next_id ;  //get the selected object next number
+	              while (my_next!=0)
+				  {
+                     CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
 
-	               while (my_next!=0)
-				   {
-                      CGExternal *nxt = ((CGExternal*)sdoc->Obj[my_next]);  //get next object
+					 nxt->totalx = px; //set next object selected right back point
+				     nxt->totaly = py;
+				     nxt->totalz = pz;
 
-					  distance  = nxt->GetLeftDistance(); //get object left distance
-					  height = nxt->GetHeightDistance();  //get object height
-                      nxt->MoveObjectTo(distance-length,height,nxt->outlook);
+		             //INVENTOR:
+	                 nxt->SetTranslation(SbVec3f(nxt->totalx,nxt->totaly,nxt->totalz));
+				     nxt->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
 
-	                  //get next object
-	                  my_next = nxt->next_id ;
-	                  meter+=1; 
-				   }
-				   break;
+					 nxt->outlook = nxt->GetObjProjection();  //calculate outlook
+
+					 px = nxt->ssx[_DNBKLEFT_]; //save current back left point
+				     py = nxt->ssy[_DNBKLEFT_]; //for the next obj...
+				     pz = nxt->ssz[_DNBKLEFT_];
+
+	                 //get next object
+	                 my_next = nxt->next_id ; 
+				  	 meter+=1;
+				  }
+				  //Change the attributes of objects
+	              if (next_id>0)
+				  {
+                    CGExternal *nxt = ((CGExternal*)sdoc->Obj[next_id]); //get first next of selected object
+                    nxt->prior_id = prior_id;
+	                nxt->SaveProperties();
+				  }
+				  break;
 				 }
         case 2 : { //left
+                  px = ssx[_DNBKRIGHT_];  //get selected object left back point
+				  py = ssy[_DNBKRIGHT_];
+				  pz = ssz[_DNBKRIGHT_];
 
-                   my_prev = prior_id ;  //get the selected object prior number
+	              while (my_prev!=0)
+				  {
+                     CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
 
-	               while (my_prev!=0)
-				   {
-                      CGExternal *prv = ((CGExternal*)sdoc->Obj[my_prev]);  //get previous object
+					 SbVec3f Length    = prv->GetObjectVector();  //get direction vector
+	                 SbVec3f dirLength = Length;//as is...
 	                  
-					  distance  = prv->GetLeftDistance(); //get object left distance
-					  height = prv->GetHeightDistance();  //get object height
-                      prv->MoveObjectTo(distance+length,height,prv->outlook);
+					 prv->totalx = px - dirLength[0]; 
+				     prv->totaly = py - dirLength[1];
+				     prv->totalz = pz - dirLength[2];
 
-					  //get prev object
-	                  my_prev = prv->prior_id ;
-	                  meter+=1;
-				   }
-				   break;
+		             //INVENTOR:
+	                 prv->SetTranslation(SbVec3f(prv->totalx,prv->totaly,prv->totalz));
+				     prv->GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
+
+					 prv->outlook = prv->GetObjProjection();  //calculate outlook
+
+					 px = prv->ssx[_DNBKLEFT_]; //save current back left point
+				     py = prv->ssy[_DNBKLEFT_]; //for the next obj...
+				     pz = prv->ssz[_DNBKLEFT_];
+
+					 //get prev object
+	                 my_prev = prv->prior_id ;
+	                 meter+=1;
+				  }
+				  //Change the attributes of objects
+				  if (prior_id>0)
+				  {
+                     CGExternal *prv = ((CGExternal*)sdoc->Obj[prior_id]);  //get first prev of selected object 
+	                 prv->next_id = next_id;
+                     prv->SaveProperties();
+				  }
+				  break;
 				 }
-	  }
-
-      //Change the attributes of objects
-	  if (next_id!=0)
-	  {
-        CGExternal *nxt = ((CGExternal*)sdoc->Obj[next_id]);       //get next of selected object
-        nxt->prior_id = prior_id;
-	    nxt->SaveProperties();
-	  }
-      if (prior_id!=0)
-	  {
-        CGExternal *prv = ((CGExternal*)sdoc->Obj[prior_id]);      //get prev of selected object 
-	    prv->next_id = next_id;
-        prv->SaveProperties();
 	  }
 
 	  //change selected (deleted) object attributes
@@ -1034,10 +1142,10 @@ void CGExternal::DelRebuildButtering()
 
 
 
-//rebuild the battering objects at right or left and change the attributes
+//rebuild the battery objects at right or left and change the attributes
 //delete object and break the battering in 2 butterings
 //extent delete mode...
-void CGExternal::ExtDelRebuildButtering()
+void CGExternal::ExtDelRebuildButtery()
 {
 	int the_next, the_prev;
 
@@ -1075,14 +1183,14 @@ void CGExternal::ExtDelRebuildButtering()
 }
 
 
-//delete object ... (if battering ..from battering)...
+//delete object ... (if battery ..from battering)...
 void CGExternal::DelObject(int aanum,int mode)
 {
 	if (IsAttachedObject(aanum)==false)
 	{
-	  //rebuild the battering -before- delete the selected object
-	  if (mode==0) DelRebuildButtering(); 
-	          else ExtDelRebuildButtering();
+	  //rebuild the battery -before- delete the selected object
+	  if (mode==0) DelRebuildButtery(); 
+	          else ExtDelRebuildButtery();
 
 	  DeleteObject(aanum);
 	}
@@ -1096,26 +1204,17 @@ void CGExternal::DelObject(int aanum,int mode)
 void CGExternal::ReplaceObject()
 {
 	int mynext,myprior,mycarrier,myoutlook,mycarrier_side,myobj_side,obj_rp ;
-    SbVec3f Transaxis , Rotaxis ;
-    float Rotangle ,tx,ty,tz , myangle ;
+    float tx,ty,tz , myangle ,mylocal_rot;
 
-	SoSeparator *obj_sep = sep;  //get new object sep
 	//get selected-old object ...
 	CGExternal *the_old = ((CGExternal*)sdoc->Obj[sdoc->obj_selector]);//old
-
-	//get selected-old object translation and rotation
-	SoSeparator *selected = ((CGExternal*)the_old)->sep ; //get selected object node
-
-	//SoTranslation *t = (SoTranslation *)selected->getChild(1) ; 
-	SoRotation *r = (SoRotation *)selected->getChild(2) ;    	
-	//Transaxis = t->translation.getValue(); //get selected object translation values   
-    r->rotation.getValue(Rotaxis , Rotangle); //get selected object rotation values
 
     //save selected-old data
 	tx             = the_old->totalx;
     ty             = the_old->totaly;
 	tz             = the_old->totalz;
-	myangle        = Rotangle;//GetRotationAngle();//the_old->yangle;<<----not work??????
+	myangle        = the_old->rotangle;
+	mylocal_rot    = the_old->local_rot;
 	mynext         = the_old->next_id ;
 	myprior        = the_old->prior_id ;
 	mycarrier      = the_old->carrier_id ;
@@ -1125,8 +1224,7 @@ void CGExternal::ReplaceObject()
 	obj_rp         = the_old->object_refpoint;
 
 
-    //delete the old(replaced)-selected object
-	//sview->OnDelete();
+	//delete selected (old) object
 	the_old->DelObject(sdoc->obj_selector,0);
 
 	if ((mynext!=0) || (myprior!=0)) //more than one object battering
@@ -1194,22 +1292,20 @@ void CGExternal::ReplaceObject()
 	else //only one object
     {
 	   object_refpoint = obj_rp;
+	   rotangle = myangle; //get real rotation
+	   local_rot = mylocal_rot; //get local rotation
+
 	   //in this case get old totals
 	   totalx = tx;
 	   totaly = ty;
 	   totalz = tz;
+
+	   //*** INVENTOR rendering ***
+	   MakeObjVisible();
+	   SetTranslation(SbVec3f(totalx,totaly,totalz));
+	   //SetRotationAngle(myangle);
+	   RotateObjectTo(local_rot);
 	   GetBox();   //<<<<<-------------------------------- εγκιβωτισμος
-
-	   //****INVENTOR rendering
-	   //set new object rotation  <<--------------- να δινω την στροφη σε radians
-	                           //    e.g. setRotationAngle(old_radians)
-	   SoRotation *rot	= (SoRotation *)sep->getChild(2) ;
-	   rot->rotation.setValue(Rotaxis ,Rotangle) ; //put selected object rotation values to the new object
-
-       MakeObjVisible();
-	   SetTranslation(SbVec3f(totalx,totaly,totalz)); 
-	   //SetRotationAngle(myangle); //<<<<---------------????
-       //***********************
 
        //save new object attributes (get it from saved old-selected-replaced object)
 	   next_id      = mynext ;
@@ -1228,8 +1324,8 @@ void CGExternal::ReplaceObject()
 
 	   sdoc->new_object = _NONE_ ;  //δεν χρειάζεται να κάνουμε click για να εμφανιστει το αντικείμενο
 
-	   //.. and set battering on..
-	   sdoc->BATTERING = true;
+	   //.. and set battery on..
+	   sdoc->BATTERY = true;
 
 	   sdoc->SetModifiedFlag() ;
 	   sdoc->UpdateAllViews(NULL);   
@@ -1306,9 +1402,9 @@ void CGExternal::CopyObject(int aanumber)
 
 	    clone = (SoSeparator *)SoNode::getByName(name);
 
-		SoNode *myGeom = clone->getChild(5); //get "Geometry" 
+		SoNode *myGeom = clone->getChild(4); //get "Geometry" 
 	    sview->sep_buffer->addChild( myGeom );
-		SoNode *myAttr = clone->getChild(6); //get "Attributes" 
+		SoNode *myAttr = clone->getChild(5); //get "Attributes" 
 	    sview->sep_buffer->addChild( myAttr );
 
 		//copy data...
@@ -1332,22 +1428,18 @@ void CGExternal::PasteObject()
  
 
 		//*****create pasted object...
-	    SoTranslation	*trans	= new SoTranslation ;
-	    SoRotation		*rot	= new SoRotation ;
+		SoTransform *xform = new SoTransform ;
+		sep->addChild( xform ) ;
 
 		SoDrawStyle *ds = new SoDrawStyle ;
 		sep->addChild(ds) ;
 		ds->style = SoDrawStyle::INVISIBLE ;
-	
-	    sep->addChild ( trans ) ;
-	    sep->addChild ( rot ) ;
 
 	    SoPickStyle *ps = new SoPickStyle;
 	    sep->addChild(ps) ;
         ps->style.setValue(SoPickStyle::SHAPE) ;
 
-	    SoMaterial  *mat = new SoMaterial;
-	    //mat->diffuseColor.setValue( k_red, k_green, k_blue ); 
+	    SoMaterial  *mat = new SoMaterial; 
         sep->addChild(mat) ;
         
 		//copy object (geometry & attributes) from buffer...
@@ -1369,13 +1461,6 @@ void CGExternal::PasteObject()
 		for ( i = 0 ; i < 10 ; i++ )
 			ob->eid_id[i] = sdoc->external_buffer->eid_id[i];
 
-		for ( i = 0 ; i < 3 ; i++ )
-		{
-			ob->left_base_point[i]	= sdoc->external_buffer->left_base_point[i] ;
-			ob->right_base_point[i] = sdoc->external_buffer->right_base_point[i] ;
-			ob->left_top_point[i]	= sdoc->external_buffer->left_top_point[i] ;
-			ob->right_top_point[i]	= sdoc->external_buffer->right_top_point[i] ;
-		}
 
 		//get min..max
 		ob->xmin = sdoc->external_buffer->xmin ;
@@ -1463,6 +1548,7 @@ GExternalProp::GExternalProp(CWnd* pParent /*=NULL*/)
 	m_objLen = 0.0f;
 	m_batLen = 0.0f;
 	m_outlook = 0.0f;
+	m_rotpoint = 0;
 	//}}AFX_DATA_INIT
 }
 
@@ -1484,6 +1570,8 @@ void GExternalProp::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_OBJLEN, m_objLen);
 	DDX_Text(pDX, IDC_BATLEN, m_batLen);
 	DDX_Text(pDX, IDC_OUTLOOK, m_outlook);
+	DDX_Text(pDX, IDC_ROTPOINT, m_rotpoint);
+	DDV_MinMaxInt(pDX, m_rotpoint, 4000, 4004);
 	//}}AFX_DATA_MAP
 }
 

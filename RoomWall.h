@@ -31,9 +31,7 @@ public:
 	CString		plakaki ;
 	float		plakaki1, plakaki2 ;
 
-	float xdist, ydist ,zdist ,rot ,left_d , right_d , up_d;
-
-	float corner ;  //η γωνια του τοιχου με τον carrier τοιχο
+	float xdist, ydist ,zdist ;    //abs distances (hiden)
 
 // Operations
 public:
@@ -48,13 +46,14 @@ public:
 	void MoveCarrierObjects(float dx,float dy,float dz) ;
 	void MoveObjectTo(float d1,float d2,float d3) ;
 	void RotateCarrierObjects(float dx,float dy,float dz) ;
-	void RotateObject(float crn) ;
+	void RotateObjectTo(float crn) ;
 
 	bool IsAttachedObject(int wallno) ;
 	void DeleteObject(int aanumber) ;
 	void CopyObject(int aanumber) ;
 	void PasteObject() ;
 };
+
 
 /////////////////////////////////////////////////////////////////////////////
 

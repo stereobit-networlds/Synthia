@@ -28,39 +28,31 @@ public:
 	CString eid_id[10] ;
 	CString code, descr ;
 
-    int pCount ;   // properties count
     CString  pval[10], pname[10] ;
 
 	int next_id, prior_id ; //next and previous indexes
+    float Ldist , Rdist ;   //battery distance from carrier (left and right)
+	int rotpoint ; //the rotation point of object (backright,center,...)
 
-    float yangle ;
-
-    float back_vec[3][3] ;
-
-    float left_top_point[3],
-          right_top_point[3],
-          left_base_point[3],
-          right_base_point[3] ;   // in case of participation in a battery
-
-    int back_side ;     // the back side syrface offset into the Syrfs[]
-
-    float xdist, ydist ,x1dist;  //calculated distances
-    float Ldist , Rdist ; //object distance from walls (left and right)
-
+    float local_rot ; //the local object rotation (begin as 0)
+	float global_rot; //the global object rotation = (CObject)rotangle(=first global)+local_rot
+	float xbox[8], ybox[8], zbox[8] ; //σημεία αποθηκευσης εγκιβωτισμου
 
 // Operations
 public:
 	void ObjectToInventor ( SoSeparator *root ) ;
 	void InventorToObject ( SoSeparator *root ) ;
 	void SaveProperties() ;
+
+	void GetBoxPoints(float Ax,float Ay,float Az,float Bx,float By,float Bz,
+					  float fangle,float rotaxisX,float rotaxisY,float rotaxisZ,
+					  float *Cx,float *Cy,float *Cz) ;
+	void RotateBox(int rp,float a) ;
 	void GetBox() ;
-	int EditProperties ( CDocument *d, SoSeparator *root ) ;
+	int  EditProperties ( CDocument *d, SoSeparator *root ) ;
 
+   float GetGlobalObjDirection(SbVec3f point,SbVec3f normal) ;
 	void AddNewObject(SbVec3f p_point, SbVec3f p_normal) ;
-
-	SbMatrix GetObjectMatrix() ;
-	SbVec3f GetObjectVectors() ;
-	SbVec3f GetObjectDirection(SbVec3f source) ;
 
 	float GetBatteryLength() ;
 	float GetBatteryLeftDistance() ;
@@ -68,19 +60,20 @@ public:
 	float SetBatteryLeftDistance(float val) ;
 	float SetBatteryRightDistance(float val) ;
 
-	void MoveObjectTo(float d1,float d2,float d3) ;
-	void MoveButtering(float x,float y,float z) ;
-	void RotateObject(float angle,int typeof) ;
+	void MoveObjectTo(float d1,float d2) ;
+	void MoveBattery() ;
+    void RotateObjectTo(float ang) ;
+	void RotateBattery() ;
+	void ProjectObjectTo(float projection) ;
+	void ProjectBattery() ;
 
 	void AttachObject() ;
 
-	void InsRebuildButtering() ;
-	void DelRebuildButtering() ;
-	void ExtDelRebuildButtering() ;
+	void DelRebuildButtery() ;
+	void ExtDelRebuildButtery() ;
 	void DelObject(int aanum,int mode);
 
 	void ReplaceObject() ;
-	void RepRebuildButtering() ;
 	void UnGroupObjects();
 
 	void CopyObject(int aanumber) ;
@@ -116,6 +109,7 @@ public:
 	float	m_objLen;
 	float	m_batLen;
 	float	m_outlook;
+	int		m_rotpoint;
 	//}}AFX_DATA
 
 

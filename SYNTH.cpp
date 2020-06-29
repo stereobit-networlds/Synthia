@@ -29,18 +29,28 @@ BEGIN_MESSAGE_MAP(CSYNTHApp, CWinApp)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	ON_COMMAND(ID_FILE_INFO, OnFileViewInfo)
 	ON_UPDATE_COMMAND_UI(ID_FILE_INFO, OnUpdateFileViewInfo)
+	ON_COMMAND(ID_OBJECT_RIGHT, OnRight)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_RIGHT, OnUpdateRight)
+    ON_COMMAND(ID_OBJECT_LEFT, OnLeft)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_LEFT, OnUpdateLeft)
 	ON_COMMAND(ID_SHOWREFPOINTS, OnShowrefpoints)
 	ON_UPDATE_COMMAND_UI(ID_SHOWREFPOINTS, OnUpdateShowrefpoints)
+	ON_COMMAND(ID_OBJSIDE_BACK, OnObjsideBack)
+	ON_UPDATE_COMMAND_UI(ID_OBJSIDE_BACK, OnUpdateObjsideBack)
+	ON_COMMAND(ID_OBJSIDE_LEFT, OnObjsideLeft)
+	ON_UPDATE_COMMAND_UI(ID_OBJSIDE_LEFT, OnUpdateObjsideLeft)
+	ON_COMMAND(ID_OBJSIDE_FRONT, OnObjsideFront)
+	ON_UPDATE_COMMAND_UI(ID_OBJSIDE_FRONT, OnUpdateObjsideFront)
+	ON_COMMAND(ID_OBJSIDE_RIGHT, OnObjsideRight)
+	ON_UPDATE_COMMAND_UI(ID_OBJSIDE_RIGHT, OnUpdateObjsideRight)
+	ON_COMMAND(ID_OBJSIDE_TOP, OnObjsideTop)
+	ON_UPDATE_COMMAND_UI(ID_OBJSIDE_TOP, OnUpdateObjsideTop)
+	ON_COMMAND(ID_OBJSIDE_BOTTOM, OnObjsideBottom)
+	ON_UPDATE_COMMAND_UI(ID_OBJSIDE_BOTTOM, OnUpdateObjsideBottom)
 	//}}AFX_MSG_MAP
 
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
-
-	// my commands
-    ON_COMMAND(ID_OBJECT_RIGHT, OnRight)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_RIGHT, OnUpdateRight)
-    ON_COMMAND(ID_OBJECT_LEFT, OnLeft)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_LEFT, OnUpdateLeft)
 
 END_MESSAGE_MAP()
 
@@ -51,6 +61,16 @@ CSYNTHApp::CSYNTHApp()
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
+
+	//<<<<<<<<<<<  initialization  >>>>>>>>>>>
+	//init light editor
+	TheLightIs = false ; //no 
+    //init direction ...left,right... 
+	ObjDirection = 1;
+	//init side object position...
+	ObjSidePosition = 2003 ; //=_BACK_
+	//init ref points rendering
+	ShowRefPoints = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -153,11 +173,6 @@ BOOL CSYNTHApp::InitInstance()
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
-
-    //init direction ...left,right...
-	ObjDirection = 1;
-	//init ref points rendering
-	ShowRefPoints = 0;
 
 	// OPEN DATABASE / DATASETS
 	// open the database 
@@ -317,8 +332,8 @@ void CSYNTHApp::OnFileOpen()
 	const char szFilter[] =
 	"Synthesis Files (*.sn3)\0*.sn3\0Inventor Files (*.iv)\0*.iv\0Vrml Files (*.wrl)\0*.wrl\0";
 
+
 	const char szTitle[] = "Open File";
-	CSYNTHDoc *pDoc ;
 
 	CFileDialog openDlg(TRUE);
 
@@ -340,14 +355,14 @@ void CSYNTHApp::OnFileOpen()
 		else
 		{
 			CString newName = openDlg.m_ofn.lpstrFile;
-			pDoc = (CSYNTHDoc *)OpenDocumentFile(newName);
+			CSYNTHDoc *pDoc =
+   		    (CSYNTHDoc *)OpenDocumentFile(newName);
 
 			if (openDlg.m_ofn.nFilterIndex < NUM_EXT_VALS)
 					m_nLastOpenedFilterIX = openDlg.m_ofn.nFilterIndex;
-			
-		}
 
-		pDoc->OpenSYNTHFile();
+			pDoc->OpenSceneFile(openDlg.m_ofn.nFilterIndex);
+		}
 	}
 }
 
@@ -407,6 +422,8 @@ pTemplate->OpenDocumentFile(NULL);
 // END_IVWGEN
 
 //******************************************************** my routines
+
+//<<<<<<<<<<<<<<<   ÊÁÔÅÕÈÕÍÓÇ ÓÕÍÈÅÓÇÓ   >>>>>>>>>>>>>>>>>>>>>
 void CSYNTHApp::OnRight()
 {
   ObjDirection = 1;
@@ -415,11 +432,9 @@ void CSYNTHApp::OnRight()
 void CSYNTHApp::OnUpdateRight(CCmdUI* pCmdUI) 
 {
     ASSERT( ObjDirection != NULL );
-    if (ObjDirection == 1)
-        //pCmdUI->Enable( TRUE );	
+    if (ObjDirection == 1)	
 		pCmdUI->SetCheck(TRUE);
     else
-        //pCmdUI->Enable( FALSE );
 		pCmdUI->SetCheck(FALSE);
 }
 
@@ -439,7 +454,7 @@ void CSYNTHApp::OnUpdateLeft(CCmdUI* pCmdUI)
 		pCmdUI->SetCheck(FALSE);
 }
 
-
+//<<<<<<<<<<<<<<<   SHOW REFERENCE POINTS   >>>>>>>>>>>>>>>>>>>>>
 void CSYNTHApp::OnShowrefpoints() 
 {
 	// TODO: Add your command handler code here
@@ -454,4 +469,97 @@ void CSYNTHApp::OnUpdateShowrefpoints(CCmdUI* pCmdUI)
 		pCmdUI->SetCheck(TRUE);
     else
 		pCmdUI->SetCheck(FALSE);	
+}
+
+//<<<<<<<<<<<<<<<   ÐËÅÕÑÁ ÔÏÐÏÈÅÔÇÓÇÓ ÔÏÕ ÁÍÔÉÊÅÉÌÅÍÏÕ   >>>>>>>>>>>>>>>>>>>>>
+void CSYNTHApp::OnObjsideBack() 
+{
+	// TODO: Add your command handler code here
+	ObjSidePosition = 2003;
+}
+
+void CSYNTHApp::OnUpdateObjsideBack(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (ObjSidePosition==2003)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+	
+}
+
+void CSYNTHApp::OnObjsideLeft() 
+{
+	// TODO: Add your command handler code here
+	ObjSidePosition = 2000;
+}
+
+void CSYNTHApp::OnUpdateObjsideLeft(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (ObjSidePosition==2000)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHApp::OnObjsideFront() 
+{
+	// TODO: Add your command handler code here
+	ObjSidePosition = 2001;
+}
+
+void CSYNTHApp::OnUpdateObjsideFront(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (ObjSidePosition==2001)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHApp::OnObjsideRight() 
+{
+	// TODO: Add your command handler code here
+	ObjSidePosition = 2002;
+}
+
+void CSYNTHApp::OnUpdateObjsideRight(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (ObjSidePosition==2002)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHApp::OnObjsideTop() 
+{
+	// TODO: Add your command handler code here
+	ObjSidePosition = 2004;
+	
+}
+
+void CSYNTHApp::OnUpdateObjsideTop(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (ObjSidePosition==2004)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
+}
+
+void CSYNTHApp::OnObjsideBottom() 
+{
+	// TODO: Add your command handler code here
+	ObjSidePosition = 2005;
+}
+
+void CSYNTHApp::OnUpdateObjsideBottom(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	if (ObjSidePosition==2005)	
+		pCmdUI->SetCheck(TRUE);
+    else
+		pCmdUI->SetCheck(FALSE);
 }

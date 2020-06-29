@@ -14,7 +14,7 @@ class SoSelection;
 // IVF_EXAMPLE_END
 
 // We'll need an instance of SoWinClipboard for cut/copy/paste
-class SoWinClipboard;   //SelectB
+class SoWinClipboard;   
 // IVF_EXAMPLE_END
 
 
@@ -31,24 +31,11 @@ protected: // create from serialization only
 
 // Attributes
 public:
-	CSYNTHDoc* GetDocument();
-
-	SoSeparator *sep_buffer;  //aux node for copy/paste 
+	CSYNTHDoc* GetDocument(); 
 
     SoSelection *GetSelectionNode()
         { return m_pSelectionNode; }
-
-	SoPath *lightpath;
-
-    // Colors
-	float m_ClearColorRed;
-	float m_ClearColorGreen;
-	float m_ClearColorBlue;
-
-	//options
-	int headlight_option ;
-	int decoration_option ;
-	int drawStyle_option ;
+	SoSeparator *sep_buffer;  //aux node for copy/paste
 
 	BOOL IsDocLoaded();
 	BOOL IsSelected();
@@ -98,21 +85,38 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
     
-	void OnDelete();
-	void OnExtDelete();
-	void OnUnGroup();
-	bool StartScene();
-    void DrawBox(float x1,float y1,float z1,
-			     float x2,float y2,float z2);
 
 protected:
 // IVF_EXAMPLE_BEGIN
     // Selection node to manage selection
     SoSelection *m_pSelectionNode; 
 
-    SoWinClipboard *m_pClipboard;   //SelectB
+    SoWinClipboard *m_pClipboard;
 
-    static void OnPasteCB( void *data, SoPathList *pList );
+	//SoSeparator *Root;
+
+	SoPath *lightpath;
+
+    // Colors
+	float m_ClearColorRed;
+	float m_ClearColorGreen;
+	float m_ClearColorBlue;
+
+	//options
+	int headlight_option ;
+	int decoration_option ;
+	int drawStyle_option ;
+
+	SbBool writePickedPath (SoNode *root, const SbViewportRegion &viewport,  
+									      const SbVec2s &cursorPosition ) ;
+	void GetPickObjectID(SoPath *path);
+	void AddObjects();
+	static void MousePressCB(void *userData, SoEventCallback *eventCB ) ;
+
+	void StartScene();
+	void CreateScene();
+	void AddSphere(SbVec3f p_point,SbVec3f p_normal);
+
 // IVF_EXAMPLE_END
 
 
@@ -132,10 +136,16 @@ protected:
 	afx_msg void OnEditCopy();
 	afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
 	afx_msg void OnEditPaste();
+	afx_msg void OnUpdateUngroup(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
 	afx_msg void OnViewViewmodesSelectionmode();
 	afx_msg void OnViewViewmodesViewingmode();
+	afx_msg void OnUngroup();
 	afx_msg void OnUpdateUnGroup(CCmdUI* pCmdUI);
+	afx_msg void OnNewProject();
+	afx_msg void OnUpdateNewProject(CCmdUI* pCmdUI);
+	afx_msg void OnProperties();
+	afx_msg void OnUpdateProperties(CCmdUI* pCmdUI);
 	afx_msg void OnHidebase();
 	afx_msg void OnUpdateHidebase(CCmdUI* pCmdUI);
 	afx_msg void OnHidewalls();
@@ -176,6 +186,16 @@ protected:
 	afx_msg void OnUpdateDirlight(CCmdUI* pCmdUI);
 	afx_msg void OnMaterialedit();
 	afx_msg void OnUpdateMaterialedit(CCmdUI* pCmdUI);
+	afx_msg void OnAddwall();
+	afx_msg void OnUpdateAddwall(CCmdUI* pCmdUI);
+	afx_msg void OnSelectExternal();
+	afx_msg void OnUpdateSelectExternal(CCmdUI* pCmdUI);
+	afx_msg void OnReplace();
+	afx_msg void OnUpdateReplace(CCmdUI* pCmdUI);
+	afx_msg void OnJump();
+	afx_msg void OnUpdateJump(CCmdUI* pCmdUI);
+	afx_msg void OnUndo();
+	afx_msg void OnUpdateUndo(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
@@ -186,5 +206,7 @@ inline CSYNTHDoc* CSYNTHView::GetDocument()
 #endif
 
 extern CSYNTHView	*sview ;
+extern SbVec3f		picked_point ;
+extern SbVec3f		picked_normal ;
 
 /////////////////////////////////////////////////////////////////////////////

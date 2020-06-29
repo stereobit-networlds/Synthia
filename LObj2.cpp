@@ -15,6 +15,7 @@
 #include <Inventor/nodes/SoTexture2.h>
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoTransform.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -242,8 +243,9 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	else
 		sep = new SoSeparator ;
 
-	SoTranslation	*trans	= new SoTranslation ;
-	SoRotation		*rot	= new SoRotation ;
+
+	SoTransform *xform = new SoTransform ;
+	sep->addChild( xform );
 
 	if ( add )
 	{
@@ -251,8 +253,6 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 		sep->addChild(ds) ;
 		ds->style = SoDrawStyle::INVISIBLE ;
 	}
-	sep->addChild ( trans ) ;
-	sep->addChild ( rot ) ;
 
 	//init pick style
 	SoPickStyle *ps = new SoPickStyle;
@@ -261,7 +261,6 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 
 	// setup total material for whole object //<<<<<<<----------add by me
 	SoMaterial  *mat_total = new SoMaterial;
-	//mat_total->diffuseColor.setValue( k_red, k_green, k_blue ); 
     sep->addChild(mat_total) ;
 
 
@@ -295,9 +294,7 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 	else
 		txt_syr = NULL ;
 
-    // battery variables
-    float left_base_point[3], right_base_point[3],
-          left_top_point[3], right_top_point[3] ;
+    // box variables
 	float xmin,xmax,ymin,ymax,zmin,zmax;  //min..max
 
 	SoNode *b ;
@@ -320,13 +317,6 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 		  if (zmin > zz[i]) zmin = zz[i] ;
         }
 
-
-		left_base_point[0] = xx[0] ;
-		left_base_point[1] = yy[0] ;
-		left_base_point[2] = zz[0] ;
-		right_base_point[0] = xx[pleyres-1] ;
-		right_base_point[1] = yy[pleyres-1] ;
-		right_base_point[2] = zz[pleyres-1] ;
 	}
 
 	// setup top
@@ -337,12 +327,6 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 		b = glib.CreatePrisma ( mat_kas, NULL, 0, 15, pleyres, xx, yy, zz ) ;
 		group->addChild( b );
 
-		left_top_point[0] = xx[0] ;
-		left_top_point[1] = yy[0] ;
-		left_top_point[2] = zz[0] ;
-		right_top_point[0] = xx[pleyres-1] ;
-		right_top_point[1] = yy[pleyres-1] ;
-		right_top_point[2] = zz[pleyres-1] ;
 		
 		for ( i = 0 ; i < pleyres ; i++ )
 			yy[i] = yy[i] - height0*10 ;
@@ -480,14 +464,6 @@ void LObj2::CreateObject ( BOOL add, SoSeparator *root, COleVariant eid_id[10],
 
 		for ( i = 0 ; i < 10 ; i++ )
 			ob->eid_id[i] = eid_id[i].pbVal ;
-
-		for ( i = 0 ; i < 3 ; i++ )
-		{
-			ob->left_base_point[i]	= left_base_point[i] ;
-			ob->right_base_point[i] = right_base_point[i] ;
-			ob->left_top_point[i]	= left_top_point[i] ;
-			ob->right_top_point[i]	= right_top_point[i] ;
-		}
 
 		//transfer min..max to object's min..max
 		ob->xmin = xmin ;

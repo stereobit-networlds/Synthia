@@ -10,12 +10,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CWizz0 dialog
 
-class CWizz0 : public CDialog
+class CWizz0 : public CDialog 
 {
 // Construction
 public:
 	CWizz0(CWnd* pParent = NULL);   // standard constructor
-
 
 // Dialog Data
 	//{{AFX_DATA(CWizz0)
@@ -59,12 +58,15 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CWizz0)
-		// NOTE: the ClassWizard will add member functions here
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
+
+extern CWizz0 *wizard0;
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
 
 #endif // !defined(AFX_WIZZ0_H__1BF688E1_8779_11D2_81BC_444553540000__INCLUDED_)
+

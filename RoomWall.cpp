@@ -16,10 +16,10 @@
 #include <Inventor/nodes/SoTexture2.h>
 #include <Inventor/nodes/SoTexture2Transform.h>
 #include <Inventor/nodes/SoTextureCoordinatePlane.h>
+#include <Inventor/nodes/SoTextureCoordinateEnvironment.h>
 #include <Inventor/nodes/SoComplexity.h>
 #include <Inventor/nodes/SoSelection.h>
-#include <Inventor/nodes/SoTranslation.h>
-#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoTransform.h>
 
 #include "glib0.h"
 #include "lib0.h"
@@ -35,7 +35,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#define PI 3.1415926
 
 /////////////////////////////////////////////////////////////////////////////
 // CRoomWall
@@ -47,7 +46,7 @@ CRoomWall::CRoomWall()
 	sep = NULL ;
 	plakaki1 = plakaki2 = 0 ;
 	xdist = ydist = zdist = 0 ;
-	rot = 0 ;
+	rotangle = 0 ;
 }
 
 CRoomWall::~CRoomWall()
@@ -76,9 +75,8 @@ void CRoomWall::ObjectToInventor ( SoSeparator *root )
 		first_time = TRUE ;
 	}
 
-	//setup trans & rot
-	SoTranslation	*trans	= new SoTranslation ;
-	SoRotation		*rotat	= new SoRotation ;
+	//init transform
+    SoTransform	*trans	= new SoTransform ;
 
 	//setup draw style
 	SoDrawStyle *ds = new SoDrawStyle ;
@@ -92,9 +90,8 @@ void CRoomWall::ObjectToInventor ( SoSeparator *root )
 	SoMaterial  *mat = new SoMaterial;
 	mat->diffuseColor.setValue( 1., 1., 1. ); // WHITE
 
-	sep->addChild( ds ) ;
-    sep->addChild( trans );	
-	sep->addChild( rotat );
+	sep->addChild( trans ) ;
+    sep->addChild( ds );	
 	sep->addChild( ps ) ;
 	sep->addChild( mat );
 
@@ -272,6 +269,7 @@ void CRoomWall::ObjectToInventor ( SoSeparator *root )
 	SoTexture2 *txt ;
 	SoTexture2Transform *txtxf ;
 	SoTextureCoordinatePlane *txtpl ;
+	//SoTextureCoordinateEnvironment *txtpl ; future use...
 	if (plakaki != "") 
     {
 		txt = new SoTexture2 ;
@@ -348,7 +346,6 @@ void CRoomWall::SaveProperties ()
  
 	lib.setSoSFFloatProp ( attr, SbName("height"+soff), height ) ;
 	lib.setSoSFFloatProp ( attr, SbName("depth"+soff), depth ) ;
-	lib.setSoSFFloatProp ( attr, SbName("corner"+soff), corner ) ;
 
 	// BASE PONTS
 	lib.setSoSFFloatProp ( attr, SbName("Koryfsx0"+soff), Koryfsx[0] ) ;
@@ -401,7 +398,6 @@ void CRoomWall::InventorToObject ( SoSeparator *root )
 
 	depth     = lib.getSoSFFloatProp(SbName("depth"+soff)) ;
 	height    = lib.getSoSFFloatProp(SbName("height"+soff)) ;
-	corner    = lib.getSoSFFloatProp(SbName("corner"+soff)) ;
 
 	// BASE POINTS
 	Koryfsx[0] = lib.getSoSFFloatProp(SbName("Koryfsx0"+soff)) ;
@@ -472,11 +468,11 @@ int CRoomWall::EditProperties ( CDocument *d, SoSeparator *root )
 	AfxMessageBox(" offset "+lib.inttostr(offset)+"\n Carrier "
 		               +lib.inttostr(carrier_id)+"\n Side"
 		               +lib.inttostr(carrier_side)+"\n Obj Side"
-					   +lib.inttostr(object_side)+"\n corner "
-					   +lib.inttostr(corner));
+					   +lib.inttostr(object_side)+"\n rotation "
+					   +lib.inttostr(rotangle));
 
 
-	if ((carrier_side ==_NONE_) || 
+	if ((carrier_side ==_NOWHERE_) || 
 		(object_side == _NOWHERE_))
 	{
        AfxMessageBox("Invalid object data");
@@ -488,7 +484,8 @@ int CRoomWall::EditProperties ( CDocument *d, SoSeparator *root )
 	zdist = Koryfsz[0];
 
 	//get rotation angle ...
-	rot = corner;
+	//rotangle = corner;
+
     //Calculate selected object distances
     left_d  = GetLeftDistance();
 	right_d = GetRightDistance();
@@ -504,7 +501,7 @@ int CRoomWall::EditProperties ( CDocument *d, SoSeparator *root )
 	dlg->m_xdist    = xdist ;    cdistX = xdist ;
 	dlg->m_ydist    = ydist ;    cdistY = ydist ;
 	dlg->m_zdist    = zdist ;    cdistZ = zdist ;
-	dlg->m_rot      = rot   ;    cRot   = rot ;
+	dlg->m_rot      = rotangle ; cRot   = rotangle ;
 	dlg->m_left	    = left_d  ;  cleft  = left_d ; 
 	dlg->m_right	= right_d ;  cright = right_d ;
 	dlg->m_up   	= up_d ;     cup    = up_d ;
@@ -526,7 +523,7 @@ int CRoomWall::EditProperties ( CDocument *d, SoSeparator *root )
 		xdist   =   dlg->m_xdist ; 
 		ydist   =   dlg->m_ydist ;
 		zdist   =   dlg->m_zdist ; 
-		rot     =   dlg->m_rot ;
+		rotangle=   dlg->m_rot ;
 		left_d  =   dlg->m_left ;
 		right_d =   dlg->m_right ;
 		up_d    =   dlg->m_up ;
@@ -560,12 +557,6 @@ int CRoomWall::EditProperties ( CDocument *d, SoSeparator *root )
         {*/
           //standart method
 
-		  //set object rotation...
-		  if (fabs(rot - cRot) > 0.001) 
-		  {
-			RotateObject(rot);
-		  } 
-
           // set x object translation 
 		  if (fabs(left_d - cleft) > 0.001)
 		  {
@@ -585,16 +576,17 @@ int CRoomWall::EditProperties ( CDocument *d, SoSeparator *root )
 		 
 
 out : ;	  //move...
+	      RotateObjectTo(rotangle);
           MoveObjectTo(x,up_d,outlook) ;                      
 		/*}*/
     }
 
-	//select it.. ...no need ???
-  /*	SoSeparator *wall = sep ;
+	//select it.. ...
+  	SoSeparator *wall = sep ;
     sview->GetSelectionNode()->deselectAll();
-    if (plakaki=="") sview->GetSelectionNode()->select(wall->getChild(9)) ; //get faceset node
-	            else sview->GetSelectionNode()->select(wall->getChild(12)) ;
-*/
+    if (plakaki=="") sview->GetSelectionNode()->select(wall->getChild(8)) ; //get faceset node
+	            else sview->GetSelectionNode()->select(wall->getChild(11)) ;
+
 	return res ;
 }
 
@@ -612,8 +604,6 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 		float   nrx[20],nry[20],nrz[20] ; //normals array 
 		float	vx, vy, vz, len1, len0 ;
 		bool    first_time;
-		SbVec3f p2_point;
-
 
 		CLib0 lib ;
 		CGLib0 *glib = new CGLib0 ;
@@ -626,32 +616,32 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 		int dd =100; //=wall depth ????
 
 		// transfer data from arrays
-		len[0] = sdoc->l[0] ;
-		len[1] = sdoc->l[1] ;
-		len[2] = sdoc->l[2] ;
-		len[3] = sdoc->l[3] ;
-		len[4] = sdoc->l[4] ;
-		len[5] = sdoc->l[5] ;
-		len[6] = sdoc->l[6] ;
-		len[7] = sdoc->l[7] ;
+		len[0] = theApp.l[0] ;
+		len[1] = theApp.l[1] ;
+		len[2] = theApp.l[2] ;
+		len[3] = theApp.l[3] ;
+		len[4] = theApp.l[4] ;
+		len[5] = theApp.l[5] ;
+		len[6] = theApp.l[6] ;
+		len[7] = theApp.l[7] ;
 
-		angle[0] = sdoc->a[0] ;
-		angle[1] = sdoc->a[1] ;
-		angle[2] = sdoc->a[2] ;
-		angle[3] = sdoc->a[3] ;
-		angle[4] = sdoc->a[4] ;
-		angle[5] = sdoc->a[5] ;
-		angle[6] = sdoc->a[6] ;
-		angle[7] = sdoc->a[7] ;
+		angle[0] = theApp.a[0] ;
+		angle[1] = theApp.a[1] ;
+		angle[2] = theApp.a[2] ;
+		angle[3] = theApp.a[3] ;
+		angle[4] = theApp.a[4] ;
+		angle[5] = theApp.a[5] ;
+		angle[6] = theApp.a[6] ;
+		angle[7] = theApp.a[7] ;
 
-		toix[0] = sdoc->t[0] ;
-		toix[1] = sdoc->t[1] ;
-		toix[2] = sdoc->t[2] ;
-		toix[3] = sdoc->t[3] ;
-		toix[4] = sdoc->t[4] ;
-		toix[5] = sdoc->t[5] ;
-		toix[6] = sdoc->t[6] ;
-		toix[7] = sdoc->t[7] ;
+		toix[0] = theApp.t[0] ;
+		toix[1] = theApp.t[1] ;
+		toix[2] = theApp.t[2] ;
+		toix[3] = theApp.t[3] ;
+		toix[4] = theApp.t[4] ;
+		toix[5] = theApp.t[5] ;
+		toix[6] = theApp.t[6] ;
+		toix[7] = theApp.t[7] ;
 
 		//get wall base height = room height + world height
 		CWorldBase *wr = ((CWorldBase*)sdoc->Obj[0]);
@@ -709,8 +699,8 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 
 				//παιρνω το normal της πλευρας του προηγουμενου τοιχου ...
                 glib->GetPolyNormal ( fx[i-1], fy[i-1], fz[i-1],
-  			               		      nx[i-1], ny[i-1]+100, nz[i-1],						
-					                  nx[i-1], ny[i-1], nz[i-1],
+  			               		      nx[i-1], ny[i-1], nz[i-1],						
+					                  nx[i-1], ny[i-1]+100, nz[i-1],
 					                 &vx, &vy, &vz ) ;
 
 			    //Συγκοληση σημειων - τοιχων  
@@ -721,13 +711,13 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 				  fz[i] = fz[i] - dd;//(vz * dd) ;
 				}*/
             
-				nrx[i] = -vx;
-				nry[i] = -vy;
-				nrz[i] = -vz; 
+				nrx[i] = vx;
+				nry[i] = vy;
+				nrz[i] = vz; 
 			}
 
-			len0 = int(sin((180-angle[i])*3.1415926/180)*len[i]);
-			len1 = int(cos((180-angle[i]) * 3.1415926 /180) * len[i]) ;
+			len0 = int(sin((180-angle[i]) * M_PI/180) * len[i]);
+			len1 = int(cos((180-angle[i]) * M_PI/180) * len[i]) ;
                 
 			//προσθεtουμε την μετατοπιση στον αξονα με 1 normal
 			nx[i] = fx[i] + (nrx[i] * len0);
@@ -772,6 +762,9 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 			rw[off]->Koryfsy[1] = ny[i] ;
 			rw[off]->Koryfsz[1] = nz[i] ;
 
+			rw[off]->ObjectToInventor( sdoc->root ) ;
+
+			//SET ATTRIBUTES...
 			//WARNING : επειδη η κατασκευη τοιχων γινεται αυτοματοποιημενα
 			//          μεσω wizzard ισχυει ¨:
 			//          Ο πρωτος τοιχος εχει carrier το roombase (ή το 
@@ -806,7 +799,7 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 			//set object side
 			if (off==0) 
 			{   
-				if (first_time) rw[off]->SetObjectSide(_BOTTOM_); 
+				if (first_time) rw[off]->SetObjectSide(_BACK_); //??BOTTOM 
 				           else rw[off]->SetObjectSide(_BACK_);
             }
 			else rw[off]->SetObjectSide(_BACK_); 
@@ -817,16 +810,14 @@ void CRoomWall::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 			                                 else rw[off]->outlook = -dd;//????
 
 			//set rotation
-			if ((angle[i]>=0) && (angle[i]<=180)) rw[off]->corner  = angle[i];
-			                                 else rw[off]->corner  = (360 - angle[i]);
+			if ((angle[i]>=0) && (angle[i]<=180)) rw[off]->rotangle  = angle[i];
+			                                 else rw[off]->rotangle  = (360 - angle[i]);
 
-			rw[off]->ObjectToInventor( sdoc->root ) ;
 
 			//get totals = το πρωτο σημείο του εγκιβωτισμου
 		    rw[off]->totalx  = rw[off]->ssx[0];
 		    rw[off]->totaly  = rw[off]->ssy[0];
 		    rw[off]->totalz  = rw[off]->ssz[0];
-		    rw[off]->object_refpoint = _DNBKLEFT_;
 
 			rw[off]->SaveProperties();
 
@@ -919,30 +910,21 @@ void CRoomWall::MoveObjectTo(float d1,float d2,float d3)
 {
 	float pX,pY,pZ ;
 	float dX,dY,dZ ;
-	float b ,nnx , nny , nnz ;
+	float nnx , nny , nnz ;
 
 	//προκειται να ξαναδημιουργηθει ο τοιχος αρα
 	//αλλαζω τισ κορυφες του και με την objecttoinventor
 	//γινεται εγκιβωτισμος εκ' νεου...
-
-	//calculations...
-	b = sqrt( (pow( (pointX2 - pointX1), 2)) +  
-		      (pow( (pointY2 - pointY1), 2)) + 
-			  (pow( (pointZ2 - pointZ1), 2)) );
 
 	//save prev values
 	pX = Koryfsx[0] ;
 	pY = Koryfsy[0] ;
 	pZ = Koryfsz[0] ;
 
-    //change Koryfes                                                           
-    Koryfsx[0] = ( ( (pointX2 - pointX1) / fabs(b) ) * d1 + pointX1 );       
-    Koryfsy[0] = ( ( (pointY2 - pointY1) / fabs(b) ) * d1  + d2 + pointY1 ); 
-	Koryfsz[0] = ( ( (pointZ2 - pointZ1) / fabs(b) ) * d1 + pointZ1 );    
-	
+	MoveOnCarrier(d1,d2,&Koryfsx[0],&Koryfsy[0],&Koryfsz[0]);
+
     //add outlook
 	GetCarrierNormal(&nnx, &nny, &nnz);
-
     Koryfsx[0] = Koryfsx[0] + (nnx * d3);
 	Koryfsy[0] = Koryfsy[0] + (nny * d3);
 	Koryfsz[0] = Koryfsz[0] + (nnz * d3);
@@ -981,7 +963,7 @@ void CRoomWall::RotateCarrierObjects(float dx, float dy, float dz)
 {
     int i,father_obj ;
 	float len01 , len02, dist ,fnx ,fny ,fnz, pxX0, pyY0, pzZ0, length;
-    SbVec3f obj_vals ,new_vals;
+    SbVec3f vectors;
 	CLib0 lib;
 
     father_obj = offset;
@@ -1035,8 +1017,8 @@ void CRoomWall::RotateCarrierObjects(float dx, float dy, float dz)
 			 //παιρνω το normal της πλευρας του carrier τοιχου ...
 	         wal->GetCarrierNormal(&fnx,&fny,&fnz);
 
-	         len01 = int(sin((180-wal->corner) * 3.1415926 /180) * fabs(dist));
-			 len02 = int(cos((180-wal->corner) * 3.1415296 /180) * fabs(dist));
+	         len01 = int(sin((180-wal->rotangle) * M_PI/180) * fabs(dist));
+			 len02 = int(cos((180-wal->rotangle) * M_PI/180) * fabs(dist));
 			 //AfxMessageBox(lib.floattostr(len01));
 
              //προσθεtουμε την μετατοπιση στον αξονα με 1 normal
@@ -1069,18 +1051,9 @@ void CRoomWall::RotateCarrierObjects(float dx, float dy, float dz)
 		     ext->totaly  = ext->totaly + dy;
 		     ext->totalz  = ext->totalz + dz;
 
-             obj_vals = obj->GetTranslation(); //get translation
-
-             //επειδη τα externals εχουν total coordinate system
-			 //δεν αλλαζουν οι κορυφές του αλλα το translation
-	         new_vals[0] = obj_vals[0] + dx; 
-		     new_vals[1] = obj_vals[1] + dy;
-		     new_vals[2] = obj_vals[2] + dz;
-			 
-			 obj->SetTranslation(new_vals);
-
-			 //refresh : move object 0.001 mm
-			 //CGExternal *ext = (CGExternal *)obj;
+			 //INVENTOR:put new translation
+	         vectors.setValue(ext->totalx , ext->totaly , ext->totalz);
+	         ext->SetTranslation(vectors);
 		   }
 		}
 	  }
@@ -1089,7 +1062,7 @@ void CRoomWall::RotateCarrierObjects(float dx, float dy, float dz)
 
 
 //change corner - rotate object
-void CRoomWall::RotateObject(float crn)
+void CRoomWall::RotateObjectTo(float crn)
 {
     float length,cnx,cny,cnz,len0,len1;
 	float pxX,pyY,pzZ;
@@ -1118,8 +1091,8 @@ void CRoomWall::RotateObject(float crn)
 	GetCarrierNormal(&cnx,&cny,&cnz);
 
 	//calculate Koryfs[1] lengths to add..
-	len0 = int(sin((180-crn) * 3.1415926 /180) * fabs(length));
-	len1 = int(cos((180-crn) * 3.1415926 /180) * fabs(length));
+	len0 = int(sin((180-crn) * M_PI/180) * fabs(length));
+	len1 = int(cos((180-crn) * M_PI/180) * fabs(length));
                 
 	//προσθεtουμε την μετατοπιση στον αξονα με 1 normal
 	Koryfsx[1] = Koryfsx[0] + (cnx * len0);
@@ -1134,7 +1107,7 @@ void CRoomWall::RotateObject(float crn)
 	Koryfsz[1] = Koryfsz[1] - (cnx * len1);
 
 	//save corner
-	corner = crn; //save new value to the wall properties
+	rotangle = crn; //save new value to the wall properties
 
 	ObjectToInventor( sdoc->root ) ;
 
@@ -1216,7 +1189,7 @@ void CRoomWall::DeleteObject(int aanumber)
 		          wall->SetCarrierSide(_TOP_); //top side of base
 		          wall->SetObjectSide(_BOTTOM_); //bottom side of wall
 		          wall->outlook = 0;
-		          wall->corner  = 0; 
+		          wall->rotangle = 0; 
                 }
 			}
           }
@@ -1263,9 +1236,9 @@ void CRoomWall::PasteObject()
        //zero data arrays
 	   for (int i=0;i<8;i++)
 	   {
-		   sdoc->l[i]=0;
-		   sdoc->a[i]=0;
-		   sdoc->t[i]=0;
+		   theApp.l[i]=0;
+		   theApp.a[i]=0;
+		   theApp.t[i]=0;
        }
 
        //set data
@@ -1274,9 +1247,9 @@ void CRoomWall::PasteObject()
                          (pow( (copiedWall->Koryfsy[1] - copiedWall->Koryfsy[0]), 2)) +
 		                 (pow( (copiedWall->Koryfsz[1] - copiedWall->Koryfsz[0]), 2)) );
 
-	   sdoc->l[0]=walldist;
-	   sdoc->a[0]=copiedWall->corner;
-	   sdoc->t[0]=1;
+	   theApp.l[0]=walldist;
+	   theApp.a[0]=copiedWall->rotangle;
+	   theApp.t[0]=1;
 
        sdoc->new_object =_ROOMWALL_ ;
 

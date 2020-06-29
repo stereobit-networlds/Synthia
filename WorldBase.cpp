@@ -12,12 +12,13 @@
 #include <Inventor/fields/SoSFString.h>
 #include <Inventor/nodes/SoDrawStyle.h>
 #include <Inventor/SbString.h>
-#include <Inventor/nodes/SoTranslation.h>
-#include <Inventor/nodes/SoRotation.h>
+#include <Inventor/nodes/SoTransform.h>
 
+#include "Wizz0.h"
 #include "WorldBase.h"
 #include "lib0.h"
 #include "SYNTHDoc.h"
+#include "SYNTHView.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -41,12 +42,32 @@ CWorldBase::~CWorldBase()
 
 }
 
+
+//get the active document ...
+CSYNTHDoc* GetMyDocument()
+{
+   CMDIFrameWnd *pFrame = 
+             (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
+
+   // Get the active MDI child window.
+   CMDIChildWnd *pChild = 
+             (CMDIChildWnd *) pFrame->GetActiveFrame();
+
+   // or CMDIChildWnd *pChild = pFrame->MDIGetActive();
+
+   // Get the active view attached to the active MDI child
+   // window.
+   //CSYNTHView *pView = (CSYNTHView *) pChild->GetActiveView();
+   CSYNTHDoc* pDoc  = (CSYNTHDoc *) pChild->GetActiveDocument();
+
+   return pDoc;
+}
+
+
 /*======================== ObjectToInventor ================*/
 
 void CWorldBase::ObjectToInventor ( SoSeparator *root )
 {
-    CLib0 lib ;
-
 	// inherited action
 	CGObject::ObjectToInventor(root) ;
 
@@ -59,9 +80,8 @@ void CWorldBase::ObjectToInventor ( SoSeparator *root )
 		first_time = TRUE ;
 	}
 
-    //setup trans & rot
-	SoTranslation	*trans	= new SoTranslation ;
-	SoRotation		*rotat	= new SoRotation ;
+    //setup transform
+	SoTransform	*trans	= new SoTransform ;
 
 	//setup draw style
 	SoDrawStyle *ds = new SoDrawStyle ;
@@ -71,9 +91,8 @@ void CWorldBase::ObjectToInventor ( SoSeparator *root )
 	SoPickStyle *ps = new SoPickStyle;
     ps->style.setValue(SoPickStyle::SHAPE) ;
 
-	sep->addChild( ds ) ;
-    sep->addChild( trans );	
-	sep->addChild( rotat );
+	sep->addChild( trans ) ;
+    sep->addChild( ds );	
 	sep->addChild( ps ) ;
 
 	// setup shape
@@ -272,43 +291,62 @@ void CWorldBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 		CGLib0 *glib = new CGLib0 ;
 
 		// inherited action
-	    CGObject::AddNewObject(p_point,p_normal) ;
+		CGObject::AddNewObject(p_point,p_normal) ;
 
-		// transfer data from arrays
-		len[0] = sdoc->l[0] ;
-		len[1] = sdoc->l[1] ;
-		len[2] = sdoc->l[2] ;
-		len[3] = sdoc->l[3] ;
-		len[4] = sdoc->l[4] ;
-		len[5] = sdoc->l[5] ;
-		len[6] = sdoc->l[6] ;
-		len[7] = sdoc->l[7] ;
+		// transfer data from wizard
+		len[0] = theApp.l[0] ;
+		len[1] = theApp.l[1] ;
+		len[2] = theApp.l[2] ;
+		len[3] = theApp.l[3] ;
+		len[4] = theApp.l[4] ;
+		len[5] = theApp.l[5] ;
+		len[6] = theApp.l[6] ;
+		len[7] = theApp.l[7] ;
 
-		angle[0] = sdoc->a[0] ;
-		angle[1] = sdoc->a[1] ;
-		angle[2] = sdoc->a[2] ;
-		angle[3] = sdoc->a[3] ;
-		angle[4] = sdoc->a[4] ;
-		angle[5] = sdoc->a[5] ;
-		angle[6] = sdoc->a[6] ;
-		angle[7] = sdoc->a[7] ;
+		angle[0] = theApp.a[0] ;
+		angle[1] = theApp.a[1] ;
+		angle[2] = theApp.a[2] ;
+		angle[3] = theApp.a[3] ;
+		angle[4] = theApp.a[4] ;
+		angle[5] = theApp.a[5] ;
+		angle[6] = theApp.a[6] ;
+		angle[7] = theApp.a[7] ;
 
-		toix[0] = sdoc->t[0] ;
-		toix[1] = sdoc->t[1] ;
-		toix[2] = sdoc->t[2] ;
-		toix[3] = sdoc->t[3] ;
-		toix[4] = sdoc->t[4] ;
-		toix[5] = sdoc->t[5] ;
-		toix[6] = sdoc->t[6] ;
-		toix[7] = sdoc->t[7] ;
+		toix[0] = theApp.t[0] ;
+		toix[1] = theApp.t[1] ;
+		toix[2] = theApp.t[2] ;
+		toix[3] = theApp.t[3] ;
+		toix[4] = theApp.t[4] ;
+		toix[5] = theApp.t[5] ;
+		toix[6] = theApp.t[6] ;
+		toix[7] = theApp.t[7] ;
 
 		World_Height = 100; //υψος world
 
 		// setup world base 
 		CWorldBase *wb = new CWorldBase ;
 
-		sdoc->Obj[sdoc->ObjCount] = wb ; 
-		sdoc->ObjCount++ ;
+		//CSYNTHDoc* pdoc=GetMyDocument();
+
+		  CMDIFrameWnd *pFrame = 
+             (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
+
+   // Get the active MDI child window.
+   CMDIChildWnd *pChild = 
+             (CMDIChildWnd *) pFrame->GetActiveFrame();
+
+   // or CMDIChildWnd *pChild = pFrame->MDIGetActive();
+
+   // Get the active view attached to the active MDI child
+   // window.
+   CSYNTHView *pView = (CSYNTHView *) pChild->GetActiveView();
+   CSYNTHDoc *pdoc  = (CSYNTHDoc *) pChild->GetActiveDocument();
+   
+//   CSYNTHDoc* xdoc = pView->GetDocument();
+  
+
+		pdoc->Obj[pdoc->ObjCount] = wb ; 
+		pdoc->ObjCount++ ;
 
 		wb->offset  = 0 ;
 		wb->id      = _WORLDBASE_ ;
@@ -345,16 +383,16 @@ void CWorldBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 
 				//παιρνω το normal της πλευρας του προηγουμενου τοιχου ...
                 glib->GetPolyNormal ( fx[i-1], fy[i-1], fz[i-1],
-  			               		      nx[i-1], ny[i-1]+100, nz[i-1],						
-					                  nx[i-1], ny[i-1], nz[i-1],
+  			               		      nx[i-1], ny[i-1], nz[i-1],						
+					                  nx[i-1], ny[i-1]+100, nz[i-1],
 					                 &vx, &vy, &vz ) ;
-				nrx[i] = -vx;
-				nry[i] = -vy;
-				nrz[i] = -vz;
+				nrx[i] = vx;
+				nry[i] = vy;
+				nrz[i] = vz;
 			}
 
-			len0 = int(sin((180-angle[i])*3.1415926/180)*len[i]);
-			len1 = int(cos((180-angle[i]) * 3.1415926 /180) * len[i]) ;
+			len0 = int(sin((180-angle[i]) * M_PI/180) * len[i]);
+			len1 = int(cos((180-angle[i]) * M_PI/180) * len[i]) ;
                 
 			//προσθεtουμε την μετατοπιση στον αξονα με 1 normal
 			nx[i] = fx[i] + (nrx[i] * len0);
@@ -380,18 +418,18 @@ void CWorldBase::AddNewObject(SbVec3f p_point, SbVec3f p_normal)
 		wb->width	= (wb->xmax - wb->xmin) + wb->outspace ;
 		wb->depth	= (wb->zmax - wb->zmin) + wb->outspace ;
 
-		wb->ObjectToInventor ( sdoc->root ) ;
+		wb->ObjectToInventor ( pdoc->root ) ;
 
 		//το πρωτο σημείο του εγκιβωτισμου
 		wb->totalx  = wb->ssx[0];
 		wb->totaly  = wb->ssy[0];
 		wb->totalz  = wb->ssz[0];
-		wb->object_refpoint = _DNBKLEFT_;
+		//wb->object_refpoint = _DNBKLEFT_;
 
 		wb->carrier_id = -1; //nowhere (invalid)
 		wb->SetCarrierSide(_NOWHERE_); 
-		wb->object_side = -1; //none (invalid)
-		wb->outlook = 0;
+		wb->SetObjectSide(_NOWHERE_); 
+		//wb->outlook = 0;
 
 		wb->SaveProperties();
 }
